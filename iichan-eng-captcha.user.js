@@ -15,7 +15,11 @@
     'use strict';
 
     function init() {
-        document.querySelector('input[name=captcha]').addEventListener('keypress', function(e) {
+        var input = document.querySelector('input[name=captcha]');
+        if (!input) {
+            return;
+        }
+        input.addEventListener('keypress', function(e) {
             // copypasta from https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/blob/master/src/Dollchan_Extension_Tools.es6.user.js
             var ruUa = 'йцукенгшщзхъїфыівапролджэєячсмитьбюёґ',
                 en = 'qwertyuiop[]]assdfghjkl;\'\'zxcvbnm,.`\\';
