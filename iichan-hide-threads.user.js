@@ -34,8 +34,11 @@
         var threads = document.querySelectorAll('[id^=thread]');
         for (var i = threads.length - 1; i >= 0; i--) {
             var thread = threads[i];
-            var label = thread.querySelector('label');
-            if (!label) {
+            if (!thread) {
+                continue;
+            }
+            var label = thread.querySelector(':scope > label');
+            if (!label || !label.nextSibling) {
                 continue;
             }
             var btn = document.createElement('a');
@@ -76,6 +79,9 @@
             return;
         }
         var parent = thread.parentNode;
+        if (!parent) {
+            return;
+        }
         var threadHiddenDiv = document.createElement('div');
         var threadNo = threadId.split('-')[1];
         var threadTitle = thread.querySelector('.filetitle').innerText || thread.querySelector('blockquote').innerText || 'картинка';
