@@ -1,0 +1,36 @@
+{
+  "name": "iichan-extensions",
+  "version": "1.0.0",
+  "description": "Makes Wakaba more useable",
+  "scripts": {
+    "build": "gulp",
+    "test": "jshint *.js **/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WagonOfDoubt/iichan-extensions.git"
+  },
+  "keywords": [
+    "wakaba",
+    "imageboards",
+    "userscript"
+  ],
+  "author": "Cirno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WagonOfDoubt/iichan-extensions/issues"
+  },
+  "homepage": "https://github.com/WagonOfDoubt/iichan-extensions#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-include": "^2.3.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.1.2",
+    "jshint": "^2.9.4",
+    "pump": "^1.0.2",
+    "run-sequence": "^1.2.2",
+    "uglify-js-harmony": "^2.7.5"
+  }
+}

@@ -1,0 +1,25 @@
+.${PLACEHOLDER_CLASSNAME} {
+    pointer-events: none;
+}
+
+.${PLACEHOLDER_CLASSNAME} a {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.${PLACEHOLDER_CLASSNAME}:hover + div,
+.${PLACEHOLDER_CLASSNAME}:hover + div + br {
+    display: block !important;
+}
+
+.${HIDDEN_THREAD_CLASSNAME} {
+    display: none;
+}
+.${HIDDEN_THREAD_CLASSNAME} +  br {
+    display: none;
+}
+
+.${HIDE_BTN_CLASSNAME} {
+    margin-left: 0.2em;
+    cursor: pointer;
+}
