@@ -60,14 +60,14 @@
         return;
       }
 
-      let thumb = this.querySelector('.thumb');
+      let thumb = e.currentTarget.querySelector('.thumb');
       let isExpanded = !thumb.classList.toggle(EXPANDED_THUMB_CLASSNAME);
-      let imageExt = this.href.match(/\w*$/).toString();
+      let imageExt = e.currentTarget.href.match(/\w*$/).toString();
       if (!EXTENSIONS.includes(imageExt)) return;
 
-      thumb.src = isExpanded ? thumb.thumbSrc : this.href;
+      thumb.src = isExpanded ? thumb.thumbSrc : e.currentTarget.href;
       e.preventDefault();
-    };
+    }
 
     let thumbs = document.querySelectorAll('.thumb');
     for (let img of thumbs) {
