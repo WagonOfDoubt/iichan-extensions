@@ -32,7 +32,7 @@ gulp.task('userscript', function() {
   let tasks = folders.map(function(folder) {
     return pump([
       gulp.src([path.join('src/', folder, '/*.meta.js'), path.join('src/', folder, '/*.main.js')]),
-      concat(folder + '.user.js'),
+      concat('iichan-' + folder + '.user.js'),
       include({hardFail: true}),
       gulp.dest('dist/userscript/')
     ]);
@@ -54,7 +54,7 @@ gulp.task('compress', function(cb) {
 
 gulp.task('combine', function(cb) {
   return pump([
-    gulp.src('dist/*.js'),
+    gulp.src(['dist/*.js', '!dist/iichan-extensions.js']),
     concat('iichan-extensions.js'),
     rename({dirname: ''}),
     gulp.dest('dist/')
