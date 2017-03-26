@@ -3,44 +3,40 @@
 (function() {
   'use strict';
 
-  const MIN_DISPLAY_WIDTH = 700;  // ширина, при которой картинки будут открываться как обычно
-  const MIN_DISPLAY_HEIGHT = 700;  // высота, при которой картинки будут открываться как обычно
-  const EXPANDED_THUMB_CLASSNAME = 'iichan-image-fullsize';
+  /*
+  Если это условие НЕ выполняется, изображения будут открываться как обычно на новой вкладке.
+  См. https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries
+  */
+  const HANDHELD_MEDIA_QUERY = '(min-width: 10cm)';
+  /*
+  Список расширений файлов, для которых может применяться раскрытие.
+  */
   const EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
+  /*
+  Класс CSS, применяемый для раскрытых картинок.
+  */
+  const EXPANDED_THUMB_CLASSNAME = 'iichan-image-fullsize';
 
   function addListeners(e) {
     function onThumbnailClick(e) {
-      if (screen.width < MIN_DISPLAY_WIDTH ||
-        screen.height < MIN_DISPLAY_HEIGHT) {
+      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) {
         return;
       }
 
       let thumb = this.querySelector('.thumb');
-      if (thumb.classList.contains(EXPANDED_THUMB_CLASSNAME)) {
-        thumb.src = thumb.originalSrc;
-        thumb.width = thumb.originalWidth;
-        thumb.height = thumb.originalHeight;
-        thumb.classList.remove(EXPANDED_THUMB_CLASSNAME);
-        e.preventDefault();
-        return;
-      }
-
-      let imageSrc = this.href;
-      let imageExt = imageSrc.match(/\w*$/).toString();
+      let isExpanded = !thumb.classList.toggle(EXPANDED_THUMB_CLASSNAME);
+      let imageExt = this.href.match(/\w*$/).toString();
       if (!EXTENSIONS.includes(imageExt)) return;
 
+      thumb.src = isExpanded ? thumb.thumbSrc : this.href;
       e.preventDefault();
-      thumb.originalSrc = thumb.src;
-      thumb.originalWidth = thumb.width;
-      thumb.originalHeight = thumb.height;
-      thumb.removeAttribute('width');
-      thumb.removeAttribute('height');
-      thumb.classList.add(EXPANDED_THUMB_CLASSNAME);
-      thumb.src = imageSrc;
     };
 
     let thumbs = document.querySelectorAll('.thumb');
     for (let img of thumbs) {
+      img.removeAttribute('width');
+      img.removeAttribute('height');
+      img.thumbSrc = img.src;
       let a = img.parentNode;
       if (!a) continue;
       a.addEventListener('click', onThumbnailClick);
