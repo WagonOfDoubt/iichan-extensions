@@ -14,12 +14,15 @@
 (function() {
   'use strict';
 
-  const THREAD_TITLE_LENGTH = 50;  // Сколько первых символов из поста показывать в заголовке скрытого треда
+  /*
+  Сколько первых символов из поста показывать в заголовке скрытого треда
+  */
+  const THREAD_TITLE_LENGTH = 50;
+  
   const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
   const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
   const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
-  const PLACEHOLDER_NO_TEXT = 'изображение';
 
   function getHiddenThreads() {
     return JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '[]');
@@ -69,12 +72,11 @@
 
     let threadNo = threadId.split('-')[1];
     let threadTitle = thread.querySelector('.filetitle').innerText ||
-      thread.querySelector('blockquote').innerText ||
-      PLACEHOLDER_NO_TEXT;
+      thread.querySelector('blockquote').innerText;
     threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
     let placeholderId = 'iichan-hidden-' + threadId;
     thread.insertAdjacentHTML('beforebegin', `
-      <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a>№${threadNo}</a> скрыт (${threadTitle})</div>
+      <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a>№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
     `);
 
     let placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
