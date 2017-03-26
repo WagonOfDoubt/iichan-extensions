@@ -1,5 +1,3 @@
-//=include hide-threads.meta.js
-
 (function() {
   'use strict';
 

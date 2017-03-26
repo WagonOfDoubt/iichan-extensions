@@ -1,3 +1,5 @@
+const fs            = require('fs');
+const path          = require('path');
 const gulp          = require('gulp');
 const include       = require('gulp-include');
 const rename        = require('gulp-rename');
@@ -9,27 +11,50 @@ const pump          = require('pump');
 const runSequence   = require('run-sequence');
 
 
+function getFolders(dir) {
+  return fs.readdirSync(dir)
+    .filter(function(file) {
+      return fs.statSync(path.join(dir, file)).isDirectory();
+    });
+}
+
+
 gulp.task('clean', function() {
   return gulp.src('dist/*', {read: false})
     .pipe(clean());
 });
 
 
+gulp.task('userscript', function() {
+  // https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
+  let folders = getFolders('src/');
+
+  let tasks = folders.map(function(folder) {
+    return pump([
+      gulp.src([path.join('src/', folder, '/*.meta.js'), path.join('src/', folder, '/*.main.js')]),
+      concat(folder + '.user.js'),
+      include({hardFail: true}),
+      gulp.dest('dist/userscript/')
+    ]);
+  });
+});
+
+
 gulp.task('compress', function(cb) {
   return pump([
-    gulp.src(['dist/*/*.user.js', 'dist/iichan-extensions.js']),
+    gulp.src(['dist/*.js']),
     minifier({}, uglifyjs),
     rename(function(path) {
       path.basename += '.min';
     }),
-    gulp.dest('dist/')
+    gulp.dest('dist/minified/')
   ]);
 });
 
 
 gulp.task('combine', function(cb) {
   return pump([
-    gulp.src('dist/userscript/*.js'),
+    gulp.src('dist/*.js'),
     concat('iichan-extensions.js'),
     rename({dirname: ''}),
     gulp.dest('dist/')
@@ -46,16 +71,15 @@ gulp.task('build', function(cb) {
       path.dirname = '';
       path.basename = 'iichan-';
       path.basename += name;
-      path.basename += '.user';
       path.extname = '.js';
     }),
-    gulp.dest('dist/userscript/')
+    gulp.dest('dist/')
   ]);
 });
 
  
 gulp.task('make', function(cb) {
-  runSequence('build', 'combine', 'compress', cb)
+  runSequence(['build', 'userscript'], 'combine', 'compress', cb)
 });
 
 

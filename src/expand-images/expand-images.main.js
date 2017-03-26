@@ -1,5 +1,3 @@
-//=include expand-images.meta.js
-
 (function() {
   'use strict';
 
