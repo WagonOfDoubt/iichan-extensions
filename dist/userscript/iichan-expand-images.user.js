@@ -30,26 +30,22 @@
 
   function addListeners(e) {
     function onThumbnailClick(e) {
-      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) {
-        return;
-      }
-
+      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
       let thumb = e.currentTarget.querySelector('.thumb');
       let isExpanded = !thumb.classList.toggle(EXPANDED_THUMB_CLASSNAME);
-      let imageExt = e.currentTarget.href.match(/\w*$/).toString();
-      if (!EXTENSIONS.includes(imageExt)) return;
-
       thumb.src = isExpanded ? thumb.thumbSrc : e.currentTarget.href;
       e.preventDefault();
     }
 
     let thumbs = document.querySelectorAll('.thumb');
     for (let img of thumbs) {
+      let a = img.parentNode;
+      if (!a) continue;
+      let imageExt = a.href.match(/\w*$/).toString();
+      if (!EXTENSIONS.includes(imageExt)) continue;
       img.removeAttribute('width');
       img.removeAttribute('height');
       img.thumbSrc = img.src;
-      let a = img.parentNode;
-      if (!a) continue;
       a.addEventListener('click', onThumbnailClick);
     }
   }
