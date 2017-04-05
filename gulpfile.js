@@ -54,7 +54,7 @@ gulp.task('compress', function(cb) {
 
 gulp.task('combine', function(cb) {
   return pump([
-    gulp.src(['dist/*.js', '!dist/iichan-extensions.js']),
+    gulp.src(['dist/*.js', '!dist/iichan-extensions.js', '!dist/iichan-ice-fairy.js']),
     concat('iichan-extensions.js'),
     rename({dirname: ''}),
     gulp.dest('dist/')
