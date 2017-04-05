@@ -14,13 +14,14 @@
     let observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         for (let node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
           cirnify(node);
         }
       });
     });
 
     cirnify(document.body);
-    observer.observe(document.body, { childList: true });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   if (document.body) {
