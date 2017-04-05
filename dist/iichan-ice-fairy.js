@@ -13,7 +13,7 @@
           continue;
         }
         let day = label.innerText.match(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/);
-        if (day.length === 0 || day[0] === SPECIAL_DAY) {
+        if (day.length < 1 || day[1] === SPECIAL_DAY) {
           continue;
         }
         namespan.innerHTML = NAME;
