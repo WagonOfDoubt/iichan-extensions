@@ -2,12 +2,21 @@
   'use strict';
   const NAME = 'Сырно';
   const NAME_QUERY = '.postername, .commentpostername';
+  const SPECIAL_DAY = 'Пн';
 
   function init() {
     function cirnify(node) {
-      let namespans = node.querySelectorAll(NAME_QUERY);
-      for (let ns of namespans) {
-        ns.innerHTML = NAME;
+      let labels = node.querySelectorAll('label');
+      for (let label of labels) {
+        let namespan = label.querySelector(NAME_QUERY);
+        if (!namespan) {
+          continue;
+        }
+        let day = label.innerText.match(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/);
+        if (day.length === 0 || day[0] === SPECIAL_DAY) {
+          continue;
+        }
+        namespan.innerHTML = NAME;
       }
     }
 
