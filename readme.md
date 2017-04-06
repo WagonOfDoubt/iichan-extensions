@@ -58,7 +58,7 @@
 - Кроме понедельников
 - Изменяет так же имя в постах, добавленных динамически после загрузки страницы, например, при автообновлении треда Куклоскриптом или подгрузке страниц
 
-Если у вас установлен куклоскрипт, того же эффекта можно добться, применив [спелл](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/wiki/Spells-ru#rep) автозамены:
+Если у вас установлен куклоскрипт, того же эффекта можно добиться, применив [спелл](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/wiki/Spells-ru#rep) автозамены:
 
 `#rep[b](/<span class="(comment|)postername">[^<]+<\/span> +(Вт|Ср|Чт|Пт|Сб|Вс)/g,<span class="$1postername">Сырно</span> $2)`
 
