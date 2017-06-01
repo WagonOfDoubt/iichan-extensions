@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/WagonOfDoubt/iichan-extensions#readme",
   "devDependencies": {
+    "babel-preset-env": "^1.5.1",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
     "gulp-include": "^2.3.1",

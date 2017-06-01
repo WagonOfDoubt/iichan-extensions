@@ -11,6 +11,7 @@ const pump          = require('pump');
 const runSequence   = require('run-sequence');
 const jsEscape      = require('gulp-js-escape');
 const wrap          = require('gulp-wrap');
+const babel         = require('gulp-babel');
 
 
 function getFolders(dir) {
@@ -50,6 +51,20 @@ gulp.task('compress', function(cb) {
       path.basename += '.min';
     }),
     gulp.dest('dist/minified/')
+  ]);
+});
+
+
+gulp.task('es5', function(cb) {
+  return pump([
+    gulp.src(['dist/*.js']),
+    babel({
+      presets: ['env']
+    }),
+    rename(function(path) {
+      path.basename += '.es5';
+    }),
+    gulp.dest('dist/es5/')
   ]);
 });
 
@@ -95,7 +110,7 @@ gulp.task('escape', function(cb) {
 
 
 gulp.task('make', function(cb) {
-  runSequence(['build', 'userscript'], 'combine', 'compress', 'escape', cb)
+  runSequence(['build', 'userscript'], 'combine', 'compress', 'escape', 'es5', cb)
 });
 
 
