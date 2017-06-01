@@ -9,6 +9,8 @@ const uglifyjs      = require('uglify-js-harmony');
 const minifier      = require('gulp-uglify/minifier');
 const pump          = require('pump');
 const runSequence   = require('run-sequence');
+const jsEscape      = require('gulp-js-escape');
+const wrap          = require('gulp-wrap');
 
 
 function getFolders(dir) {
@@ -77,9 +79,23 @@ gulp.task('build', function(cb) {
   ]);
 });
 
- 
+
+gulp.task('escape', function(cb) {
+  return pump([
+    gulp.src(['dist/minified/*.js']),
+    jsEscape(),
+    wrap({ src: 'src/eval-wrapper.js'}),
+    rename(function(path) {
+      let name = path.basename.split('.')[0];
+      path.basename += '.escaped';
+    }),
+    gulp.dest('dist/escaped/')
+  ]);
+});
+
+
 gulp.task('make', function(cb) {
-  runSequence(['build', 'userscript'], 'combine', 'compress', cb)
+  runSequence(['build', 'userscript'], 'combine', 'compress', 'escape', cb)
 });
 
 
