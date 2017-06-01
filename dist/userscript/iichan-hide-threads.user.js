@@ -18,14 +18,16 @@
   Сколько первых символов из поста показывать в заголовке скрытого треда
   */
   const THREAD_TITLE_LENGTH = 50;
-  
+
   const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
   const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
   const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
+  const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
   function getHiddenThreads() {
-    return JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '[]');
+    const json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+    return Array.isArray(json) ? {} : json;
   }
 
   function setHiddenThreads(hiddenThreads) {
@@ -50,9 +52,12 @@
   function unhideThread(e) {
     let threadId = typeof e === 'object' ? e.target.threadId : e;
     let hiddenThreads = getHiddenThreads();
-    let index = hiddenThreads.indexOf(threadId);
+    if (!hiddenThreads[board]) {
+      hiddenThreads[board] = [];
+    }
+    let index = hiddenThreads[board].indexOf(threadId);
     if (index === -1) return;
-    hiddenThreads.splice(index, 1);
+    hiddenThreads[board].splice(index, 1);
     setHiddenThreads(hiddenThreads);
 
     let thread = document.getElementById(threadId);
@@ -86,15 +91,21 @@
     thread.classList.add(HIDDEN_THREAD_CLASSNAME);
     // save result
     let hiddenThreads = getHiddenThreads();
-    if (!hiddenThreads.includes(threadId)) {
-      hiddenThreads.push(threadId);
+    if (!hiddenThreads[board]) {
+      hiddenThreads[board] = [];
+    }
+    if (!hiddenThreads[board].includes(threadId)) {
+      hiddenThreads[board].push(threadId);
       setHiddenThreads(hiddenThreads);
     }
   }
 
   function hideAllHiddenThreads() {
     let hiddenThreads = getHiddenThreads();
-    for (let thread of hiddenThreads) {
+    if (!hiddenThreads[board]) {
+      return;
+    }
+    for (let thread of hiddenThreads[board]) {
       hideThread(thread);
     }
   }
