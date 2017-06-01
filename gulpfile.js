@@ -31,6 +31,7 @@ gulp.task('clean', function() {
 gulp.task('userscript', function() {
   // https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
   let folders = getFolders('src/');
+  folders = folders.filter((dir) => dir !== 'hide-threads' && dir !== 'expand-images');
 
   let tasks = folders.map(function(folder) {
     return pump([

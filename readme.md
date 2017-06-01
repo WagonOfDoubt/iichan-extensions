@@ -2,8 +2,8 @@
 Набор скриптов, расширяющих функционал Ычана.
 
 ## Состав:
-- [iichan-expand-images.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-expand-images.js) - раскрывалка картинок 
-- [iichan-hide-threads.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-hide-threads.js) - скрывалка тредов 
+- [iichan-expand-images.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-expand-images.js) - раскрывалка картинок
+- [iichan-hide-threads.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-hide-threads.js) - скрывалка тредов
 - [iichan-eng-captcha.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-eng-captcha.js) - автоматическое исправление русской раскладки клавиатуры на английскую при вводе капчи
 - [iichan-extensions.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-extensions.js) - все сразу в одном файле
 - Опциональные скрипты, не вохдящие в *iichan-extensions.js*:
@@ -13,8 +13,6 @@
 
 Для установки юзерскрипта скачайте расширение [Tampermonkey](https://tampermonkey.net/) или [Greasemonkey](http://www.greasespot.net/) для вашего браузера.
 
-- **[[Установть iichan-expand-images.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js)**
-- **[[Установть iichan-hide-threads.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-hide-threads.user.js)**
 - **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)**
 - **[[Установть iichan-ice-fairy.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-ice-fairy.user.js)**
 
