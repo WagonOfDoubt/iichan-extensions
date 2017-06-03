@@ -23,3 +23,7 @@
     margin-left: 0.2em;
     cursor: pointer;
 }
+
+.${HIDE_BTN_CLASSNAME}::after {
+    content: '[✕]';
+}

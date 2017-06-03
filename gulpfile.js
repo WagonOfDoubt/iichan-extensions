@@ -9,6 +9,9 @@ const uglifyjs      = require('uglify-js-harmony');
 const minifier      = require('gulp-uglify/minifier');
 const pump          = require('pump');
 const runSequence   = require('run-sequence');
+const jsEscape      = require('gulp-js-escape');
+const wrap          = require('gulp-wrap');
+const babel         = require('gulp-babel');
 
 
 function getFolders(dir) {
@@ -28,6 +31,7 @@ gulp.task('clean', function() {
 gulp.task('userscript', function() {
   // https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
   let folders = getFolders('src/');
+  folders = folders.filter((dir) => dir !== 'hide-threads' && dir !== 'expand-images');
 
   let tasks = folders.map(function(folder) {
     return pump([
@@ -48,6 +52,20 @@ gulp.task('compress', function(cb) {
       path.basename += '.min';
     }),
     gulp.dest('dist/minified/')
+  ]);
+});
+
+
+gulp.task('es5', function(cb) {
+  return pump([
+    gulp.src(['dist/*.js']),
+    babel({
+      presets: ['env']
+    }),
+    rename(function(path) {
+      path.basename += '.es5';
+    }),
+    gulp.dest('dist/es5/')
   ]);
 });
 
@@ -77,9 +95,23 @@ gulp.task('build', function(cb) {
   ]);
 });
 
- 
+
+gulp.task('escape', function(cb) {
+  return pump([
+    gulp.src(['dist/minified/*.js']),
+    jsEscape(),
+    wrap({ src: 'src/eval-wrapper.js'}),
+    rename(function(path) {
+      let name = path.basename.split('.')[0];
+      path.basename += '.escaped';
+    }),
+    gulp.dest('dist/escaped/')
+  ]);
+});
+
+
 gulp.task('make', function(cb) {
-  runSequence(['build', 'userscript'], 'combine', 'compress', cb)
+  runSequence(['build', 'userscript'], 'combine', 'compress', 'escape', 'es5', cb)
 });
 
 

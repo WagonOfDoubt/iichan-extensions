@@ -57,20 +57,27 @@
   function addListeners(e) {
     function onThumbnailClick(e) {
       if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
-      let thumb = e.currentTarget.querySelector('.thumb');
-      let isExpanded = !thumb.classList.toggle(EXPANDED_THUMB_CLASSNAME);
-      thumb.src = isExpanded ? thumb.thumbSrc : e.currentTarget.href;
+      const img = e.currentTarget.querySelector('.thumb');
+      const isExpanded = img.classList.toggle(EXPANDED_THUMB_CLASSNAME);
+      if (isExpanded) {
+        img.removeAttribute('width');
+        img.removeAttribute('height');
+      } else {
+        img.setAttribute('width', img.thumbWidth);
+        img.setAttribute('height', img.thumbHeight);
+      }
+      img.src = isExpanded ? e.currentTarget.href : img.thumbSrc;
       e.preventDefault();
     }
 
-    let thumbs = document.querySelectorAll('.thumb');
+    const thumbs = document.querySelectorAll('.thumb');
     for (let img of thumbs) {
       let a = img.parentNode;
       if (!a) continue;
       let imageExt = a.href.match(/\w*$/).toString();
       if (!EXTENSIONS.includes(imageExt)) continue;
-      img.removeAttribute('width');
-      img.removeAttribute('height');
+      img.thumbWidth = img.getAttribute('width');
+      img.thumbHeight = img.getAttribute('height');
       img.thumbSrc = img.src;
       a.addEventListener('click', onThumbnailClick);
     }
@@ -104,14 +111,16 @@
   Сколько первых символов из поста показывать в заголовке скрытого треда
   */
   const THREAD_TITLE_LENGTH = 50;
-  
+
   const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
   const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
   const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
+  const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
   function getHiddenThreads() {
-    return JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '[]');
+    const json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+    return Array.isArray(json) ? {} : json;
   }
 
   function setHiddenThreads(hiddenThreads) {
@@ -125,7 +134,7 @@
       if (!label) continue;
 
       label.insertAdjacentHTML('afterend', `
-        <a class="${HIDE_BTN_CLASSNAME}" title="Скрыть тред">[-]</a>
+        <span class="${HIDE_BTN_CLASSNAME}" title="Скрыть тред"></span>
       `);
       let btn = label.nextElementSibling;
       btn.threadId = thread.id;
@@ -136,9 +145,12 @@
   function unhideThread(e) {
     let threadId = typeof e === 'object' ? e.target.threadId : e;
     let hiddenThreads = getHiddenThreads();
-    let index = hiddenThreads.indexOf(threadId);
+    if (!hiddenThreads[board]) {
+      hiddenThreads[board] = [];
+    }
+    let index = hiddenThreads[board].indexOf(threadId);
     if (index === -1) return;
-    hiddenThreads.splice(index, 1);
+    hiddenThreads[board].splice(index, 1);
     setHiddenThreads(hiddenThreads);
 
     let thread = document.getElementById(threadId);
@@ -172,15 +184,21 @@
     thread.classList.add(HIDDEN_THREAD_CLASSNAME);
     // save result
     let hiddenThreads = getHiddenThreads();
-    if (!hiddenThreads.includes(threadId)) {
-      hiddenThreads.push(threadId);
+    if (!hiddenThreads[board]) {
+      hiddenThreads[board] = [];
+    }
+    if (!hiddenThreads[board].includes(threadId)) {
+      hiddenThreads[board].push(threadId);
       setHiddenThreads(hiddenThreads);
     }
   }
 
   function hideAllHiddenThreads() {
     let hiddenThreads = getHiddenThreads();
-    for (let thread of hiddenThreads) {
+    if (!hiddenThreads[board]) {
+      return;
+    }
+    for (let thread of hiddenThreads[board]) {
       hideThread(thread);
     }
   }
@@ -213,10 +231,18 @@
             margin-left: 0.2em;
             cursor: pointer;
         }
+        
+        .${HIDE_BTN_CLASSNAME}::after {
+            content: '[✕]';
+        }
       </style>`);
   }
 
   function init() {
+    const threads = document.querySelectorAll('[id^=thread]');
+    if (threads.length <= 1) {
+      return;
+    }
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
