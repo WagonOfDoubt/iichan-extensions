@@ -283,3 +283,93 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     document.addEventListener('DOMContentLoaded', init);
   }
 })();
+
+(function () {
+  'use strict';
+
+  var POPUP_OFFSET = { x: 5, y: 5 };
+
+  function appendCSS() {
+    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .reply-popup {\n        \tborder: 1px solid currentColor;\n        }\n      </style>');
+  }
+
+  function init() {
+    var currentPopup = null;
+    var onHover = function onHover(event) {
+      if (document.querySelector('#de-main')) {
+        return;
+      }
+      var postId = event.target.innerText.match(/\d+/).toString();
+      var post = document.querySelector('#reply' + postId);
+      if (!post) {
+        return;
+      }
+      currentPopup = document.createElement('div');
+      currentPopup.innerHTML = post.innerHTML;
+      currentPopup.classList.add('reply');
+      currentPopup.classList.add('reply-popup');
+      currentPopup.style.position = 'fixed';
+      currentPopup.style.left = event.clientX + POPUP_OFFSET.x + 'px';
+      currentPopup.style.top = event.clientY + POPUP_OFFSET.y + 'px';
+      document.body.appendChild(currentPopup);
+    };
+    var onLeave = function onLeave(event) {
+      if (document.querySelector('#de-main')) {
+        return;
+      }
+      if (currentPopup) {
+        document.body.removeChild(currentPopup);
+        currentPopup = null;
+      }
+    };
+    var onMove = function onMove(event) {
+      if (document.querySelector('#de-main')) {
+        return;
+      }
+      if (currentPopup) {
+        currentPopup.style.left = event.clientX + POPUP_OFFSET.x + 'px';
+        currentPopup.style.top = event.clientY + POPUP_OFFSET.y + 'px';
+      }
+    };
+    if (document.querySelector('#de-main')) {
+      return;
+    }
+    var reflinks = document.querySelectorAll('a[onclick^="highlight"]');
+    if (!reflinks.length) {
+      return;
+    }
+    appendCSS();
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+      for (var _iterator4 = reflinks[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var link = _step4.value;
+
+        link.addEventListener('mouseenter', onHover);
+        link.addEventListener('mouseleave', onLeave);
+        link.addEventListener('mousemove', onMove);
+      }
+    } catch (err) {
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+          _iterator4.return();
+        }
+      } finally {
+        if (_didIteratorError4) {
+          throw _iteratorError4;
+        }
+      }
+    }
+  }
+
+  if (document.body) {
+    init();
+  } else {
+    document.addEventListener('DOMContentLoaded', init);
+  }
+})();
