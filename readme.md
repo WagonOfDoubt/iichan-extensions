@@ -40,10 +40,17 @@
 
 ![img](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/hide-threads.png)
 
-- Добавляет кнопку [-] скрытия треда
+- Добавляет кнопку [✕] скрытия треда
 - Скрытые треды можно быстро посмотреть по наведению на номер (как в кукле)
 - Отображает тему скрытого треда или первую строку ОП-поста
 - Сохраняет скрытые треды в localStorage
+- Поменять текст конпки [✕] можно пользовательским стилем, например так:
+
+```css
+.iichan-hide-thread-btn::after {
+    content: '[Скрыть тред]';
+}
+```
 
 ### eng-captcha
 
@@ -62,6 +69,7 @@
 
 ## См. так же
 
+- [IIchan archive search](https://github.com/WagonOfDoubt/IIchan-archive-search)
 - [IIchan catalogue search](https://github.com/aslian/IIchan-catalogue-search) от [@aslian](https://github.com/aslian)
 - [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools) от [@SthephanShinkufag](https://github.com/SthephanShinkufag)
 

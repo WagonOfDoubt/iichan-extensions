@@ -28,7 +28,7 @@
       if (!label) continue;
 
       label.insertAdjacentHTML('afterend', `
-        <a class="${HIDE_BTN_CLASSNAME}" title="Скрыть тред">[-]</a>
+        <span class="${HIDE_BTN_CLASSNAME}" title="Скрыть тред"></span>
       `);
       let btn = label.nextElementSibling;
       btn.threadId = thread.id;
@@ -124,6 +124,10 @@
         .${HIDE_BTN_CLASSNAME} {
             margin-left: 0.2em;
             cursor: pointer;
+        }
+        
+        .${HIDE_BTN_CLASSNAME}::after {
+            content: '[✕]';
         }
       </style>`);
   }
