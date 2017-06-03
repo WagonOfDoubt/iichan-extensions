@@ -8,6 +8,7 @@
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-ice-fairy.user.js
 // @author       Cirno
 // @match        http://iichan.hk/b/*
+// @match        https://iichan.hk/b/*
 // @grant        none
 // ==/UserScript==
 

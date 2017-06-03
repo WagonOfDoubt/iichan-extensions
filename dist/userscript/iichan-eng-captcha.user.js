@@ -8,6 +8,7 @@
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-eng-captcha.user.js
 // @author       Cirno
 // @match        http://iichan.hk/*
+// @match        https://iichan.hk/*
 // @grant        none
 // ==/UserScript==
 
