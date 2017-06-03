@@ -144,6 +144,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }
 
   function init() {
+    var threads = document.querySelectorAll('[id^=thread]');
+    if (threads.length <= 1) {
+      return;
+    }
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();

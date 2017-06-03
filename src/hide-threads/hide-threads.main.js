@@ -105,6 +105,10 @@
   }
 
   function init() {
+    const threads = document.querySelectorAll('[id^=thread]');
+    if (threads.length <= 1) {
+      return;
+    }
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
