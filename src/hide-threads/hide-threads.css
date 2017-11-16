@@ -12,10 +12,10 @@
     display: block !important;
 }
 
-.${HIDDEN_THREAD_CLASSNAME} {
+.${PLACEHOLDER_CLASSNAME} + div {
     display: none;
 }
-.${HIDDEN_THREAD_CLASSNAME} +  br {
+.${PLACEHOLDER_CLASSNAME} + div +  br {
     display: none;
 }
 

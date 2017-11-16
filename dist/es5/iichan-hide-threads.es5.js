@@ -12,7 +12,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   var THREAD_TITLE_LENGTH = 50;
 
   var LOCALSTORAGE_KEY = 'iichan_hidden_threads';
-  var HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   var HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
   var PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   var board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
@@ -74,7 +73,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var thread = document.getElementById(threadId);
     if (!thread) return;
 
-    thread.classList.remove(HIDDEN_THREAD_CLASSNAME);
     var placeholder = document.getElementById('iichan-hidden-' + threadId);
     if (placeholder) {
       placeholder.parentElement.removeChild(placeholder);
@@ -96,7 +94,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     placeholderBtn.threadId = threadId;
     placeholderBtn.addEventListener('click', unhideThread);
 
-    thread.classList.add(HIDDEN_THREAD_CLASSNAME);
     // save result
     var hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
@@ -140,7 +137,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + PLACEHOLDER_CLASSNAME + ' {\n            pointer-events: none;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' a {\n            cursor: pointer;\n            pointer-events: auto;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ':hover + div,\n        .' + PLACEHOLDER_CLASSNAME + ':hover + div + br {\n            display: block !important;\n        }\n        \n        .' + HIDDEN_THREAD_CLASSNAME + ' {\n            display: none;\n        }\n        .' + HIDDEN_THREAD_CLASSNAME + ' +  br {\n            display: none;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + ' {\n            margin-left: 0.2em;\n            cursor: pointer;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + '::after {\n            content: \'[\u2715]\';\n        }\n      </style>');
+    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + PLACEHOLDER_CLASSNAME + ' {\n            pointer-events: none;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' a {\n            cursor: pointer;\n            pointer-events: auto;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ':hover + div,\n        .' + PLACEHOLDER_CLASSNAME + ':hover + div + br {\n            display: block !important;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' + div {\n            display: none;\n        }\n        .' + PLACEHOLDER_CLASSNAME + ' + div +  br {\n            display: none;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + ' {\n            margin-left: 0.2em;\n            cursor: pointer;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + '::after {\n            content: \'[\u2715]\';\n        }\n      </style>');
   };
 
   var init = function init() {

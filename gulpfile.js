@@ -38,9 +38,7 @@ gulp.task('userscript', function() {
       gulp.src([path.join('src/', folder, '/*.meta.js'), path.join('src/', folder, '/*.main.js')]),
       concat('iichan-' + folder + '.user.js'),
       include({hardFail: true}),
-      gulp.dest('dist/userscript/')
-    ],
-    [
+      gulp.dest('dist/userscript/'),
       gulp.src(path.join('src/', folder, '/*.meta.js')),
       rename('iichan-' + folder + '.meta.js'),
       gulp.dest('dist/userscript/')

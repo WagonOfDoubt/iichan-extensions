@@ -7,7 +7,6 @@
   const THREAD_TITLE_LENGTH = 50;
 
   const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
-  const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
   const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
@@ -50,7 +49,6 @@
     const thread = document.getElementById(threadId);
     if(!thread) return;
 
-    thread.classList.remove(HIDDEN_THREAD_CLASSNAME);
     const placeholder = document.getElementById('iichan-hidden-' + threadId);
     if (placeholder) {
       placeholder.parentElement.removeChild(placeholder);
@@ -75,7 +73,6 @@
     placeholderBtn.threadId = threadId;
     placeholderBtn.addEventListener('click', unhideThread);
 
-    thread.classList.add(HIDDEN_THREAD_CLASSNAME);
     // save result
     const hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
