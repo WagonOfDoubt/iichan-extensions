@@ -12,7 +12,7 @@
 
 ## Установка в качестве юзерскрипта
 
-Для установки юзерскрипта скачайте расширение [Tampermonkey](https://tampermonkey.net/) или [Greasemonkey](http://www.greasespot.net/) для вашего браузера.
+Для установки юзерскрипта скачайте расширение [Violentmonkey](https://violentmonkey.github.io/get-it/) или [Greasemonkey](http://www.greasespot.net/) для вашего браузера.
 
 - **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)**
 - **[[Установть iichan-ice-fairy.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-ice-fairy.user.js)**
@@ -23,7 +23,7 @@
 - Совместим с [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools)
 - Не содержит костылей для старых браузеров
 - Можно копипастить в wakaba.js
-- Можно использовать как юзерскрипт и подключать через [Tampermonkey](https://tampermonkey.net/) или [Greasemonkey](http://www.greasespot.net/)
+- Можно использовать как юзерскрипт и подключать через [Violentmonkey](https://violentmonkey.github.io/get-it/) или [Greasemonkey](http://www.greasespot.net/)
 - Легковесный: суммарно занимает менее 10 Кб в несжатом виде
 
 ## Подробности о скриптах
