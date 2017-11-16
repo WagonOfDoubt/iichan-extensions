@@ -27,3 +27,35 @@
 .${HIDE_BTN_CLASSNAME}::after {
     content: '[✕]';
 }
+
+.catthreadlist a {
+  position: relative;
+  transition: all .3s ease-in-out;
+}
+
+.catthreadlist .${HIDDEN_THREAD_CLASSNAME} {
+  opacity: .6;
+}
+
+.catthreadlist .${HIDDEN_THREAD_CLASSNAME}:not(:hover) {
+  opacity: .2;
+  filter: blur(1px);
+}
+
+.catthread:hover .${HIDE_BTN_CLASSNAME} {
+  display: block;
+}
+
+.catthread .${HIDE_BTN_CLASSNAME} {
+  text-decoration: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  width: 25px;
+  height: 25px;
+}
+
+.catthreadlist .${HIDDEN_THREAD_CLASSNAME} .${HIDE_BTN_CLASSNAME}::after {
+  content: '[┼]';
+}
