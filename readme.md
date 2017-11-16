@@ -5,6 +5,7 @@
 - [iichan-expand-images.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-expand-images.js) - раскрывалка картинок
 - [iichan-hide-threads.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-hide-threads.js) - скрывалка тредов
 - [iichan-eng-captcha.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-eng-captcha.js) - автоматическое исправление русской раскладки клавиатуры на английскую при вводе капчи
+- [iichan-video-player.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-video-player.js) - раскрытие webm
 - [iichan-extensions.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-extensions.js) - все сразу в одном файле
 - Опциональные скрипты, не вохдящие в *iichan-extensions.js*:
 	- [iichan-ice-fairy.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-ice-fairy.js) - заменяет имя в /b/ на "Сырно"
@@ -15,6 +16,8 @@
 
 - **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)**
 - **[[Установть iichan-ice-fairy.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-ice-fairy.user.js)**
+
+Для установки скрипта версии, отличной от той, что уже включена на сайте, чтобы они не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*`. Все остальные юзерскрипты находятся [здесь](https://github.com/WagonOfDoubt/iichan-extensions/tree/master/dist/userscript).
 
 ## Фичи:
 - Совместим с [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools)
