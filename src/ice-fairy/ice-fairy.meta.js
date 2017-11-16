@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Cirno forever
+// @name         [IIchan] Cirno 4ever
 // @namespace    http://iichan.hk/
 // @license      MIT
 // @version      0.2

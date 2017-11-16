@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Expand images on iichan
+// @name         [IIchan] Expand images
 // @namespace    http://iichan.hk/
 // @license      MIT
 // @version      0.3

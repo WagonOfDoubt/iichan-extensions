@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Hide threads on iichan
+// @name         [IIchan] Hide threads
 // @namespace    http://iichan.hk/
 // @license      MIT
 // @version      0.2

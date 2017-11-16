@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         English captcha input language on iichan
+// @name         [IIchan] English captcha
 // @namespace    http://iichan.hk/
 // @license      MIT
 // @version      0.2

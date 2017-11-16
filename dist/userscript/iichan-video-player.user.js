@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Video players on iichan
+// @name         [IIchan] Video player
 // @namespace    http://iichan.hk/
 // @license      MIT
 // @version      0.2
