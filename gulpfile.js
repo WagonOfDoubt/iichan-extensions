@@ -31,13 +31,18 @@ gulp.task('clean', function() {
 gulp.task('userscript', function() {
   // https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
   let folders = getFolders('src/');
-  folders = folders.filter((dir) => dir !== 'hide-threads' && dir !== 'expand-images');
+  // folders = folders.filter((dir) => dir !== 'hide-threads' && dir !== 'expand-images');
 
   let tasks = folders.map(function(folder) {
     return pump([
       gulp.src([path.join('src/', folder, '/*.meta.js'), path.join('src/', folder, '/*.main.js')]),
       concat('iichan-' + folder + '.user.js'),
       include({hardFail: true}),
+      gulp.dest('dist/userscript/')
+    ],
+    [
+      gulp.src(path.join('src/', folder, '/*.meta.js')),
+      rename('iichan-' + folder + '.meta.js'),
       gulp.dest('dist/userscript/')
     ]);
   });

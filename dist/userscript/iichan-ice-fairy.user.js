@@ -5,7 +5,7 @@
 // @version      0.2
 // @description  Sets Cirno as default name in /b/
 // @icon         http://iichan.hk/favicon.ico
-// @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-ice-fairy.user.js
+// @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-ice-fairy.meta.js
 // @author       Cirno
 // @match        http://iichan.hk/b/*
 // @match        https://iichan.hk/b/*
