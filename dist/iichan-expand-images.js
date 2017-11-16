@@ -53,7 +53,6 @@
           margin: 0;
           padding: 2px 20px
         }
-        
       </style>`);
   };
 

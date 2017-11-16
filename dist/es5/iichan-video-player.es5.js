@@ -56,10 +56,11 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + VIDEO_PLAYER_CLASSNAME + ' {\n            max-width: calc(100% - 42px);\n        }\n      </style>');
+    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + VIDEO_PLAYER_CLASSNAME + ' {\n          max-width: 100%;\n          height: auto;\n          box-sizing: border-box;\n          margin: 0;\n          padding: 2px 20px\n        }\n      </style>');
   };
 
   var init = function init() {
+    if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
     var observer = new MutationObserver(function (mutations) {

@@ -2,7 +2,7 @@
 // @name         [IIchan] Expand images
 // @namespace    http://iichan.hk/
 // @license      MIT
-// @version      0.3
+// @version      0.4
 // @description  Expands images on click
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-expand-images.meta.js
@@ -67,7 +67,6 @@
           margin: 0;
           padding: 2px 20px
         }
-        
       </style>`);
   };
 

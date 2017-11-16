@@ -2,7 +2,7 @@
 // @name         [IIchan] Video player
 // @namespace    http://iichan.hk/
 // @license      MIT
-// @version      0.2
+// @version      0.4
 // @description  Video players on thumbnail click
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-video-player.meta.js
@@ -49,7 +49,11 @@
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
         .${VIDEO_PLAYER_CLASSNAME} {
-            max-width: calc(100% - 42px);
+          max-width: 100%;
+          height: auto;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 2px 20px
         }
       </style>`);
   };

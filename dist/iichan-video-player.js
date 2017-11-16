@@ -35,7 +35,11 @@
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
         .${VIDEO_PLAYER_CLASSNAME} {
-            max-width: calc(100% - 42px);
+          max-width: 100%;
+          height: auto;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 2px 20px
         }
       </style>`);
   };

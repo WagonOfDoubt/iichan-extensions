@@ -141,6 +141,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 
   var init = function init() {
+    if (document.querySelector('#de-main')) return;
     var threads = document.querySelectorAll('[id^=thread]');
     if (threads.length <= 1) {
       return;

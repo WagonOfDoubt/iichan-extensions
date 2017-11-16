@@ -4,6 +4,7 @@
   'use strict';
 
   var init = function init() {
+    if (document.querySelector('#de-main')) return;
     var captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
 
