@@ -25,8 +25,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
   };
 
-  var addHideBtns = function addHideBtns() {
-    var threads = document.querySelectorAll('[id^=thread]');
+  var addHideBtns = function addHideBtns(rootNode) {
+    var threads = rootNode && rootNode.id.startsWith('thread-') ? [rootNode] : (rootNode || document).querySelectorAll('[id^=thread]');
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -148,6 +148,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = mutation.addedNodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var node = _step3.value;
+
+            if (!node.querySelectorAll) return;
+            addHideBtns(node);
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {

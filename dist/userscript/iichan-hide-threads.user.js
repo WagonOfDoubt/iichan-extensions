@@ -34,8 +34,9 @@
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
   };
 
-  const addHideBtns = () => {
-    const threads = document.querySelectorAll('[id^=thread]');
+  const addHideBtns = (rootNode) => {
+    const threads = (rootNode && rootNode.id.startsWith('thread-')) ? [rootNode] :
+      (rootNode || document).querySelectorAll('[id^=thread]');
     for (const thread of threads) {
       const label = thread.querySelector(':scope > label');
       if (!label) continue;
@@ -151,6 +152,15 @@
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (const node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
+          addHideBtns(node);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {

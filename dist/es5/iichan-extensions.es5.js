@@ -56,18 +56,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   */
   var EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
 
-  var addListeners = function addListeners(e) {
-    var onThumbnailClick = function onThumbnailClick(e) {
-      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
-      var img = e.currentTarget.querySelector('.thumb');
-      var isExpanded = img.src == img.dataset.fullSrc;
-      img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
-      img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
-      img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
-      e.preventDefault();
-    };
+  var onThumbnailClick = function onThumbnailClick(e) {
+    if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
+    var img = e.currentTarget.querySelector('.thumb');
+    var isExpanded = img.src == img.dataset.fullSrc;
+    img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
+    img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+    img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
+    e.preventDefault();
+  };
 
-    var thumbs = document.querySelectorAll('.thumb');
+  var addListeners = function addListeners(rootNode) {
+    var thumbs = (rootNode || document).querySelectorAll('.thumb');
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -116,6 +116,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   var init = function init() {
     appendCSS();
     addListeners();
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = mutation.addedNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var node = _step2.value;
+
+            if (!node.querySelectorAll) return;
+            addListeners(node);
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {
@@ -148,15 +178,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
   };
 
-  var addHideBtns = function addHideBtns() {
-    var threads = document.querySelectorAll('[id^=thread]');
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+  var addHideBtns = function addHideBtns(rootNode) {
+    var threads = rootNode && rootNode.id.startsWith('thread-') ? [rootNode] : (rootNode || document).querySelectorAll('[id^=thread]');
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
 
     try {
-      for (var _iterator2 = threads[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var thread = _step2.value;
+      for (var _iterator3 = threads[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var thread = _step3.value;
 
         var label = thread.querySelector(':scope > label');
         if (!label) continue;
@@ -167,16 +197,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         btn.addEventListener('click', hideThread);
       }
     } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-          _iterator2.return();
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+          _iterator3.return();
         }
       } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
+        if (_didIteratorError3) {
+          throw _iteratorError3;
         }
       }
     }
@@ -233,27 +263,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     if (!hiddenThreads[board]) {
       return;
     }
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
 
     try {
-      for (var _iterator3 = hiddenThreads[board][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-        var thread = _step3.value;
+      for (var _iterator4 = hiddenThreads[board][Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var thread = _step4.value;
 
         hideThread(thread);
       }
     } catch (err) {
-      _didIteratorError3 = true;
-      _iteratorError3 = err;
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-          _iterator3.return();
+        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+          _iterator4.return();
         }
       } finally {
-        if (_didIteratorError3) {
-          throw _iteratorError3;
+        if (_didIteratorError4) {
+          throw _iteratorError4;
         }
       }
     }
@@ -271,6 +301,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = mutation.addedNodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var node = _step5.value;
+
+            if (!node.querySelectorAll) return;
+            addHideBtns(node);
+          }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {
@@ -293,25 +353,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   */
   var VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
 
-  var addListeners = function addListeners(e) {
-    var onThumbnailClick = function onThumbnailClick(e) {
-      var parentNode = e.currentTarget.parentNode;
-      var vp = document.createElement('video');
-      vp.src = e.currentTarget.href;
-      vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      parentNode.insertBefore(vp, e.currentTarget);
-      parentNode.removeChild(e.currentTarget);
-      e.preventDefault();
-    };
+  var onThumbnailClick = function onThumbnailClick(e) {
+    var parentNode = e.currentTarget.parentNode;
+    var vp = document.createElement('video');
+    vp.src = e.currentTarget.href;
+    vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+    parentNode.insertBefore(vp, e.currentTarget);
+    parentNode.removeChild(e.currentTarget);
+    e.preventDefault();
+  };
 
-    var thumbs = document.querySelectorAll('.thumb');
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+  var addListeners = function addListeners(rootNode) {
+    var thumbs = (rootNode || document).querySelectorAll('.thumb');
+    var _iteratorNormalCompletion6 = true;
+    var _didIteratorError6 = false;
+    var _iteratorError6 = undefined;
 
     try {
-      for (var _iterator4 = thumbs[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-        var img = _step4.value;
+      for (var _iterator6 = thumbs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+        var img = _step6.value;
 
         var a = img.parentNode;
         if (!a) continue;
@@ -320,16 +380,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         a.addEventListener('click', onThumbnailClick);
       }
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _didIteratorError6 = true;
+      _iteratorError6 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-          _iterator4.return();
+        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+          _iterator6.return();
         }
       } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
+        if (_didIteratorError6) {
+          throw _iteratorError6;
         }
       }
     }
@@ -342,6 +402,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   var init = function init() {
     appendCSS();
     addListeners();
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = mutation.addedNodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var node = _step7.value;
+
+            if (!node.querySelectorAll) return;
+            addListeners(node);
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
+            }
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {

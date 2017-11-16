@@ -10,18 +10,18 @@
   */
   const VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
 
-  const addListeners = (e) => {
-    const onThumbnailClick = (e) => {
-      const parentNode = e.currentTarget.parentNode;
-      const vp = document.createElement('video');
-      vp.src = e.currentTarget.href;
-      vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      parentNode.insertBefore(vp, e.currentTarget);
-      parentNode.removeChild(e.currentTarget);
-      e.preventDefault();
-    };
+  const onThumbnailClick = (e) => {
+    const parentNode = e.currentTarget.parentNode;
+    const vp = document.createElement('video');
+    vp.src = e.currentTarget.href;
+    vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+    parentNode.insertBefore(vp, e.currentTarget);
+    parentNode.removeChild(e.currentTarget);
+    e.preventDefault();
+  };
 
-    const thumbs = document.querySelectorAll('.thumb');
+  const addListeners = (rootNode) => {
+    const thumbs = (rootNode || document).querySelectorAll('.thumb');
     for (const img of thumbs) {
       const a = img.parentNode;
       if (!a) continue;
@@ -43,6 +43,15 @@
   const init = () => {
     appendCSS();
     addListeners();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (const node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
+          addListeners(node);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {

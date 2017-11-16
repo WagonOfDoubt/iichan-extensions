@@ -11,18 +11,18 @@
   */
   const EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
 
-  const addListeners = (e) => {
-    const onThumbnailClick = (e) => {
-      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
-      const img = e.currentTarget.querySelector('.thumb');
-      const isExpanded = img.src == img.dataset.fullSrc;
-      img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
-      img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
-      img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
-      e.preventDefault();
-    };
+  const onThumbnailClick = (e) => {
+    if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
+    const img = e.currentTarget.querySelector('.thumb');
+    const isExpanded = img.src == img.dataset.fullSrc;
+    img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
+    img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+    img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
+    e.preventDefault();
+  };
 
-    const thumbs = document.querySelectorAll('.thumb');
+  const addListeners = (rootNode) => {
+    const thumbs = (rootNode || document).querySelectorAll('.thumb');
     for (const img of thumbs) {
       const a = img.parentNode;
       if (!a) continue;
@@ -60,6 +60,15 @@
   const init = () => {
     appendCSS();
     addListeners();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (const node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
+          addListeners(node);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {

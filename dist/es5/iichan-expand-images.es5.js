@@ -14,18 +14,18 @@
   */
   var EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
 
-  var addListeners = function addListeners(e) {
-    var onThumbnailClick = function onThumbnailClick(e) {
-      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
-      var img = e.currentTarget.querySelector('.thumb');
-      var isExpanded = img.src == img.dataset.fullSrc;
-      img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
-      img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
-      img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
-      e.preventDefault();
-    };
+  var onThumbnailClick = function onThumbnailClick(e) {
+    if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
+    var img = e.currentTarget.querySelector('.thumb');
+    var isExpanded = img.src == img.dataset.fullSrc;
+    img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
+    img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+    img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
+    e.preventDefault();
+  };
 
-    var thumbs = document.querySelectorAll('.thumb');
+  var addListeners = function addListeners(rootNode) {
+    var thumbs = (rootNode || document).querySelectorAll('.thumb');
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -74,6 +74,36 @@
   var init = function init() {
     appendCSS();
     addListeners();
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = mutation.addedNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var node = _step2.value;
+
+            if (!node.querySelectorAll) return;
+            addListeners(node);
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {

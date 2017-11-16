@@ -50,18 +50,18 @@
   */
   const EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
 
-  const addListeners = (e) => {
-    const onThumbnailClick = (e) => {
-      if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
-      const img = e.currentTarget.querySelector('.thumb');
-      const isExpanded = img.src == img.dataset.fullSrc;
-      img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
-      img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
-      img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
-      e.preventDefault();
-    };
+  const onThumbnailClick = (e) => {
+    if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
+    const img = e.currentTarget.querySelector('.thumb');
+    const isExpanded = img.src == img.dataset.fullSrc;
+    img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
+    img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+    img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
+    e.preventDefault();
+  };
 
-    const thumbs = document.querySelectorAll('.thumb');
+  const addListeners = (rootNode) => {
+    const thumbs = (rootNode || document).querySelectorAll('.thumb');
     for (const img of thumbs) {
       const a = img.parentNode;
       if (!a) continue;
@@ -99,6 +99,15 @@
   const init = () => {
     appendCSS();
     addListeners();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (const node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
+          addListeners(node);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {
@@ -130,8 +139,9 @@
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
   };
 
-  const addHideBtns = () => {
-    const threads = document.querySelectorAll('[id^=thread]');
+  const addHideBtns = (rootNode) => {
+    const threads = (rootNode && rootNode.id.startsWith('thread-')) ? [rootNode] :
+      (rootNode || document).querySelectorAll('[id^=thread]');
     for (const thread of threads) {
       const label = thread.querySelector(':scope > label');
       if (!label) continue;
@@ -247,6 +257,15 @@
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (const node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
+          addHideBtns(node);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {
@@ -268,18 +287,18 @@
   */
   const VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
 
-  const addListeners = (e) => {
-    const onThumbnailClick = (e) => {
-      const parentNode = e.currentTarget.parentNode;
-      const vp = document.createElement('video');
-      vp.src = e.currentTarget.href;
-      vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      parentNode.insertBefore(vp, e.currentTarget);
-      parentNode.removeChild(e.currentTarget);
-      e.preventDefault();
-    };
+  const onThumbnailClick = (e) => {
+    const parentNode = e.currentTarget.parentNode;
+    const vp = document.createElement('video');
+    vp.src = e.currentTarget.href;
+    vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+    parentNode.insertBefore(vp, e.currentTarget);
+    parentNode.removeChild(e.currentTarget);
+    e.preventDefault();
+  };
 
-    const thumbs = document.querySelectorAll('.thumb');
+  const addListeners = (rootNode) => {
+    const thumbs = (rootNode || document).querySelectorAll('.thumb');
     for (const img of thumbs) {
       const a = img.parentNode;
       if (!a) continue;
@@ -301,6 +320,15 @@
   const init = () => {
     appendCSS();
     addListeners();
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        for (const node of mutation.addedNodes) {
+          if (!node.querySelectorAll) return;
+          addListeners(node);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   };
 
   if (document.body) {
