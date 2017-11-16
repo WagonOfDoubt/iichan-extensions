@@ -2,7 +2,7 @@
 // @name         Expand images on iichan
 // @namespace    http://iichan.hk/
 // @license      MIT
-// @version      0.2
+// @version      0.3
 // @description  Expands images on click
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-expand-images.meta.js
@@ -24,24 +24,15 @@
   Список расширений файлов, для которых может применяться раскрытие.
   */
   const EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
-  /*
-  Класс CSS, применяемый для раскрытых картинок.
-  */
-  const EXPANDED_THUMB_CLASSNAME = 'iichan-image-fullsize';
 
   const addListeners = (e) => {
     const onThumbnailClick = (e) => {
       if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
       const img = e.currentTarget.querySelector('.thumb');
-      const isExpanded = img.classList.toggle(EXPANDED_THUMB_CLASSNAME);
-      if (isExpanded) {
-        img.removeAttribute('width');
-        img.removeAttribute('height');
-      } else {
-        img.setAttribute('width', img.thumbWidth);
-        img.setAttribute('height', img.thumbHeight);
-      }
-      img.src = isExpanded ? e.currentTarget.href : img.thumbSrc;
+      const isExpanded = img.src == img.dataset.fullSrc;
+      img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
+      img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+      img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
       e.preventDefault();
     };
 
@@ -51,9 +42,17 @@
       if (!a) continue;
       const imageExt = a.href.match(/\w*$/).toString();
       if (!EXTENSIONS.includes(imageExt)) continue;
-      img.thumbWidth = img.getAttribute('width');
-      img.thumbHeight = img.getAttribute('height');
-      img.thumbSrc = img.src;
+      img.dataset.thumbWidth = img.getAttribute('width');
+      img.dataset.thumbHeight = img.getAttribute('height');
+      img.dataset.thumbSrc = img.src;
+      img.dataset.fullSrc = a.href;
+      const post = a.parentNode;
+      if (!post) continue;
+      const filesize = post.querySelector('.filesize > em');
+      if (!filesize) continue;
+      const WxH = filesize.innerText.match(/(\d*)x(\d*)/);
+      img.dataset.fullWidth = WxH[1];
+      img.dataset.fullHeight = WxH[2];
       a.addEventListener('click', onThumbnailClick);
     }
   };
@@ -61,9 +60,14 @@
   const appendCSS = () => {
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
-        .${EXPANDED_THUMB_CLASSNAME} {
-            max-width: calc(100% - 42px);
+        .thumb {
+          max-width: 100%;
+          height: auto;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 2px 20px
         }
+        
       </style>`);
   };
 

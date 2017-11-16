@@ -19,7 +19,7 @@
       var vp = document.createElement('video');
       vp.src = e.currentTarget.href;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      parentNode.instertBefore(vp, e.currentTarget);
+      parentNode.insertBefore(vp, e.currentTarget);
       parentNode.removeChild(e.currentTarget);
       e.preventDefault();
     };
