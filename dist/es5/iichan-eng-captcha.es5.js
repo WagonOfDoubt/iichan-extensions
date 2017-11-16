@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  function init() {
+  var init = function init() {
     var captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
 
@@ -31,7 +31,7 @@
       el.scrollTop = scrtop;
       e.preventDefault();
     });
-  }
+  };
 
   if (document.body) {
     init();

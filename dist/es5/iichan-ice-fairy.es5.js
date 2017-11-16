@@ -7,8 +7,8 @@
   var NAME_QUERY = '.postername, .commentpostername';
   var SPECIAL_DAY = 'Пн';
 
-  function init() {
-    function cirnify(node) {
+  var init = function init() {
+    var cirnify = function cirnify(node) {
       var labels = node.querySelectorAll('label');
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -42,7 +42,7 @@
           }
         }
       }
-    }
+    };
 
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
@@ -76,7 +76,7 @@
 
     cirnify(document.body);
     observer.observe(document.body, { childList: true, subtree: true });
-  }
+  };
 
   if (document.body) {
     init();

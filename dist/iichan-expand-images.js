@@ -1,4 +1,4 @@
-(function() {
+(() => {
   'use strict';
 
   /*
@@ -15,8 +15,8 @@
   */
   const EXPANDED_THUMB_CLASSNAME = 'iichan-image-fullsize';
 
-  function addListeners(e) {
-    function onThumbnailClick(e) {
+  const addListeners = (e) => {
+    const onThumbnailClick = (e) => {
       if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
       const img = e.currentTarget.querySelector('.thumb');
       const isExpanded = img.classList.toggle(EXPANDED_THUMB_CLASSNAME);
@@ -29,34 +29,34 @@
       }
       img.src = isExpanded ? e.currentTarget.href : img.thumbSrc;
       e.preventDefault();
-    }
+    };
 
     const thumbs = document.querySelectorAll('.thumb');
-    for (let img of thumbs) {
-      let a = img.parentNode;
+    for (const img of thumbs) {
+      const a = img.parentNode;
       if (!a) continue;
-      let imageExt = a.href.match(/\w*$/).toString();
+      const imageExt = a.href.match(/\w*$/).toString();
       if (!EXTENSIONS.includes(imageExt)) continue;
       img.thumbWidth = img.getAttribute('width');
       img.thumbHeight = img.getAttribute('height');
       img.thumbSrc = img.src;
       a.addEventListener('click', onThumbnailClick);
     }
-  }
+  };
 
-  function appendCSS() {
+  const appendCSS = () => {
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
         .${EXPANDED_THUMB_CLASSNAME} {
             max-width: calc(100% - 42px);
         }
       </style>`);
-  }
+  };
 
-  function init() {
+  const init = () => {
     appendCSS();
     addListeners();
-  }
+  };
 
   if (document.body) {
     init();

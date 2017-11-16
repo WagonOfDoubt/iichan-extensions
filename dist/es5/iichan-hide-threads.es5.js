@@ -17,16 +17,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   var PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   var board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
-  function getHiddenThreads() {
+  var getHiddenThreads = function getHiddenThreads() {
     var json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
     return Array.isArray(json) ? {} : json;
-  }
+  };
 
-  function setHiddenThreads(hiddenThreads) {
+  var setHiddenThreads = function setHiddenThreads(hiddenThreads) {
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
-  }
+  };
 
-  function addHideBtns() {
+  var addHideBtns = function addHideBtns() {
     var threads = document.querySelectorAll('[id^=thread]');
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
@@ -58,9 +58,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
     }
-  }
+  };
 
-  function unhideThread(e) {
+  var unhideThread = function unhideThread(e) {
     var threadId = (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' ? e.target.threadId : e;
     var hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
@@ -79,9 +79,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     if (placeholder) {
       placeholder.parentElement.removeChild(placeholder);
     }
-  }
+  };
 
-  function hideThread(e) {
+  var hideThread = function hideThread(e) {
     var threadId = (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' ? e.target.threadId : e;
     var thread = document.getElementById(threadId);
     if (!thread || !thread.parentNode) return;
@@ -106,9 +106,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       hiddenThreads[board].push(threadId);
       setHiddenThreads(hiddenThreads);
     }
-  }
+  };
 
-  function hideAllHiddenThreads() {
+  var hideAllHiddenThreads = function hideAllHiddenThreads() {
     var hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
       return;
@@ -137,13 +137,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
     }
-  }
+  };
 
-  function appendCSS() {
+  var appendCSS = function appendCSS() {
     document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + PLACEHOLDER_CLASSNAME + ' {\n            pointer-events: none;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' a {\n            cursor: pointer;\n            pointer-events: auto;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ':hover + div,\n        .' + PLACEHOLDER_CLASSNAME + ':hover + div + br {\n            display: block !important;\n        }\n        \n        .' + HIDDEN_THREAD_CLASSNAME + ' {\n            display: none;\n        }\n        .' + HIDDEN_THREAD_CLASSNAME + ' +  br {\n            display: none;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + ' {\n            margin-left: 0.2em;\n            cursor: pointer;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + '::after {\n            content: \'[\u2715]\';\n        }\n      </style>');
-  }
+  };
 
-  function init() {
+  var init = function init() {
     var threads = document.querySelectorAll('[id^=thread]');
     if (threads.length <= 1) {
       return;
@@ -151,7 +151,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
-  }
+  };
 
   if (document.body) {
     init();

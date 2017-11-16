@@ -18,8 +18,8 @@
   */
   var EXPANDED_THUMB_CLASSNAME = 'iichan-image-fullsize';
 
-  function addListeners(e) {
-    function onThumbnailClick(e) {
+  var addListeners = function addListeners(e) {
+    var onThumbnailClick = function onThumbnailClick(e) {
       if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
       var img = e.currentTarget.querySelector('.thumb');
       var isExpanded = img.classList.toggle(EXPANDED_THUMB_CLASSNAME);
@@ -32,7 +32,7 @@
       }
       img.src = isExpanded ? e.currentTarget.href : img.thumbSrc;
       e.preventDefault();
-    }
+    };
 
     var thumbs = document.querySelectorAll('.thumb');
     var _iteratorNormalCompletion = true;
@@ -66,16 +66,16 @@
         }
       }
     }
-  }
+  };
 
-  function appendCSS() {
+  var appendCSS = function appendCSS() {
     document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + EXPANDED_THUMB_CLASSNAME + ' {\n            max-width: calc(100% - 42px);\n        }\n      </style>');
-  }
+  };
 
-  function init() {
+  var init = function init() {
     appendCSS();
     addListeners();
-  }
+  };
 
   if (document.body) {
     init();

@@ -1,11 +1,11 @@
-(function() {
+(() => {
   'use strict';
 
-  function init() {
-    let captchaInput = document.querySelector('input[name=captcha]');
+  const init = () => {
+    const captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
 
-    captchaInput.addEventListener('keypress', function(e) {
+    captchaInput.addEventListener('keypress', (e) => {
       /*
       copypasta from
       https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/blob/master/src/Dollchan_Extension_Tools.es6.user.js
@@ -18,17 +18,17 @@
         return;
       }
       chr = en[i];
-      let el = e.target;
-      let txt = chr;
-      let scrtop = el.scrollTop;
-      let start = el.selectionStart;
+      const el = e.target;
+      const txt = chr;
+      const scrtop = el.scrollTop;
+      const start = el.selectionStart;
       el.value = el.value.substr(0, start) + txt + el.value.substr(el.selectionEnd);
       el.setSelectionRange(start + txt.length, start + txt.length);
       el.focus();
       el.scrollTop = scrtop;
       e.preventDefault();
     });
-  }
+  };
 
   if (document.body) {
     init();

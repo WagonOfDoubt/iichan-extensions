@@ -5,7 +5,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
   'use strict';
 
-  function init() {
+  var init = function init() {
     var captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
 
@@ -33,7 +33,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       el.scrollTop = scrtop;
       e.preventDefault();
     });
-  }
+  };
 
   if (document.body) {
     init();
@@ -60,8 +60,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   */
   var EXPANDED_THUMB_CLASSNAME = 'iichan-image-fullsize';
 
-  function addListeners(e) {
-    function onThumbnailClick(e) {
+  var addListeners = function addListeners(e) {
+    var onThumbnailClick = function onThumbnailClick(e) {
       if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
       var img = e.currentTarget.querySelector('.thumb');
       var isExpanded = img.classList.toggle(EXPANDED_THUMB_CLASSNAME);
@@ -74,7 +74,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
       img.src = isExpanded ? e.currentTarget.href : img.thumbSrc;
       e.preventDefault();
-    }
+    };
 
     var thumbs = document.querySelectorAll('.thumb');
     var _iteratorNormalCompletion = true;
@@ -108,16 +108,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
     }
-  }
+  };
 
-  function appendCSS() {
+  var appendCSS = function appendCSS() {
     document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + EXPANDED_THUMB_CLASSNAME + ' {\n            max-width: calc(100% - 42px);\n        }\n      </style>');
-  }
+  };
 
-  function init() {
+  var init = function init() {
     appendCSS();
     addListeners();
-  }
+  };
 
   if (document.body) {
     init();
@@ -141,16 +141,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   var PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   var board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
-  function getHiddenThreads() {
+  var getHiddenThreads = function getHiddenThreads() {
     var json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
     return Array.isArray(json) ? {} : json;
-  }
+  };
 
-  function setHiddenThreads(hiddenThreads) {
+  var setHiddenThreads = function setHiddenThreads(hiddenThreads) {
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
-  }
+  };
 
-  function addHideBtns() {
+  var addHideBtns = function addHideBtns() {
     var threads = document.querySelectorAll('[id^=thread]');
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
@@ -182,9 +182,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
     }
-  }
+  };
 
-  function unhideThread(e) {
+  var unhideThread = function unhideThread(e) {
     var threadId = (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' ? e.target.threadId : e;
     var hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
@@ -203,9 +203,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     if (placeholder) {
       placeholder.parentElement.removeChild(placeholder);
     }
-  }
+  };
 
-  function hideThread(e) {
+  var hideThread = function hideThread(e) {
     var threadId = (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' ? e.target.threadId : e;
     var thread = document.getElementById(threadId);
     if (!thread || !thread.parentNode) return;
@@ -230,9 +230,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       hiddenThreads[board].push(threadId);
       setHiddenThreads(hiddenThreads);
     }
-  }
+  };
 
-  function hideAllHiddenThreads() {
+  var hideAllHiddenThreads = function hideAllHiddenThreads() {
     var hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
       return;
@@ -261,13 +261,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
     }
-  }
+  };
 
-  function appendCSS() {
+  var appendCSS = function appendCSS() {
     document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + PLACEHOLDER_CLASSNAME + ' {\n            pointer-events: none;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' a {\n            cursor: pointer;\n            pointer-events: auto;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ':hover + div,\n        .' + PLACEHOLDER_CLASSNAME + ':hover + div + br {\n            display: block !important;\n        }\n        \n        .' + HIDDEN_THREAD_CLASSNAME + ' {\n            display: none;\n        }\n        .' + HIDDEN_THREAD_CLASSNAME + ' +  br {\n            display: none;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + ' {\n            margin-left: 0.2em;\n            cursor: pointer;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + '::after {\n            content: \'[\u2715]\';\n        }\n      </style>');
-  }
+  };
 
-  function init() {
+  var init = function init() {
     var threads = document.querySelectorAll('[id^=thread]');
     if (threads.length <= 1) {
       return;
@@ -275,7 +275,78 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
+  };
+
+  if (document.body) {
+    init();
+  } else {
+    document.addEventListener('DOMContentLoaded', init);
   }
+})();
+
+(function () {
+  'use strict';
+
+  /*
+  Список расширений файлов, преобразуемых в видеопроигрыватели.
+  */
+
+  var EXTENSIONS = ['webm', 'mp4', 'ogv'];
+  /*
+  Класс CSS, применяемый для видеопроигрывателей.
+  */
+  var VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
+
+  var addListeners = function addListeners(e) {
+    var onThumbnailClick = function onThumbnailClick(e) {
+      var parentNode = e.currentTarget.parentNode;
+      var vp = document.createElement('video');
+      vp.src = e.currentTarget.href;
+      vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+      parentNode.instertBefore(vp, e.currentTarget);
+      parentNode.removeChild(e.currentTarget);
+      e.preventDefault();
+    };
+
+    var thumbs = document.querySelectorAll('.thumb');
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+      for (var _iterator4 = thumbs[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var img = _step4.value;
+
+        var a = img.parentNode;
+        if (!a) continue;
+        var videoExt = a.href.split('.').pop();
+        if (!EXTENSIONS.includes(videoExt)) continue;
+        a.addEventListener('click', onThumbnailClick);
+      }
+    } catch (err) {
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+          _iterator4.return();
+        }
+      } finally {
+        if (_didIteratorError4) {
+          throw _iteratorError4;
+        }
+      }
+    }
+  };
+
+  var appendCSS = function appendCSS() {
+    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + VIDEO_PLAYER_CLASSNAME + ' {\n            max-width: calc(100% - 42px);\n        }\n      </style>');
+  };
+
+  var init = function init() {
+    appendCSS();
+    addListeners();
+  };
 
   if (document.body) {
     init();

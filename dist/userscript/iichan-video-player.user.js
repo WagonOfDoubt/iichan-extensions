@@ -1,3 +1,17 @@
+// ==UserScript==
+// @name         Video players on iichan
+// @namespace    http://iichan.hk/
+// @license      MIT
+// @version      0.2
+// @description  Video players on thumbnail�click
+// @icon         http://iichan.hk/favicon.ico
+// @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-video-player.user.js
+// @author       Mithgol
+// @match        http://iichan.hk/*
+// @match        https://iichan.hk/*
+// @grant        none
+// ==/UserScript==
+
 (() => {
   'use strict';
 
@@ -34,7 +48,9 @@
   const appendCSS = () => {
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
-        //=include video-player.css
+        .${VIDEO_PLAYER_CLASSNAME} {
+            max-width: calc(100% - 42px);
+        }
       </style>`);
   };
 

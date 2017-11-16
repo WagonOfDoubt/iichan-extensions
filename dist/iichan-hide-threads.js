@@ -1,4 +1,4 @@
-(function() {
+(() => {
   'use strict';
 
   /*
@@ -12,72 +12,72 @@
   const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
-  function getHiddenThreads() {
+  const getHiddenThreads = () => {
     const json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
     return Array.isArray(json) ? {} : json;
-  }
+  };
 
-  function setHiddenThreads(hiddenThreads) {
+  const setHiddenThreads = (hiddenThreads) => {
     window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
-  }
+  };
 
-  function addHideBtns() {
-    let threads = document.querySelectorAll('[id^=thread]');
-    for (let thread of threads) {
-      let label = thread.querySelector(':scope > label');
+  const addHideBtns = () => {
+    const threads = document.querySelectorAll('[id^=thread]');
+    for (const thread of threads) {
+      const label = thread.querySelector(':scope > label');
       if (!label) continue;
 
       label.insertAdjacentHTML('afterend', `
         <span class="${HIDE_BTN_CLASSNAME}" title="Скрыть тред"></span>
       `);
-      let btn = label.nextElementSibling;
+      const btn = label.nextElementSibling;
       btn.threadId = thread.id;
       btn.addEventListener('click', hideThread);
     }
-  }
+  };
 
-  function unhideThread(e) {
-    let threadId = typeof e === 'object' ? e.target.threadId : e;
-    let hiddenThreads = getHiddenThreads();
+  const unhideThread = (e) => {
+    const threadId = typeof e === 'object' ? e.target.threadId : e;
+    const hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
       hiddenThreads[board] = [];
     }
-    let index = hiddenThreads[board].indexOf(threadId);
+    const index = hiddenThreads[board].indexOf(threadId);
     if (index === -1) return;
     hiddenThreads[board].splice(index, 1);
     setHiddenThreads(hiddenThreads);
 
-    let thread = document.getElementById(threadId);
+    const thread = document.getElementById(threadId);
     if(!thread) return;
 
     thread.classList.remove(HIDDEN_THREAD_CLASSNAME);
-    let placeholder = document.getElementById('iichan-hidden-' + threadId);
+    const placeholder = document.getElementById('iichan-hidden-' + threadId);
     if (placeholder) {
       placeholder.parentElement.removeChild(placeholder);
     }
-  }
+  };
 
-  function hideThread(e) {
-    let threadId = typeof e === 'object' ? e.target.threadId : e;
-    let thread = document.getElementById(threadId);
+  const hideThread = (e) => {
+    const threadId = typeof e === 'object' ? e.target.threadId : e;
+    const thread = document.getElementById(threadId);
     if(!thread || !thread.parentNode) return;
 
-    let threadNo = threadId.split('-')[1];
+    const threadNo = threadId.split('-')[1];
     let threadTitle = thread.querySelector('.filetitle').innerText ||
       thread.querySelector('blockquote').innerText;
     threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
-    let placeholderId = 'iichan-hidden-' + threadId;
+    const placeholderId = 'iichan-hidden-' + threadId;
     thread.insertAdjacentHTML('beforebegin', `
       <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a>№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
     `);
 
-    let placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
+    const placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
     placeholderBtn.threadId = threadId;
     placeholderBtn.addEventListener('click', unhideThread);
 
     thread.classList.add(HIDDEN_THREAD_CLASSNAME);
     // save result
-    let hiddenThreads = getHiddenThreads();
+    const hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
       hiddenThreads[board] = [];
     }
@@ -85,19 +85,19 @@
       hiddenThreads[board].push(threadId);
       setHiddenThreads(hiddenThreads);
     }
-  }
+  };
 
-  function hideAllHiddenThreads() {
-    let hiddenThreads = getHiddenThreads();
+  const hideAllHiddenThreads = () => {
+    const hiddenThreads = getHiddenThreads();
     if (!hiddenThreads[board]) {
       return;
     }
-    for (let thread of hiddenThreads[board]) {
+    for (const thread of hiddenThreads[board]) {
       hideThread(thread);
     }
-  }
+  };
 
-  function appendCSS() {
+  const appendCSS = () => {
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
         .${PLACEHOLDER_CLASSNAME} {
@@ -130,9 +130,9 @@
             content: '[✕]';
         }
       </style>`);
-  }
+  };
 
-  function init() {
+  const init = () => {
     const threads = document.querySelectorAll('[id^=thread]');
     if (threads.length <= 1) {
       return;
@@ -140,7 +140,7 @@
     appendCSS();
     addHideBtns();
     hideAllHiddenThreads();
-  }
+  };
 
   if (document.body) {
     init();
