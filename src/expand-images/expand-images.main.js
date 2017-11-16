@@ -51,6 +51,7 @@
   };
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
     const observer = new MutationObserver((mutations) => {

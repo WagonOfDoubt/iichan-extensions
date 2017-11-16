@@ -16,6 +16,7 @@
   'use strict';
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     const captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
 

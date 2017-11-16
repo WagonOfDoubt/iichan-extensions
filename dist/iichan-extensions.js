@@ -2,6 +2,7 @@
   'use strict';
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     const captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
 
@@ -97,6 +98,7 @@
   };
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
     const observer = new MutationObserver((mutations) => {
@@ -250,6 +252,7 @@
   };
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     const threads = document.querySelectorAll('[id^=thread]');
     if (threads.length <= 1) {
       return;
@@ -318,6 +321,7 @@
   };
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
     const observer = new MutationObserver((mutations) => {

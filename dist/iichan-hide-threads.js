@@ -131,6 +131,7 @@
   };
 
   const init = () => {
+    if (document.querySelector('#de-main')) return;
     const threads = document.querySelectorAll('[id^=thread]');
     if (threads.length <= 1) {
       return;
