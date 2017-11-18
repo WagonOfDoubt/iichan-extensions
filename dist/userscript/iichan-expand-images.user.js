@@ -40,7 +40,7 @@
     for (const img of thumbs) {
       const a = img.parentNode;
       if (!a) continue;
-      const imageExt = a.href.match(/\w*$/).toString();
+      const imageExt = a.href.split('.').pop();
       if (!EXTENSIONS.includes(imageExt)) continue;
       img.dataset.thumbWidth = img.getAttribute('width');
       img.dataset.thumbHeight = img.getAttribute('height');

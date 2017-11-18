@@ -15,11 +15,28 @@
 
   var onThumbnailClick = function onThumbnailClick(e) {
     var parentNode = e.currentTarget.parentNode;
-    var vp = document.createElement('video');
-    vp.src = e.currentTarget.href;
-    vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-    parentNode.insertBefore(vp, e.currentTarget);
-    parentNode.removeChild(e.currentTarget);
+
+    if (e.currentTarget.dataset.videoMode) {
+      e.currentTarget.dataset.videoMode = false;
+
+      parentNode.removeChild(e.currentTarget.dataset.videoPlayer);
+      e.currentTarget.innerHTML = e.currentTarget.dataset.thumbHTML;
+    } else {
+      e.currentTarget.dataset.videoMode = true;
+
+      var vp = document.createElement('video');
+      vp.poster = e.currentTarget.dataset.thumbSrc;
+      vp.src = e.currentTarget.href;
+      vp.autoplay = true;
+      vp.controls = true;
+      vp.loop = true;
+      vp.muted = true;
+      vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+      e.currentTarget.dataset.videoPlayer = vp;
+      parentNode.insertAfter(vp, e.currentTarget);
+      e.currentTarget.innerHTML = '[Свернуть видео]';
+    }
+
     e.preventDefault();
   };
 
@@ -37,6 +54,8 @@
         if (!a) continue;
         var videoExt = a.href.split('.').pop();
         if (!EXTENSIONS.includes(videoExt)) continue;
+        a.dataset.thumbSrc = img.src;
+        a.dataset.thumbHTML = a.innerHTML;
         a.addEventListener('click', onThumbnailClick);
       }
     } catch (err) {
@@ -56,7 +75,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + VIDEO_PLAYER_CLASSNAME + ' {\n          max-width: 100%;\n          height: auto;\n          box-sizing: border-box;\n          margin: 0;\n          padding: 2px 20px\n        }\n      </style>');
+    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">.' + VIDEO_PLAYER_CLASSNAME + ' {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      margin: 2px 20px;\n    }</style>');
   };
 
   var init = function init() {

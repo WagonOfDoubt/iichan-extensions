@@ -114,7 +114,7 @@ gulp.task('escape', function(cb) {
 
 
 gulp.task('make', function(cb) {
-  runSequence(['build', 'userscript'], 'combine', 'compress', 'escape', 'es5', cb)
+  runSequence(['build', 'userscript'], 'compress', 'escape', 'es5', cb)
 });
 
 
