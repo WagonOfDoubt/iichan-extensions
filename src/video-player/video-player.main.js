@@ -13,26 +13,26 @@
   const onThumbnailClick = e => {
     const parentNode = e.currentTarget.parentNode;
 
-    if( e.currentTarget.dataset.videoMode === 'on' ){
-      e.currentTarget.dataset.videoMode = 'off';
+    if( e.currentTarget.videoMode === 'on' ){
+      e.currentTarget.videoMode = 'off';
 
       parentNode.removeChild(document.getElementById(
-         e.currentTarget.dataset.vpid
+         e.currentTarget.videoplayerid
       ));
-      e.currentTarget.innerHTML = e.currentTarget.dataset.thumbHTML;
+      e.currentTarget.innerHTML = e.currentTarget.thumbHTML;
     } else {
-      e.currentTarget.dataset.videoMode = 'on';
+      e.currentTarget.videoMode = 'on';
 
       const vp = document.createElement('video');
       vp.id = 'video' + ('' + Math.random()).replace(/\D/g, '');
-      vp.poster = e.currentTarget.dataset.thumbSrc;
+      vp.poster = e.currentTarget.thumbSrc;
       vp.src = e.currentTarget.href;
       vp.autoplay = true;
       vp.controls = true;
       vp.loop = true;
       vp.muted = true;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      e.currentTarget.dataset.vpid = vp.id;
+      e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
       e.currentTarget.innerHTML = '[Свернуть видео]';
     }
@@ -47,8 +47,8 @@
       if (!a) continue;
       const videoExt = a.href.split('.').pop();
       if (!EXTENSIONS.includes(videoExt)) continue;
-      a.dataset.thumbSrc = img.src;
-      a.dataset.thumbHTML = a.innerHTML;
+      a.thumbSrc = img.src;
+      a.thumbHTML = a.innerHTML;
       a.addEventListener('click', onThumbnailClick);
     }
   };
