@@ -15,3 +15,7 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# Exclude dist files from diff
+
+dist/* -diff
