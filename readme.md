@@ -7,7 +7,7 @@
 - [iichan-video-player.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-video-player.js) - раскрытие webm
 - Опциональные скрипты, которых нет на Ычане:
   - [iichan-eng-captcha.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-eng-captcha.js) - автоматическое исправление русской раскладки клавиатуры на английскую при вводе капчи
-	- [iichan-ice-fairy.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-ice-fairy.js) - заменяет имя в /b/ на "Сырно"
+  - [iichan-ice-fairy.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-ice-fairy.js) - заменяет имя в /b/ на "Сырно"
 
 ## Установка в качестве юзерскрипта
 
