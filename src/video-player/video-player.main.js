@@ -13,15 +13,18 @@
   const onThumbnailClick = e => {
     const parentNode = e.currentTarget.parentNode;
 
-    if( e.currentTarget.dataset.videoMode ){
-      e.currentTarget.dataset.videoMode = false;
+    if( e.currentTarget.dataset.videoMode === 'on' ){
+      e.currentTarget.dataset.videoMode = 'off';
 
-      parentNode.removeChild(e.currentTarget.dataset.videoPlayer);
+      parentNode.removeChild(document.getElementById(
+         e.currentTarget.dataset.vpid
+      ));
       e.currentTarget.innerHTML = e.currentTarget.dataset.thumbHTML;
     } else {
-      e.currentTarget.dataset.videoMode = true;
+      e.currentTarget.dataset.videoMode = 'on';
 
       const vp = document.createElement('video');
+      vp.id = 'video' + ('' + Math.random()).replace(/\D/g, '');
       vp.poster = e.currentTarget.dataset.thumbSrc;
       vp.src = e.currentTarget.href;
       vp.autoplay = true;
@@ -29,7 +32,7 @@
       vp.loop = true;
       vp.muted = true;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      e.currentTarget.dataset.videoPlayer = vp;
+      e.currentTarget.dataset.vpid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
       e.currentTarget.innerHTML = '[Свернуть видео]';
     }
