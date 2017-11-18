@@ -30,7 +30,7 @@
       vp.muted = true;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.dataset.videoPlayer = vp;
-      parentNode.insertAfter(vp, e.currentTarget);
+      parentNode.insertBefore(vp, e.currentTarget.nextSibling);
       e.currentTarget.innerHTML = '[Свернуть видео]';
     }
 
