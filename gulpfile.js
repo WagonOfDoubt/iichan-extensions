@@ -42,7 +42,7 @@ gulp.task('userscript', ['build'], () => {
 gulp.task('compress', ['build'], cb => pump([
     gulp.src(['dist/*.js']),
     minifier({}, uglifyjs),
-    rename(function(path) {
+    rename(path => {
       path.basename += '.min';
     }),
     gulp.dest('dist/minified/')
@@ -55,7 +55,7 @@ gulp.task('babelify', ['build'], cb => pump([
     babel({
       presets: ['es2015-nostrict']
     }),
-    rename(function(path) {
+    rename(path => {
       path.basename += '.es5';
     }),
     gulp.dest('dist/es5/')
@@ -75,8 +75,7 @@ gulp.task('es5-escape', ['es5-compress'], cb => pump([
     gulp.src(['dist/es5/minified/*.js']),
     jsEscape(),
     wrap({ src: 'src/eval-wrapper.js'}),
-    rename(function(path) {
-      let name = path.basename.split('.')[0];
+    rename(path => {
       path.basename += '.escaped';
     }),
     gulp.dest('dist/es5/escaped/')
@@ -96,8 +95,8 @@ gulp.task('combine', ['build'], cb => pump([
 gulp.task('build', cb => pump([
     gulp.src('src/*/*.main.js'),
     include({hardFail: true}),
-    rename(function(path) {
-      let name = path.basename.split('.')[0];
+    rename(path => {
+      const name = path.basename.split('.')[0];
       path.dirname = '';
       path.basename = 'iichan-';
       path.basename += name;
@@ -112,8 +111,7 @@ gulp.task('escape', ['compress'], cb => pump([
     gulp.src(['dist/minified/*.js']),
     jsEscape(),
     wrap({ src: 'src/eval-wrapper.js'}),
-    rename(function(path) {
-      let name = path.basename.split('.')[0];
+    rename(path => {
       path.basename += '.escaped';
     }),
     gulp.dest('dist/escaped/')
