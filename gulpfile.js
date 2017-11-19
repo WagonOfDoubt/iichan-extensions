@@ -53,7 +53,7 @@ gulp.task('compress', ['build'], cb => pump([
 gulp.task('babelify', ['build'], cb => pump([
     gulp.src(['dist/*.js']),
     babel({
-      presets: ['env']
+      presets: ['es2015-nostrict']
     }),
     rename(function(path) {
       path.basename += '.es5';
