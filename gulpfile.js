@@ -8,33 +8,25 @@ const concat        = require('gulp-concat');
 const uglifyjs      = require('uglify-js-harmony');
 const minifier      = require('gulp-uglify/minifier');
 const pump          = require('pump');
-const runSequence   = require('run-sequence');
 const jsEscape      = require('gulp-js-escape');
 const wrap          = require('gulp-wrap');
 const babel         = require('gulp-babel');
 
 
-function getFolders(dir) {
-  return fs.readdirSync(dir)
-    .filter(function(file) {
-      return fs.statSync(path.join(dir, file)).isDirectory();
-    });
-}
+const getFolders = dir => fs.readdirSync(dir).filter(file => fs.statSync(path.join(dir, file)).isDirectory());
 
 
-gulp.task('clean', function() {
-  return gulp.src('dist/*', {read: false})
-    .pipe(clean());
-});
+gulp.task('clean', () => gulp.src('dist/*', {read: false})
+  .pipe(clean())
+);
 
 
-gulp.task('userscript', function() {
+gulp.task('userscript', ['build'], () => {
   // https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
-  let folders = getFolders('src/');
+  const folders = getFolders('src/');
   // folders = folders.filter((dir) => dir !== 'hide-threads' && dir !== 'expand-images');
 
-  let tasks = folders.map(function(folder) {
-    return pump([
+  const tasks = folders.map(folder => pump([
       gulp.src([path.join('src/', folder, '/*.meta.js'), path.join('src/', folder, '/*.main.js')]),
       concat('iichan-' + folder + '.user.js'),
       include({hardFail: true}),
@@ -42,25 +34,23 @@ gulp.task('userscript', function() {
       gulp.src(path.join('src/', folder, '/*.meta.js')),
       rename('iichan-' + folder + '.meta.js'),
       gulp.dest('dist/userscript/')
-    ]);
-  });
+    ])
+  );
 });
 
 
-gulp.task('compress', function(cb) {
-  return pump([
+gulp.task('compress', ['build'], cb => pump([
     gulp.src(['dist/*.js']),
     minifier({}, uglifyjs),
     rename(function(path) {
       path.basename += '.min';
     }),
     gulp.dest('dist/minified/')
-  ]);
-});
+  ])
+);
 
 
-gulp.task('es5', function(cb) {
-  return pump([
+gulp.task('babelify', ['build'], cb => pump([
     gulp.src(['dist/*.js']),
     babel({
       presets: ['env']
@@ -69,22 +59,41 @@ gulp.task('es5', function(cb) {
       path.basename += '.es5';
     }),
     gulp.dest('dist/es5/')
-  ]);
-});
+  ])
+);
 
 
-gulp.task('combine', function(cb) {
-  return pump([
-    gulp.src(['dist/*.js', '!dist/iichan-extensions.js', '!dist/iichan-ice-fairy.js']),
+gulp.task('es5-compress', ['babelify'], cb => pump([
+  gulp.src(['dist/es5/*.js']),
+  minifier({}, uglifyjs),
+  rename(path => path.basename += '.min'),
+  gulp.dest('dist/es5/minified/')
+]));
+
+
+gulp.task('es5-escape', ['es5-compress'], cb => pump([
+    gulp.src(['dist/es5/minified/*.js']),
+    jsEscape(),
+    wrap({ src: 'src/eval-wrapper.js'}),
+    rename(function(path) {
+      let name = path.basename.split('.')[0];
+      path.basename += '.escaped';
+    }),
+    gulp.dest('dist/es5/escaped/')
+  ])
+);
+
+
+gulp.task('combine', ['build'], cb => pump([
+    gulp.src(['dist/*.js', '!dist/iichan-extensions.js']),
     concat('iichan-extensions.js'),
     rename({dirname: ''}),
     gulp.dest('dist/')
-  ]);
-});
+  ])
+);
 
 
-gulp.task('build', function(cb) {
-  return pump([
+gulp.task('build', cb => pump([
     gulp.src('src/*/*.main.js'),
     include({hardFail: true}),
     rename(function(path) {
@@ -95,12 +104,11 @@ gulp.task('build', function(cb) {
       path.extname = '.js';
     }),
     gulp.dest('dist/')
-  ]);
-});
+  ])
+);
 
 
-gulp.task('escape', function(cb) {
-  return pump([
+gulp.task('escape', ['compress'], cb => pump([
     gulp.src(['dist/minified/*.js']),
     jsEscape(),
     wrap({ src: 'src/eval-wrapper.js'}),
@@ -109,13 +117,11 @@ gulp.task('escape', function(cb) {
       path.basename += '.escaped';
     }),
     gulp.dest('dist/escaped/')
-  ]);
-});
+  ])
+);
 
 
-gulp.task('make', function(cb) {
-  runSequence(['build', 'userscript'], 'compress', 'escape', 'es5', cb)
-});
+gulp.task('make', ['build', 'babelify', 'compress', 'es5-compress', 'escape', 'es5-escape', 'userscript']);
 
 
 gulp.task('default', ['make']);

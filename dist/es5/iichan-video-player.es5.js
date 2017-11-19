@@ -16,23 +16,24 @@
   var onThumbnailClick = function onThumbnailClick(e) {
     var parentNode = e.currentTarget.parentNode;
 
-    if (e.currentTarget.dataset.videoMode) {
-      e.currentTarget.dataset.videoMode = false;
+    if (e.currentTarget.videoMode === 'on') {
+      e.currentTarget.videoMode = 'off';
 
-      parentNode.removeChild(e.currentTarget.dataset.videoPlayer);
-      e.currentTarget.innerHTML = e.currentTarget.dataset.thumbHTML;
+      parentNode.removeChild(document.getElementById(e.currentTarget.videoplayerid));
+      e.currentTarget.innerHTML = e.currentTarget.thumbHTML;
     } else {
-      e.currentTarget.dataset.videoMode = true;
+      e.currentTarget.videoMode = 'on';
 
       var vp = document.createElement('video');
-      vp.poster = e.currentTarget.dataset.thumbSrc;
+      vp.id = 'video' + ('' + Math.random()).replace(/\D/g, '');
+      vp.poster = e.currentTarget.thumbSrc;
       vp.src = e.currentTarget.href;
       vp.autoplay = true;
       vp.controls = true;
       vp.loop = true;
       vp.muted = true;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
-      e.currentTarget.dataset.videoPlayer = vp;
+      e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
       e.currentTarget.innerHTML = '[Свернуть видео]';
     }
@@ -54,8 +55,8 @@
         if (!a) continue;
         var videoExt = a.href.split('.').pop();
         if (!EXTENSIONS.includes(videoExt)) continue;
-        a.dataset.thumbSrc = img.src;
-        a.dataset.thumbHTML = a.innerHTML;
+        a.thumbSrc = img.src;
+        a.thumbHTML = a.innerHTML;
         a.addEventListener('click', onThumbnailClick);
       }
     } catch (err) {
