@@ -46,7 +46,7 @@
   const appendCSS = () => {
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
-        .thumb {
+        a img.thumb {
           max-width: 100%;
           height: auto;
           box-sizing: border-box;
