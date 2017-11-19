@@ -19,3 +19,4 @@
 # Exclude dist files from diff
 
 dist/* -diff
+dist/* linguist-generated=true
