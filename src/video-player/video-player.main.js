@@ -59,7 +59,8 @@
       max-width: 100%;
       height: auto;
       box-sizing: border-box;
-      padding: 2px 20px;
+      margin: 2px 20px;
+      padding: 0;
     }</style>`
   );
 
