@@ -36,7 +36,7 @@
       if (!post) continue;
       const filesize = post.querySelector('.filesize > em');
       if (!filesize) continue;
-      const WxH = filesize.innerText.match(/(\d*)x(\d*)/);
+      const WxH = filesize.innerText.match(/(\d+)x(\d+)/);
       img.dataset.fullWidth = WxH[1];
       img.dataset.fullHeight = WxH[2];
       a.addEventListener('click', onThumbnailClick);
