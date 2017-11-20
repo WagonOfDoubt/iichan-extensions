@@ -7,8 +7,8 @@
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-expand-images.meta.js
 // @author       Cirno
-// @match        http://iichan.hk/*
-// @match        https://iichan.hk/*
+// @match        http://nowere.net/*
+// @match        https://nowere.net/*
 // @grant        none
 // ==/UserScript==
 

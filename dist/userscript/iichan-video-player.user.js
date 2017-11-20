@@ -7,8 +7,8 @@
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-video-player.meta.js
 // @author       Mithgol
-// @match        http://iichan.hk/*
-// @match        https://iichan.hk/*
+// @match        http://nowere.net/*
+// @match        https://nowere.net/*
 // @grant        none
 // ==/UserScript==
 
@@ -48,7 +48,7 @@
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
-      e.currentTarget.innerHTML = '[Свернуть видео]';
+      e.currentTarget.innerHTML = '<div style="padding: 2px 20px;">[Свернуть видео]</div>';
     }
 
     e.preventDefault();
@@ -73,7 +73,7 @@
       max-width: 100%;
       height: auto;
       box-sizing: border-box;
-      margin: 2px 20px;
+      padding: 2px 20px;
     }</style>`
   );
 
