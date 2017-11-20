@@ -59,8 +59,8 @@
       max-width: 100%;
       height: auto;
       box-sizing: border-box;
-      margin: 2px 20px;
-      padding: 0;
+      padding: 2px 20px;
+      margin: 0;
     }</style>`
   );
 
