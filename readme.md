@@ -13,27 +13,37 @@
 
 Для установки юзерскрипта скачайте расширение [Violentmonkey](https://violentmonkey.github.io/get-it/) или [Greasemonkey](http://www.greasespot.net/) для вашего браузера.
 
+### IIchan.hk
+
+Опциональные скрипты, которых нет на Ычане, можно установить самостоятельно в качестве юзерскрипта.
+
 - **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)**
 - **[[Установть iichan-ice-fairy.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-ice-fairy.user.js)**
 
-Для установки скрипта версии, отличной от той, что уже включена на сайте, чтобы они не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*` и добавьте в настройки скрипта пользовтаельские @matches `http://iichan.hk/*` и `https://iichan.hk/*`. Все остальные юзерскрипты находятся [здесь](https://github.com/WagonOfDoubt/iichan-extensions/tree/master/dist/userscript).
+Так же можно заменить скрипты Ычана ([expand-images](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js), [hide-threads](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-hide-threads.user.js), [video-player](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-video-player.user.js)) более новыми версиями, если таковые имеются. Для этого добавьте в настройки юзерскрипта пользовтаельские @matches `http://iichan.hk/*` и `https://iichan.hk/*` и, чтобы юзерскрипт и скрипты сайта не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*`.
 
 ### Nowere.net
 
-Скрипты [iichan-eng-captcha.user.js](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js), [iichan-expand-images.user.js](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js) и [iichan-video-player.user.js](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-video-player.user.js) работают на nowere.net
+Следующие скрипты могут работать на nowere.net:
+
+- **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)
+- **[[Установть iichan-expand-images.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js)
+- **[[Установть iichan-eng-video-player.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-video-player.user.js)
 
 ## Фичи:
-- Совместим с [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools)
+- Не конфликтует с [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools)
 - Не содержит костылей для старых браузеров
 - Можно копипастить в wakaba.js
 - Можно использовать как юзерскрипт и подключать через [Violentmonkey](https://violentmonkey.github.io/get-it/) или [Greasemonkey](http://www.greasespot.net/)
 - Легковесный: суммарно занимает менее 10 Кб в несжатом виде
+- Ворует печеньки
+- Свободная лицензия [MIT](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/LICENSE)
 
 ## Подробности о скриптах
 
 ### expand-images
 
-![img](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/expand-images.png)
+![expand-images screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/expand-images.png)
 
 - Растягивает изображения внутри постов по щелчку и сворачивает при повторном
 - Изображения не вылезают за края экрана при любом размере
@@ -42,9 +52,14 @@
 - Не реагирует на другие типы аттачментов (.swf, .webm, и т.д.)
 - Отступ края изображения от края поста одинаков с обеих сторон
 
+### video-player
+
+- Позволяет смотреть прикрепленные webm, mp4, и ogv файлы прямо на странице
+- Звук при разворачивании плеера всегда выключен
+
 ### hide-threads
 
-![img](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/hide-threads.png)
+![hide-threads screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/hide-threads.png)
 
 - Добавляет кнопку [✕] скрытия треда
 - Скрытые треды можно быстро посмотреть по наведению на номер (как в кукле)
@@ -79,6 +94,7 @@
 - [IIchan archive search](https://github.com/WagonOfDoubt/IIchan-archive-search)
 - [IIchan catalogue search](https://github.com/aslian/IIchan-catalogue-search) от [@aslian](https://github.com/aslian)
 - [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools) от [@SthephanShinkufag](https://github.com/SthephanShinkufag)
+- [Стили для Ычана](https://userstyles.org/styles/browse?category=iichan)
 
 ## Сборка (для продвинутых бак):
 - Установить [Node.js](https://nodejs.org/), если еще не.

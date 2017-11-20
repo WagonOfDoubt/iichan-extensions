@@ -24,7 +24,6 @@ gulp.task('clean', () => gulp.src('dist/*', {read: false})
 gulp.task('userscript', ['build'], () => {
   // https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
   const folders = getFolders('src/');
-  // folders = folders.filter((dir) => dir !== 'hide-threads' && dir !== 'expand-images');
 
   const tasks = folders.map(folder => pump([
       gulp.src([path.join('src/', folder, '/*.meta.js'), path.join('src/', folder, '/*.main.js')]),
@@ -50,7 +49,7 @@ gulp.task('compress', ['build'], cb => pump([
 );
 
 
-gulp.task('babelify', ['build'], cb => pump([
+gulp.task('es5', ['build'], cb => pump([
     gulp.src(['dist/*.js']),
     babel({
       presets: ['es2015-nostrict']
@@ -63,7 +62,7 @@ gulp.task('babelify', ['build'], cb => pump([
 );
 
 
-gulp.task('es5-compress', ['babelify'], cb => pump([
+gulp.task('es5:compress', ['es5'], cb => pump([
   gulp.src(['dist/es5/*.js']),
   minifier({}, uglifyjs),
   rename(path => path.basename += '.min'),
@@ -71,7 +70,7 @@ gulp.task('es5-compress', ['babelify'], cb => pump([
 ]));
 
 
-gulp.task('es5-escape', ['es5-compress'], cb => pump([
+gulp.task('es5:escape', ['es5:compress'], cb => pump([
     gulp.src(['dist/es5/minified/*.js']),
     jsEscape(),
     wrap({ src: 'src/eval-wrapper.js'}),
@@ -119,7 +118,7 @@ gulp.task('escape', ['compress'], cb => pump([
 );
 
 
-gulp.task('make', ['build', 'babelify', 'compress', 'es5-compress', 'escape', 'es5-escape', 'userscript']);
+gulp.task('make', ['build', 'es5', 'compress', 'es5:compress', 'escape', 'es5:escape', 'userscript']);
 
 
 gulp.task('default', ['make']);
