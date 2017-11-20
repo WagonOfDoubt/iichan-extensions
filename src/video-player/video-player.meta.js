@@ -7,7 +7,7 @@
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-video-player.meta.js
 // @author       Mithgol
-// @match        http://iichan.hk/*
-// @match        https://iichan.hk/*
+// @match        http://nowere.net/*
+// @match        https://nowere.net/*
 // @grant        none
 // ==/UserScript==

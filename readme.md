@@ -16,7 +16,11 @@
 - **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)**
 - **[[Установть iichan-ice-fairy.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-ice-fairy.user.js)**
 
-Для установки скрипта версии, отличной от той, что уже включена на сайте, чтобы они не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*`. Все остальные юзерскрипты находятся [здесь](https://github.com/WagonOfDoubt/iichan-extensions/tree/master/dist/userscript).
+Для установки скрипта версии, отличной от той, что уже включена на сайте, чтобы они не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*` и добавьте в настройки скрипта пользовтаельские @matches `http://iichan.hk/*` и `https://iichan.hk/*`. Все остальные юзерскрипты находятся [здесь](https://github.com/WagonOfDoubt/iichan-extensions/tree/master/dist/userscript).
+
+### Nowere.net
+
+Скрипты [iichan-eng-captcha.user.js](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js), [iichan-expand-images.user.js](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js) и [iichan-video-player.user.js](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-video-player.user.js) работают на nowere.net
 
 ## Фичи:
 - Совместим с [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools)
