@@ -4,7 +4,7 @@
   // Список расширений файлов, преобразуемых в видеопроигрыватели:
   const VIDEO_EXTENSIONS = ['webm', 'mp4', 'ogv'];
   // Класс тега отключателя видеопроигрывателей:
-  const VIDEO_PLAYER_TOGGLE = 'iichan-toggle-video-player';
+  const VIDEO_TOGGLE = 'iichan-toggle-video-player';
   // Класс тега видеопроигрывателей:
   const VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
   // Стиль тега видеопроигрывателей:
@@ -48,9 +48,6 @@
       const vpMode = $a.data('vpMode');
 
       const renderVideoPlayer = () => {
-        $a.addClass(VIDEO_PLAYER_TOGGLE);
-        $a.data('thumbHTML', $a.html());
-
         const $vp = $('<video>').attr({
           poster: $img.attr('src'),
           src: $a.attr('href'),
@@ -60,7 +57,10 @@
           muted: true
         }).addClass(VIDEO_PLAYER_CLASSNAME);
 
-        $a.data('videoPlayer', $vp).after($vp).html(
+        $a.addClass(VIDEO_TOGGLE).data({
+          thumbHTML: $a.html(),
+          videoPlayer: $vp
+        }).after($vp).html(
           '<div style="padding: 2px 20px;">[Свернуть видео]</div>'
         );
         return false; // do not proparate the click
@@ -80,11 +80,11 @@
       }
     });
 
-    $('body').on('click', '.' + VIDEO_PLAYER_TOGGLE, function(){
+    $('body').on('click', '.' + VIDEO_TOGGLE, function(){
       const $a = $(this);
-      $a.removeClass(VIDEO_PLAYER_TOGGLE);
-      $a.data('videoPlayer').remove();
-      $a.html( $a.data('thumbHTML') );
+      $a.removeClass(VIDEO_TOGGLE).html(
+        $a.data('thumbHTML') 
+      ).data('videoPlayer').remove();
       return false; // do not propagate the click
     });
   });
