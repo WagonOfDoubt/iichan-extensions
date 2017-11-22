@@ -105,8 +105,9 @@
         });
       });
       observer.observe(document.body, { childList: true, subtree: true });
-    };
+    }
   };
+
   if (document.body) {
     init();
   } else {
