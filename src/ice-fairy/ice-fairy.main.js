@@ -19,6 +19,7 @@
         namespan.innerHTML = NAME;
       }
     };
+    cirnify(document.body);
     if ('MutationObserver' in window) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -28,7 +29,6 @@
           }
         });
       });
-      cirnify(document.body);
       observer.observe(document.body, { childList: true, subtree: true });
     }
   };

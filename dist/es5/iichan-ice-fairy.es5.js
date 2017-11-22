@@ -41,6 +41,7 @@
         }
       }
     };
+    cirnify(document.body);
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
@@ -71,7 +72,6 @@
           }
         });
       });
-      cirnify(document.body);
       observer.observe(document.body, { childList: true, subtree: true });
     }
   };
