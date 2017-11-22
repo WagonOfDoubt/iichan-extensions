@@ -219,17 +219,18 @@
     if (document.querySelector('body.replypage')) return;
     appendCSS();
     processThreads();
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        for (const node of mutation.addedNodes) {
-          if (!node.querySelectorAll) return;
-          processThreads(node);
-        }
+    if ('MutationObserver' in window) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          for (const node of mutation.addedNodes) {
+            if (!node.querySelectorAll) return;
+            processThreads(node);
+          }
+        });
       });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  };
-
+      observer.observe(document.body, { childList: true, subtree: true });
+    };
+  }
   if (document.body) {
     init();
   } else {

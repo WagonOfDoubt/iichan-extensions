@@ -50,7 +50,8 @@
       if (!post) continue;
       const filesize = post.querySelector('.filesize > em');
       if (!filesize) continue;
-      const WxH = filesize.innerText.match(/(\d*)x(\d*)/);
+      const WxH = filesize.innerText.match(/(\d+)x(\d+)/);
+      if( WxH === null ) continue;
       img.dataset.fullWidth = WxH[1];
       img.dataset.fullHeight = WxH[2];
       a.addEventListener('click', onThumbnailClick);
@@ -74,17 +75,18 @@
     if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        for (const node of mutation.addedNodes) {
-          if (!node.querySelectorAll) return;
-          addListeners(node);
-        }
+    if ('MutationObserver' in window) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          for (const node of mutation.addedNodes) {
+            if (!node.querySelectorAll) return;
+            addListeners(node);
+          }
+        });
       });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  };
-
+      observer.observe(document.body, { childList: true, subtree: true });
+    };
+  }
   if (document.body) {
     init();
   } else {

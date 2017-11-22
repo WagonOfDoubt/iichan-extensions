@@ -68,15 +68,17 @@
     if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        for (const node of mutation.addedNodes) {
-          if (!node.querySelectorAll) return;
-          addListeners(node);
-        }
+    if ('MutationObserver' in window) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          for (const node of mutation.addedNodes) {
+            if (!node.querySelectorAll) return;
+            addListeners(node);
+          }
+        });
       });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
   };
 
   if (document.body) {

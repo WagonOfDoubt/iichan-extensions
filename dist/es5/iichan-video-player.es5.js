@@ -74,43 +74,45 @@
   };
 
   var appendCSS = function appendCSS() {
-    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">.' + VIDEO_PLAYER_CLASSNAME + ' {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n    }</style>');
+    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">.' + VIDEO_PLAYER_CLASSNAME + ' {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }</style>');
   };
 
   var init = function init() {
     if (document.querySelector('#de-main')) return;
     appendCSS();
     addListeners();
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+    if ('MutationObserver' in window) {
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
-        try {
-          for (var _iterator2 = mutation.addedNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var node = _step2.value;
-
-            if (!node.querySelectorAll) return;
-            addListeners(node);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
+            for (var _iterator2 = mutation.addedNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var node = _step2.value;
+
+              if (!node.querySelectorAll) return;
+              addListeners(node);
             }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
-        }
+        });
       });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
   };
 
   if (document.body) {
