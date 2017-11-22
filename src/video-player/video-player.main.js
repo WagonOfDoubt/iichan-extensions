@@ -30,8 +30,8 @@
     jqScript = document.createElement('script');
     jqScript.crossOrigin = 'anonymous';
     jqScript.id = 'iichanJQ';
-    jqScript.integrity = 'sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=';
-    jqScript.src = 'https://code.jquery.com/jquery-3.2.1.js';
+    jqScript.integrity = 'sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=';
+    jqScript.src = 'https://code.jquery.com/jquery-3.2.1.min.js';
     jqScript.addEventListener('load', () => jQuery(callbackJQ));
     document.body.appendChild(jqScript);
   };
