@@ -83,7 +83,7 @@
     $('body').on('click', '.' + VIDEO_PLAYER_TOGGLE, function(){
       const $a = $(this);
       $a.removeClass(VIDEO_PLAYER_TOGGLE);
-      $( $a.data('videoPlayer') ).remove();
+      $a.data('videoPlayer').remove();
       $a.html( $a.data('thumbHTML') );
       return false; // do not propagate the click
     });
