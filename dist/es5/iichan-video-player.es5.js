@@ -33,7 +33,7 @@
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
-      e.currentTarget.innerHTML = '<div style="padding: 2px 20px;">[Свернуть видео]</div>';
+      e.currentTarget.innerHTML = '<div class="hidevideo">[Свернуть видео]</div>';
     }
 
     e.preventDefault();
@@ -74,7 +74,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">.' + VIDEO_PLAYER_CLASSNAME + ' {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }</style>');
+    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">.' + VIDEO_PLAYER_CLASSNAME + ' {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }\n    .hidevideo {\n      padding: 2px 20px;\n    }</style>');
   };
 
   var init = function init() {

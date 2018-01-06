@@ -48,7 +48,7 @@
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
-      e.currentTarget.innerHTML = '<div style="padding: 2px 20px;">[Свернуть видео]</div>';
+      e.currentTarget.innerHTML = '<div class="hidevideo">[Свернуть видео]</div>';
     }
 
     e.preventDefault();
@@ -75,6 +75,9 @@
       box-sizing: border-box;
       padding: 2px 20px;
       margin: 0;
+    }
+    .hidevideo {
+      padding: 2px 20px;
     }</style>`
   );
 
