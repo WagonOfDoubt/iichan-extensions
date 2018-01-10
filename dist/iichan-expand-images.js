@@ -50,7 +50,6 @@
         @media only screen and (${HANDHELD_MEDIA_QUERY}) {
           a img.thumb {
             max-width: calc(100% - 40px);
-            height: auto;
             margin: 0;
             padding: 2px 20px;
           }
