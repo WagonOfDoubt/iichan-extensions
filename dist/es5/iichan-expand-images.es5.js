@@ -67,7 +67,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        a img.thumb {\n          max-width: calc(100% - 40px);\n          height: auto;\n          margin: 0;\n          padding: 2px 20px;\n        }\n      </style>');
+    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        @media only screen and (' + HANDHELD_MEDIA_QUERY + ') {\n          a img.thumb {\n            max-width: calc(100% - 40px);\n            height: auto;\n            margin: 0;\n            padding: 2px 20px;\n          }\n        }\n      </style>');
   };
 
   var init = function init() {

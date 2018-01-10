@@ -55,16 +55,9 @@
 
   const appendCSS = () => document.head.insertAdjacentHTML(
     'beforeend',
-    `<style type="text/css">.${VIDEO_PLAYER_CLASSNAME} {
-      max-width: 100%;
-      height: auto;
-      box-sizing: border-box;
-      padding: 2px 20px;
-      margin: 0;
-    }
-    .hidevideo {
-      padding: 2px 20px;
-    }</style>`
+    `<style type="text/css">
+      //=include video-player.css
+    </style>`
   );
 
   const init = () => {

@@ -61,11 +61,13 @@
   const appendCSS = () => {
     document.head.insertAdjacentHTML('beforeend',
       `<style type="text/css">
-        a img.thumb {
-          max-width: calc(100% - 40px);
-          height: auto;
-          margin: 0;
-          padding: 2px 20px;
+        @media only screen and (${HANDHELD_MEDIA_QUERY}) {
+          a img.thumb {
+            max-width: calc(100% - 40px);
+            height: auto;
+            margin: 0;
+            padding: 2px 20px;
+          }
         }
       </style>`);
   };

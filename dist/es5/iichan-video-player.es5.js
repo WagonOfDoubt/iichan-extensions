@@ -74,7 +74,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">.' + VIDEO_PLAYER_CLASSNAME + ' {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }\n    .hidevideo {\n      padding: 2px 20px;\n    }</style>');
+    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n      .' + VIDEO_PLAYER_CLASSNAME + ' {\n        max-width: 100%;\n        height: auto;\n        box-sizing: border-box;\n        padding: 2px 20px;\n        margin: 0;\n      }\n      .hidevideo {\n        padding: 2px 20px;\n      }\n    </style>');
   };
 
   var init = function init() {
