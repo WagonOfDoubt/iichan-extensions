@@ -69,8 +69,7 @@
         
           a img.thumb[src*="/src/"] {
             height: auto;
-            max-width: 100%;
-            box-sizing: border-box;
+            max-width: calc(100% - 40px);
           }
         }
       </style>`);
