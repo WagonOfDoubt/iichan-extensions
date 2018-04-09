@@ -30,7 +30,6 @@
       vp.autoplay = true;
       vp.controls = true;
       vp.loop = true;
-      vp.muted = true;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
