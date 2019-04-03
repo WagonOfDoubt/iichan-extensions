@@ -66,10 +66,12 @@
     textarea.focus(false);
     if (reflink) {
       reflink = '>>' + reflink + '\n';
-      if (textarea.innerText.length && !textarea.innerText.endsWith('\n')) {
-        reflink = '\n' + reflink;
+      if (!textarea.value.endsWith(reflink)) {
+        if (textarea.value.length && !textarea.value.endsWith('\n')) {
+          reflink = '\n' + reflink;
+        }
+        textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');
       }
-      textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');
     }
   };
 
@@ -105,12 +107,14 @@
     addReflinkAndFocus(ref);
   };
 
-  var placeFormAtPostarea = function placeFormAtPostarea(postform) {
+  var placeFormAtPostarea = function placeFormAtPostarea(postform, focus) {
     var postarea = document.querySelector('.postarea');
     // append postfrom to postarea
     if (postarea) {
       postarea.appendChild(postform);
-      addReflinkAndFocus();
+      if (focus) {
+        addReflinkAndFocus();
+      }
     }
     // remove table.reply
     if (quickReplyContainer.parentNode) {
@@ -139,10 +143,13 @@
     }
 
     // replyTo === null => return postform to default position
-    // already at same post => return to default
-    if (!replyTo || postform.dataset.replyTo === replyTo.id) {
+    if (!replyTo) {
       postform.dataset.replyTo = '';
-      placeFormAtPostarea(postform);
+      placeFormAtPostarea(postform, true);
+      // already at same post => return to default, no focus
+    } else if (postform.dataset.replyTo === replyTo.id) {
+      postform.dataset.replyTo = '';
+      placeFormAtPostarea(postform, false);
       // replyTo is reply (not OP)
     } else if (replyTo.classList.contains('reply')) {
       postform.dataset.replyTo = replyTo.id;
