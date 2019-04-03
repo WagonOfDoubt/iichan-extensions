@@ -1,0 +1,20 @@
+.${QUICK_REPLY_BTN_CLASSNAME}::after {
+  content: '[▶]';
+}
+
+.replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
+  content: '[Показать форму ответа]';
+}
+
+.${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
+  content: '[Создать тред]';
+}
+
+.${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME},
+.${QUICK_REPLY_BTN_CLASSNAME} {
+  cursor: pointer;
+}
+
+#${QUICK_REPLY_CONTAINER_ID} .rules {
+  display: none;
+}
