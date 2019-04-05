@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Makes Wakaba more useable",
   "scripts": {
-    "build": "gulp",
+    "build": "npx gulp",
     "test": "jshint *.js **/*.js"
   },
   "repository": {

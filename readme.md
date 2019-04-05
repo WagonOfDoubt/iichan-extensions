@@ -1,4 +1,4 @@
-# IIchan Extensions
+# 🔰 IIchan Extensions
 Набор скриптов, расширяющих функционал Ычана.
 
 ## Состав:
@@ -11,7 +11,7 @@
   - [iichan-ice-fairy.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-ice-fairy.js) - заменяет имя в /b/ на "Сырно"
 
 ## Версии скриптов в /dist/
-В папке /dist/ можно найти много по-разному собранных версий одних и тех же скриптов. Что они означают?
+В папке /dist/ можно найти несколько по-разному собранных версий одних и тех же скриптов:
 
 - **userscript** - предпочтительный способ тестирования, устанавливается как описано ниже.
 - **без префикса** - собранные скрипты как есть, практически соответствуют своим исходникам, просто исходники разделены на несколько файлов, эти же собраны воедино и работоспособны.
@@ -30,7 +30,7 @@
 - **[[Установть iichan-eng-captcha.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-eng-captcha.user.js)**
 - **[[Установть iichan-ice-fairy.user.js]](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-ice-fairy.user.js)**
 
-Так же можно заменить скрипты Ычана ([expand-images](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js), [hide-threads](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-hide-threads.user.js), [video-player](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-video-player.user.js)) более новыми версиями, если таковые имеются. Для этого добавьте в настройки юзерскрипта пользовтаельские @matches `http://iichan.hk/*` и `https://iichan.hk/*` и, чтобы юзерскрипт и скрипты сайта не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*`.
+Так же можно заменить скрипты Ычана ([expand-images](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-expand-images.user.js), [hide-threads](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-hide-threads.user.js), [video-player](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-video-player.user.js)), [quick-reply](https://github.com/WagonOfDoubt/iichan-extensions/raw/master/dist/userscript/iichan-quick-reply.user.js)) более новыми версиями, если таковые имеются. Для этого добавьте в настройки юзерскрипта пользовтаельские @matches `http://iichan.hk/*` и `https://iichan.hk/*` и, чтобы юзерскрипт и скрипты сайта не конфликтовали, внесите в фильтр адблока или носкрипта адрес `iichan.hk/extras/*`.
 
 ### Nowere.net
 
@@ -45,7 +45,7 @@
 - Не содержит костылей для старых браузеров
 - Можно копипастить в wakaba.js
 - Можно использовать как юзерскрипт и подключать через [Violentmonkey](https://violentmonkey.github.io/get-it/) или [Greasemonkey](http://www.greasespot.net/)
-- Легковесный: суммарно занимает менее 10 Кб в несжатом виде
+- Легковесный: суммарно занимает менее 20 Кб в сжатом виде
 - Ворует печеньки
 - Свободная лицензия [MIT](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/LICENSE)
 
@@ -113,10 +113,14 @@
 - [Dollchan Extension Tools](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools) от [@SthephanShinkufag](https://github.com/SthephanShinkufag)
 - [Стили для Ычана](https://userstyles.org/styles/browse?category=iichan)
 
-## Сборка (для продвинутых бак):
-- Установить [Node.js](https://nodejs.org/), если еще не.
+## Сборка:
+- Установить [Node.js](https://nodejs.org/en/), если еще не.
 - Установить [Gulp](http://gulpjs.com/): `npm install -g gulp`
-- В папке проекта сделать `npm install`.
-- Сделать `gulp make`.
+- ```bash
+$ git clone https://github.com/WagonOfDoubt/iichan-extensions.git
+$ cd iichan-extensions
+$ npm install
+$ npm run build
+```
 
 В папке *dist* появятся собранные файлы.
