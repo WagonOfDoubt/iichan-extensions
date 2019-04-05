@@ -6,6 +6,14 @@
   var QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
   var QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
   var QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
+  var CAPTCHA_URL = '/cgi-bin/captcha1.pl';
+  var board = window.location.href.match(/(?:\w+\.\w+\/)([^\/]*)(?=\/)/)[1];
+
+  var captcha = {
+    key: 'mainpage',
+    dummy: '',
+    board: board
+  };
 
   var _ref = function () {
     var quickReplyContainer = document.createElement('table');
@@ -29,6 +37,32 @@
     inp.setAttribute('name', 'parent');
     return inp;
   }();
+
+  var updateCaptcha = function updateCaptcha() {
+    var img = document.querySelector('#captcha');
+    if (!img) {
+      return;
+    }
+    var key = captcha.key,
+        dummy = captcha.dummy,
+        board = captcha.board;
+
+    img.src = CAPTCHA_URL + '/' + board + '/?key=' + key + '&dummy=' + dummy + '&' + Math.random();
+  };
+
+  var updateCaptchaParams = function updateCaptchaParams(parentThread) {
+    if (!parentThread) {
+      captcha.key = 'mainpage';
+      captcha.dummy = '';
+    } else {
+      var opRef = parentThread.id.substr('thread-'.length);
+      var lastReply = parentThread.querySelector('table:last-child .reply');
+      var lastRef = lastReply ? lastReply.id.substr('reply'.length) : opRef;
+      captcha.key = 'res' + opRef;
+      captcha.dummy = lastRef;
+    }
+    updateCaptcha();
+  };
 
   var setParentInputValue = function setParentInputValue(postform, value) {
     var inp = postform.querySelector('[name=parent]');
@@ -88,22 +122,28 @@
     if (!replyContainer || !parentThread) {
       return;
     }
+    var opRef = parentThread.id.substr('thread-'.length);
+    var ref = replyTo.id.substr('reply'.length);
+
     postformContainer.appendChild(postform);
     replyContainer.parentNode.insertBefore(quickReplyContainer, replyContainer.nextSibling);
+
     placePostareaButton();
-    var opRef = parentThread.id.substr('thread-'.length);
     setParentInputValue(postform, opRef);
-    var ref = replyTo.id.substr('reply'.length);
+    updateCaptchaParams(parentThread);
     addReflinkAndFocus(ref);
   };
 
   var placeFormAfterOp = function placeFormAfterOp(postform, replyTo) {
     var firstReply = replyTo.querySelector('table');
+    var ref = replyTo.id.substr('thread-'.length);
+
     postformContainer.appendChild(postform);
     replyTo.insertBefore(quickReplyContainer, firstReply);
+
     placePostareaButton();
-    var ref = replyTo.id.substr('thread-'.length);
     setParentInputValue(postform, ref);
+    updateCaptchaParams(replyTo);
     addReflinkAndFocus(ref);
   };
 
@@ -130,9 +170,11 @@
       var parentThread = document.querySelector('[id^=thread]');
       var opRef = parentThread.id.substr('thread-'.length);
       setParentInputValue(postform, opRef);
+      updateCaptchaParams(parentThread);
     } else {
       // create thread
       setParentInputValue(postform, null);
+      updateCaptchaParams();
     }
   };
 
@@ -213,10 +255,26 @@
 
   var init = function init() {
     if (document.querySelector('#de-main')) return;
+    // remove default captcha update handler
+    var captchaLink = document.querySelector('input[name=captcha] + a');
+    if (captchaLink) {
+      captchaLink.removeAttribute('onclick');
+      captchaLink.addEventListener('click', function (e) {
+        updateCaptcha();
+        e.preventDefault();
+      });
+    }
+    if (document.body.classList.contains('replypage')) {
+      var parentThread = document.querySelector('[id^=thread]');
+      updateCaptchaParams(parentThread);
+    } else {
+      updateCaptchaParams();
+    }
     appendCSS();
     processNodes();
     quickReplyShowFormBtn.addEventListener('click', function (e) {
-      return movePostform();
+      movePostform();
+      e.preventDefault();
     });
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {

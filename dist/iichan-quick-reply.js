@@ -6,6 +6,14 @@
   const QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
   const QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
   const QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
+  const CAPTCHA_URL = '/cgi-bin/captcha1.pl';
+  const board = window.location.href.match(/(?:\w+\.\w+\/)([^\/]*)(?=\/)/)[1];
+
+  const captcha = {
+    key: 'mainpage',
+    dummy: '',
+    board: board,
+  };
 
   const { quickReplyContainer, postformContainer } = (() => {
     const quickReplyContainer = document.createElement('table');
@@ -33,6 +41,29 @@
     inp.setAttribute('name', 'parent');
     return inp;
   })();
+
+  const updateCaptcha = () => {
+    const img = document.querySelector('#captcha');
+    if (!img) {
+      return;
+    }
+    const { key, dummy, board } = captcha;
+    img.src = `${CAPTCHA_URL}/${board}/?key=${key}&dummy=${dummy}&${Math.random()}`;
+  };
+
+  const updateCaptchaParams = (parentThread) => {
+    if (!parentThread) {
+      captcha.key = 'mainpage';
+      captcha.dummy = '';
+    } else {
+      const opRef = parentThread.id.substr('thread-'.length);
+      const lastReply = parentThread.querySelector('table:last-child .reply');
+      const lastRef = lastReply ? lastReply.id.substr('reply'.length) : opRef;
+      captcha.key = `res${opRef}`;
+      captcha.dummy = lastRef;
+    }
+    updateCaptcha();
+  };
 
   const setParentInputValue = (postform, value) => {
     let inp = postform.querySelector('[name=parent]');
@@ -74,7 +105,7 @@
         if (textarea.value.length && !textarea.value.endsWith('\n')) {
           reflink = '\n' + reflink;
         }
-        textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');        
+        textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');
       }
     }
   };
@@ -92,22 +123,28 @@
     if (!replyContainer || !parentThread) {
       return;
     }
+    const opRef = parentThread.id.substr('thread-'.length);
+    const ref = replyTo.id.substr('reply'.length);
+
     postformContainer.appendChild(postform);
     replyContainer.parentNode.insertBefore(quickReplyContainer, replyContainer.nextSibling);
+
     placePostareaButton();
-    const opRef = parentThread.id.substr('thread-'.length);
     setParentInputValue(postform, opRef);
-    const ref = replyTo.id.substr('reply'.length);
+    updateCaptchaParams(parentThread);
     addReflinkAndFocus(ref);
   };
 
   const placeFormAfterOp = (postform, replyTo) => {
     const firstReply = replyTo.querySelector('table');
+    const ref = replyTo.id.substr('thread-'.length);
+    
     postformContainer.appendChild(postform);
     replyTo.insertBefore(quickReplyContainer, firstReply);
+    
     placePostareaButton();
-    const ref = replyTo.id.substr('thread-'.length);
     setParentInputValue(postform, ref);
+    updateCaptchaParams(replyTo);
     addReflinkAndFocus(ref);
   };
 
@@ -134,9 +171,11 @@
       const parentThread = document.querySelector('[id^=thread]');
       const opRef = parentThread.id.substr('thread-'.length);
       setParentInputValue(postform, opRef);
+      updateCaptchaParams(parentThread);
     } else {
       // create thread
       setParentInputValue(postform, null);
+      updateCaptchaParams();
     }
   };
 
@@ -219,9 +258,27 @@
 
   const init = () => {
     if (document.querySelector('#de-main')) return;
+    // remove default captcha update handler
+    const captchaLink = document.querySelector('input[name=captcha] + a');
+    if (captchaLink) {
+      captchaLink.removeAttribute('onclick');
+      captchaLink.addEventListener('click', (e) => {
+        updateCaptcha();
+        e.preventDefault();
+      });
+    }
+    if (document.body.classList.contains('replypage')) {
+      const parentThread = document.querySelector('[id^=thread]');
+      updateCaptchaParams(parentThread);
+    } else {
+      updateCaptchaParams();
+    }
     appendCSS();
     processNodes();
-    quickReplyShowFormBtn.addEventListener('click', (e) => movePostform());
+    quickReplyShowFormBtn.addEventListener('click', (e) => {
+      movePostform();
+      e.preventDefault();
+    });
     if ('MutationObserver' in window) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
