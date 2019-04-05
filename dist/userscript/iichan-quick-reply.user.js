@@ -20,13 +20,11 @@
   const QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
   const QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
   const QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
-  const CAPTCHA_URL = '/cgi-bin/captcha1.pl';
-  const board = window.location.href.match(/(?:\w+\.\w+\/)([^\/]*)(?=\/)/)[1];
 
   const captcha = {
     key: 'mainpage',
     dummy: '',
-    board: board,
+    url: '/cgi-bin/captcha1.pl/b/',
   };
 
   const { quickReplyContainer, postformContainer } = (() => {
@@ -61,8 +59,8 @@
     if (!img) {
       return;
     }
-    const { key, dummy, board } = captcha;
-    img.src = `${CAPTCHA_URL}/${board}/?key=${key}&dummy=${dummy}&${Math.random()}`;
+    const { url, key, dummy } = captcha;
+    img.src = `${url}?key=${key}&dummy=${dummy}&${Math.random()}`;
   };
 
   const updateCaptchaParams = (parentThread) => {
@@ -272,6 +270,11 @@
 
   const init = () => {
     if (document.querySelector('#de-main')) return;
+    const captchaImg = document.querySelector('#captcha');
+    // get captcha root url
+    if (captchaImg) {
+      captcha.url = captchaImg.getAttribute('src').match(/[^\?]*/)[0];
+    }
     // remove default captcha update handler
     const captchaLink = document.querySelector('input[name=captcha] + a');
     if (captchaLink) {

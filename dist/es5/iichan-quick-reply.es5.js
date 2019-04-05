@@ -6,13 +6,11 @@
   var QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
   var QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
   var QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
-  var CAPTCHA_URL = '/cgi-bin/captcha1.pl';
-  var board = window.location.href.match(/(?:\w+\.\w+\/)([^\/]*)(?=\/)/)[1];
 
   var captcha = {
     key: 'mainpage',
     dummy: '',
-    board: board
+    url: '/cgi-bin/captcha1.pl/b/'
   };
 
   var _ref = function () {
@@ -43,11 +41,11 @@
     if (!img) {
       return;
     }
-    var key = captcha.key,
-        dummy = captcha.dummy,
-        board = captcha.board;
+    var url = captcha.url,
+        key = captcha.key,
+        dummy = captcha.dummy;
 
-    img.src = CAPTCHA_URL + '/' + board + '/?key=' + key + '&dummy=' + dummy + '&' + Math.random();
+    img.src = url + '?key=' + key + '&dummy=' + dummy + '&' + Math.random();
   };
 
   var updateCaptchaParams = function updateCaptchaParams(parentThread) {
@@ -255,6 +253,11 @@
 
   var init = function init() {
     if (document.querySelector('#de-main')) return;
+    var captchaImg = document.querySelector('#captcha');
+    // get captcha root url
+    if (captchaImg) {
+      captcha.url = captchaImg.getAttribute('src').match(/[^\?]*/)[0];
+    }
     // remove default captcha update handler
     var captchaLink = document.querySelector('input[name=captcha] + a');
     if (captchaLink) {
