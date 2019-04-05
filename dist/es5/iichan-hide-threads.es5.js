@@ -9,6 +9,7 @@
 
   var LOCALSTORAGE_KEY = 'iichan_hidden_threads';
   var HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
+  var HIDE_BTN_TITLE = 'Скрыть тред';
   var HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   var PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   var board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
@@ -44,7 +45,7 @@
     var label = thread.querySelector(':scope > label');
     if (!label) return;
     var btn = document.createElement('span');
-    btn.title = 'Скрыть тред';
+    btn.title = HIDE_BTN_TITLE;
     btn.classList.add(HIDE_BTN_CLASSNAME);
     btn.dataset.threadId = thread.id;
     btn.addEventListener('click', hideThread);
@@ -152,7 +153,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + PLACEHOLDER_CLASSNAME + ' {\n            pointer-events: none;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' a {\n            cursor: pointer;\n            pointer-events: auto;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ':hover + div,\n        .' + PLACEHOLDER_CLASSNAME + ':hover + div + br {\n            display: block !important;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' + div {\n            display: none;\n        }\n        .' + PLACEHOLDER_CLASSNAME + ' + div +  br {\n            display: none;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + ' {\n            margin-left: 0.2em;\n            cursor: pointer;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + '::after {\n            content: \'[\u2715]\';\n        }\n        \n        .catthreadlist a {\n          position: relative;\n          transition: all .3s ease-in-out;\n        }\n        \n        .catthreadlist .' + HIDDEN_THREAD_CLASSNAME + ' {\n          opacity: .6;\n        }\n        \n        .catthreadlist .' + HIDDEN_THREAD_CLASSNAME + ':not(:hover) {\n          opacity: .2;\n          filter: blur(1px);\n        }\n        \n        .catthread:hover .' + HIDE_BTN_CLASSNAME + ' {\n          display: block;\n        }\n        \n        .catthread .' + HIDE_BTN_CLASSNAME + ' {\n          text-decoration: none;\n          position: absolute;\n          top: 0;\n          right: 0;\n          display: none;\n          width: 25px;\n          height: 25px;\n        }\n        \n        .catthreadlist .' + HIDDEN_THREAD_CLASSNAME + ' .' + HIDE_BTN_CLASSNAME + '::after {\n          content: \'[\u253C]\';\n        }\n      </style>');
+    document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n        .' + PLACEHOLDER_CLASSNAME + ' {\n            pointer-events: none;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' a {\n            cursor: pointer;\n            pointer-events: auto;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ':hover + div,\n        .' + PLACEHOLDER_CLASSNAME + ':hover + div + br {\n            display: block !important;\n        }\n        \n        .' + PLACEHOLDER_CLASSNAME + ' + div {\n            display: none;\n        }\n        .' + PLACEHOLDER_CLASSNAME + ' + div +  br {\n            display: none;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + ' {\n            margin-left: 0.2em;\n            cursor: pointer;\n        }\n        \n        .' + HIDE_BTN_CLASSNAME + '::after {\n            content: \'[\u2715]\';\n        }\n        \n        .catthreadlist a {\n          position: relative;\n          transition: all .3s ease-in-out;\n        }\n        \n        .catthreadlist .' + HIDDEN_THREAD_CLASSNAME + ' {\n          opacity: .6;\n        }\n        \n        .catthreadlist .' + HIDDEN_THREAD_CLASSNAME + ':not(:hover) {\n          opacity: .2;\n          filter: blur(1px);\n        }\n        \n        .catthread:hover .' + HIDE_BTN_CLASSNAME + ' {\n          display: block;\n        }\n        \n        .catthread .' + HIDE_BTN_CLASSNAME + ' {\n          text-decoration: none;\n          position: absolute;\n          top: 0;\n          right: 0;\n          display: none;\n          width: 25px;\n          height: 25px;\n        }\n        \n        .catthreadlist .' + HIDDEN_THREAD_CLASSNAME + ' .' + HIDE_BTN_CLASSNAME + '::after {\n          content: \'[+]\';\n        }\n      </style>');
   };
 
   var init = function init() {

@@ -57,5 +57,5 @@
 }
 
 .catthreadlist .${HIDDEN_THREAD_CLASSNAME} .${HIDE_BTN_CLASSNAME}::after {
-  content: '[┼]';
+  content: '[+]';
 }

@@ -8,6 +8,7 @@
 
   const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
   const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
+  const HIDE_BTN_TITLE = 'Скрыть тред';
   const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
   const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
   const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
@@ -43,7 +44,7 @@
     const label = thread.querySelector(':scope > label');
     if (!label) return;
     const btn = document.createElement('span');
-    btn.title = 'Скрыть тред';
+    btn.title = HIDE_BTN_TITLE;
     btn.classList.add(HIDE_BTN_CLASSNAME);
     btn.dataset.threadId = thread.id;
     btn.addEventListener('click', hideThread);
@@ -195,7 +196,7 @@
         }
         
         .catthreadlist .${HIDDEN_THREAD_CLASSNAME} .${HIDE_BTN_CLASSNAME}::after {
-          content: '[┼]';
+          content: '[+]';
         }
       </style>`);
   };
