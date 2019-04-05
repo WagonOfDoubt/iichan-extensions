@@ -1,17 +1,30 @@
 (function () {
   'use strict';
 
-  /*
-  Список расширений файлов, преобразуемых в видеопроигрыватели.
-  */
-
   var EXTENSIONS = ['webm', 'mp4', 'ogv'];
-  /*
-  Класс CSS, применяемый для видеопроигрывателей.
-  */
+  var LOCALSTORAGE_KEY = 'iichan_video_settings';
   var VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
+  var HIDE_VIDEO_BTN_CLASSNAME = 'iichan-hide-video-btn';
+  var HIDE_VIDEO_BTN_TITLE = 'Свернуть видео';
+  var HIDE_VIDEO_BTN_TEXT = '[Свернуть видео]';
+  var MUTE_CHECKBOX_CLASSNAME = 'iichan-mute-video-checkbox';
+  var MUTE_CHECKBOX_TITLE = 'Включить звук при открытии видео';
 
   var onThumbnailClick = function onThumbnailClick(e) {
+    var videoSettings = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+    if (!videoSettings.hasOwnProperty('enableSound')) {
+      videoSettings.enableSound = false;
+    }
+    if (e.target.classList.contains(MUTE_CHECKBOX_CLASSNAME)) {
+      // костыль
+      setTimeout(function () {
+        return e.target.checked = !e.target.checked;
+      }, 0);
+      videoSettings.enableSound = e.target.checked;
+      window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(videoSettings));
+      e.preventDefault();
+      return;
+    }
     var parentNode = e.currentTarget.parentNode;
 
     if (e.currentTarget.videoMode === 'on') {
@@ -29,11 +42,12 @@
       vp.autoplay = true;
       vp.controls = true;
       vp.loop = true;
-      vp.muted = true;
+      vp.muted = !videoSettings.enableSound;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
-      e.currentTarget.innerHTML = '<div class="hidevideo">[Свернуть видео]</div>';
+      var enableSound = videoSettings.enableSound ? 'checked' : '';
+      e.currentTarget.innerHTML = '\n      <div>\n        <input type="checkbox" ' + enableSound + ' class="' + MUTE_CHECKBOX_CLASSNAME + '" title="' + MUTE_CHECKBOX_TITLE + '">\n        <div class="' + HIDE_VIDEO_BTN_CLASSNAME + '" title="' + HIDE_VIDEO_BTN_TITLE + '">' + HIDE_VIDEO_BTN_TEXT + '</div>\n      </div>\n      ';
     }
 
     e.preventDefault();
@@ -74,7 +88,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n      .' + VIDEO_PLAYER_CLASSNAME + ' {\n        max-width: 100%;\n        height: auto;\n        box-sizing: border-box;\n        padding: 2px 20px;\n        margin: 0;\n      }\n      .hidevideo {\n        padding: 2px 20px;\n      }\n    </style>');
+    return document.head.insertAdjacentHTML('beforeend', '<style type="text/css">\n      .' + VIDEO_PLAYER_CLASSNAME + ' {\n        max-width: 100%;\n        height: auto;\n        box-sizing: border-box;\n        padding: 2px 20px;\n        margin: 0;\n      }\n      .' + HIDE_VIDEO_BTN_CLASSNAME + ' {\n        padding: 2px 20px;\n      }\n      .' + MUTE_CHECKBOX_CLASSNAME + ' {\n        float: right;\n      }\n    </style>');
   };
 
   var init = function init() {

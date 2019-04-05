@@ -5,6 +5,9 @@
   padding: 2px 20px;
   margin: 0;
 }
-.hidevideo {
+.${HIDE_VIDEO_BTN_CLASSNAME} {
   padding: 2px 20px;
+}
+.${MUTE_CHECKBOX_CLASSNAME} {
+  float: right;
 }

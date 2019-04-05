@@ -15,19 +15,31 @@
 (() => {
   'use strict';
 
-  /*
-  Список расширений файлов, преобразуемых в видеопроигрыватели.
-  */
   const EXTENSIONS = ['webm', 'mp4', 'ogv'];
-  /*
-  Класс CSS, применяемый для видеопроигрывателей.
-  */
+  const LOCALSTORAGE_KEY = 'iichan_video_settings';
   const VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
+  const HIDE_VIDEO_BTN_CLASSNAME = 'iichan-hide-video-btn';
+  const HIDE_VIDEO_BTN_TITLE = 'Свернуть видео';
+  const HIDE_VIDEO_BTN_TEXT = '[Свернуть видео]';
+  const MUTE_CHECKBOX_CLASSNAME = 'iichan-mute-video-checkbox';
+  const MUTE_CHECKBOX_TITLE = 'Включить звук при открытии видео';
 
-  const onThumbnailClick = e => {
+  const onThumbnailClick = (e) => {
+    const videoSettings = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+    if (!videoSettings.hasOwnProperty('enableSound')) {
+      videoSettings.enableSound = false;
+    }
+    if (e.target.classList.contains(MUTE_CHECKBOX_CLASSNAME)) {
+      // костыль
+      setTimeout(() => e.target.checked = !e.target.checked, 0);
+      videoSettings.enableSound = e.target.checked;
+      window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(videoSettings));
+      e.preventDefault();
+      return;
+    }
     const parentNode = e.currentTarget.parentNode;
 
-    if( e.currentTarget.videoMode === 'on' ){
+    if(e.currentTarget.videoMode === 'on'){
       e.currentTarget.videoMode = 'off';
 
       parentNode.removeChild(document.getElementById(
@@ -44,17 +56,23 @@
       vp.autoplay = true;
       vp.controls = true;
       vp.loop = true;
-      vp.muted = true;
+      vp.muted = !videoSettings.enableSound;
       vp.classList.add(VIDEO_PLAYER_CLASSNAME);
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
-      e.currentTarget.innerHTML = '<div class="hidevideo">[Свернуть видео]</div>';
+      const enableSound = videoSettings.enableSound ? 'checked' : '';
+      e.currentTarget.innerHTML = `
+      <div>
+        <input type="checkbox" ${enableSound} class="${MUTE_CHECKBOX_CLASSNAME}" title="${MUTE_CHECKBOX_TITLE}">
+        <div class="${HIDE_VIDEO_BTN_CLASSNAME}" title="${HIDE_VIDEO_BTN_TITLE}">${HIDE_VIDEO_BTN_TEXT}</div>
+      </div>
+      `;
     }
 
     e.preventDefault();
   };
 
-  const addListeners = rootNode => {
+  const addListeners = (rootNode) => {
     const thumbs = (rootNode || document).querySelectorAll('.thumb');
     for (const img of thumbs) {
       const a = img.parentNode;
@@ -77,8 +95,11 @@
         padding: 2px 20px;
         margin: 0;
       }
-      .hidevideo {
+      .${HIDE_VIDEO_BTN_CLASSNAME} {
         padding: 2px 20px;
+      }
+      .${MUTE_CHECKBOX_CLASSNAME} {
+        float: right;
       }
     </style>`
   );
