@@ -116,7 +116,7 @@
 ## Сборка:
 - Установить [Node.js](https://nodejs.org/en/), если еще не.
 - Установить [Gulp](http://gulpjs.com/): `npm install -g gulp`
-- ```bash
+```bash
 $ git clone https://github.com/WagonOfDoubt/iichan-extensions.git
 $ cd iichan-extensions
 $ npm install
