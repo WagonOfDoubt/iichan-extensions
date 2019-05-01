@@ -1,6 +1,6 @@
-(function () {
-  'use strict';
+"use strict";
 
+(function () {
   var NAME = 'Сырно';
   var NAME_QUERY = '.postername, .commentpostername';
   var SPECIAL_DAY = 'Пн';
@@ -15,15 +15,18 @@
       try {
         for (var _iterator = labels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var label = _step.value;
-
           var namespan = label.querySelector(NAME_QUERY);
+
           if (!namespan) {
             continue;
           }
+
           var day = label.innerText.match(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/);
+
           if (day.length < 1 || day[1] === SPECIAL_DAY) {
             continue;
           }
+
           namespan.innerHTML = NAME;
         }
       } catch (err) {
@@ -31,7 +34,7 @@
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
             _iterator.return();
           }
         } finally {
@@ -41,7 +44,9 @@
         }
       }
     };
+
     cirnify(document.body);
+
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
@@ -52,7 +57,6 @@
           try {
             for (var _iterator2 = mutation.addedNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var node = _step2.value;
-
               if (!node.querySelectorAll) return;
               cirnify(node);
             }
@@ -61,7 +65,7 @@
             _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
                 _iterator2.return();
               }
             } finally {
@@ -72,7 +76,10 @@
           }
         });
       });
-      observer.observe(document.body, { childList: true, subtree: true });
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
     }
   };
 

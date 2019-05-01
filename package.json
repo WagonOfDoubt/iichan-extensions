@@ -22,18 +22,25 @@
   },
   "homepage": "https://github.com/WagonOfDoubt/iichan-extensions#readme",
   "devDependencies": {
-    "babel-preset-es2015-nostrict": "^6.6.2",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-clean": "^0.3.2",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "del": "^4.1.1",
+    "gulp": "^4.0.1",
+    "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
-    "gulp-include": "^2.3.1",
+    "gulp-include": "^2.4.1",
     "gulp-js-escape": "^1.0.1",
+    "gulp-order": "^1.2.0",
     "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.1.2",
-    "gulp-wrap": "^0.13.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-wrap": "^0.15.0",
     "jshint": "^2.9.4",
-    "pump": "^1.0.2",
-    "uglify-js-harmony": "^2.7.5"
+    "merge-stream": "^1.0.1",
+    "uglify-es": "^3.3.9"
+  },
+  "jshintConfig": {
+    "esversion": 9,
+    "browser": true
   }
 }

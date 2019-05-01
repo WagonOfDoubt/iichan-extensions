@@ -1,11 +1,10 @@
-(function () {
-  'use strict';
+"use strict";
 
+(function () {
   var init = function init() {
     if (document.querySelector('#de-main')) return;
     var captchaInput = document.querySelector('input[name=captcha]');
     if (!captchaInput) return;
-
     captchaInput.addEventListener('keypress', function (e) {
       /*
       copypasta from
@@ -13,12 +12,14 @@
       */
       var ruUa = 'йцукенгшщзхъїфыівапролджэєячсмитьбюёґ',
           en = 'qwertyuiop[]]assdfghjkl;\'\'zxcvbnm,.`\\';
-      var i = void 0,
+      var i,
           code = e.charCode || e.keyCode,
           chr = String.fromCharCode(code).toLowerCase();
+
       if (code < 0x0410 || code > 0x04FF || (i = ruUa.indexOf(chr)) === -1) {
         return;
       }
+
       chr = en[i];
       var el = e.target;
       var txt = chr;
