@@ -236,6 +236,9 @@ const appendCSS = () => {
         padding: 6px;
       }
       
+      #iichan-hide-threads-icons {
+        display: none;
+      }
     </style>`);
 };
 

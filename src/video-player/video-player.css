@@ -35,3 +35,7 @@
 a.imglink {
   text-decoration: none;
 }
+
+#iichan-video-player-icons {
+  display: none;
+}

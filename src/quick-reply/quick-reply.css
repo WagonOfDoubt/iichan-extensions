@@ -30,3 +30,7 @@
 #${QUICK_REPLY_CONTAINER_ID} .rules {
   display: none;
 }
+
+#iichan-quick-reply-icons {
+  display: none;
+}

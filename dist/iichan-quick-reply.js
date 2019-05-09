@@ -270,6 +270,9 @@ const appendCSS = () => {
         display: none;
       }
       
+      #iichan-quick-reply-icons {
+        display: none;
+      }
     </style>`);
 };
 

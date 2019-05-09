@@ -111,6 +111,10 @@ const appendCSS = () => document.head.insertAdjacentHTML(
     a.imglink {
       text-decoration: none;
     }
+    
+    #iichan-video-player-icons {
+      display: none;
+    }
   </style>`
 );
 
