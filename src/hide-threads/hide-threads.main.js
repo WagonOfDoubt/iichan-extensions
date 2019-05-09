@@ -6,6 +6,7 @@ const THREAD_TITLE_LENGTH = 50;
 const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
 const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
 const HIDE_BTN_TITLE = 'Скрыть тред';
+const UNHIDE_BTN_TITLE = 'Раскрыть тред';
 const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
 const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
 const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
@@ -38,25 +39,25 @@ const setThreadHidden = (threadId, isHidden) => {
 
 const addHideBtn = (thread) => {
   if (!thread) return;
-  const label = thread.querySelector(':scope > label');
+  const label = thread.querySelector(':scope > .reflink');
   if (!label) return;
-  const btn = document.createElement('span');
-  btn.title = HIDE_BTN_TITLE;
-  btn.classList.add(HIDE_BTN_CLASSNAME);
-  btn.dataset.threadId = thread.id;
+  label.insertAdjacentHTML('afterend', `
+    //=include hide-thread-btn.html
+  `);
+  const btn = thread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
   btn.addEventListener('click', hideThread);
-  thread.insertBefore(btn, label.nextSibling);  // insert after
 };
 
 const addToggleBtn = (thread) => {
   //catalog only
   if (!thread) return;
-  const btn = document.createElement('div');
-  btn.title = 'Скрыть тред';
-  btn.classList.add(HIDE_BTN_CLASSNAME, 'reply');
-  btn.dataset.threadId = thread.id;
+  const catthread = thread.querySelector('.catthread');
+  catthread.insertAdjacentHTML('beforeend', `
+    //=include hide-thread-btn.html
+  `);
+  const btn = catthread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
+  btn.classList.add('reply');
   btn.addEventListener('click', toggleThread);
-  thread.querySelector('.catthread').appendChild(btn);
 };
 
 const addPlaceholder = (thread) => {
@@ -95,7 +96,11 @@ const processThreads = (rootNode) => {
 };
 
 const unhideThread = (e) => {
-  const threadId = e.target ? e.target.dataset.threadId : e;
+  let btn = e.target ? e.target : null;
+  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  const threadId = btn ? btn.dataset.threadId : e;
   setThreadHidden(threadId, false);
 
   const thread = document.getElementById(threadId);
@@ -105,10 +110,17 @@ const unhideThread = (e) => {
   if (placeholder) {
     placeholder.parentElement.removeChild(placeholder);
   }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
 };
 
 const hideThread = (e) => {
-  const threadId = e.target ? e.target.dataset.threadId : e;
+  let btn = e.target ? e.target : null;
+  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  const threadId = btn ? btn.dataset.threadId : e;
   setThreadHidden(threadId, true);
 
   const thread = document.getElementById(threadId);
@@ -118,11 +130,18 @@ const hideThread = (e) => {
   if (!catalogMode) {
     addPlaceholder(thread);
   }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
 };
 
 const toggleThread = (e) => {
   // for catalog only
-  const threadId = e.target ? e.target.dataset.threadId : e;
+  let btn = e.target ? e.target : null;
+  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  const threadId = btn ? btn.dataset.threadId : e;
   const threadNo = threadId.split('-').pop();
   const thread = document.getElementById('thread-' + threadNo);
   setThreadHidden(threadId, thread.classList.toggle(HIDDEN_THREAD_CLASSNAME));
@@ -138,10 +157,21 @@ const appendCSS = () => {
     </style>`);
 };
 
+const appendHTML = () => {
+  const icons = `
+    //=include hide-threads-icons.svg
+  `;
+  const iconsContainer = `<div id="iichan-hide-threads-icons">
+    ${icons}
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', iconsContainer);
+};
+
 const init = () => {
   if (document.querySelector('#de-main')) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
+  appendHTML();
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

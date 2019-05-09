@@ -196,21 +196,26 @@ const movePostform = (replyTo) => {
 };
 
 const onQuickReplyClick = (e) => {
-  const btn = e.target;
-  const afterReply = document.querySelector(btn.dataset.postId);
-  movePostform(afterReply);
+  let btn = e.target;
+  while (btn && !btn.classList.contains(QUICK_REPLY_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  if (btn) {
+    const afterReply = document.getElementById(btn.dataset.postId);
+    movePostform(afterReply);
+  }
+  e.preventDefault();
 };
 
 const addReplyBtn = (reply) => {
   if (!reply) return;
   const label = reply.querySelector(':scope > .reflink');
   if (!label) return;
-  const btn = document.createElement('span');
-  btn.title = QICK_REPLY_BTN_TITLE;
-  btn.classList.add(QUICK_REPLY_BTN_CLASSNAME);
-  btn.dataset.postId = '#' + reply.id;
+  label.insertAdjacentHTML('afterend', `
+    //=include quick-reply-btn.html
+  `);
+  const btn = reply.querySelector(`.${QUICK_REPLY_BTN_CLASSNAME}`);
   btn.addEventListener('click', onQuickReplyClick);
-  reply.insertBefore(btn, label.nextSibling);  // insert after
 };
 
 const processNodes = (rootNode) => {
@@ -225,6 +230,16 @@ const appendCSS = () => {
     `<style type="text/css">
       //=include quick-reply.css
     </style>`);
+};
+
+const appendHTML = () => {
+  const icons = `
+    //=include quick-reply-icons.svg
+  `;
+  const iconsContainer = `<div id="iichan-quick-reply-icons">
+    ${icons}
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
 
 const init = () => {
@@ -250,6 +265,7 @@ const init = () => {
     updateCaptchaParams();
   }
   appendCSS();
+  appendHTML();
   processNodes();
   quickReplyShowFormBtn.addEventListener('click', (e) => {
     movePostform();

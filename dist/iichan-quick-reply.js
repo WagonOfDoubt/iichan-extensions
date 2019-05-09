@@ -201,21 +201,30 @@ const movePostform = (replyTo) => {
 };
 
 const onQuickReplyClick = (e) => {
-  const btn = e.target;
-  const afterReply = document.querySelector(btn.dataset.postId);
-  movePostform(afterReply);
+  let btn = e.target;
+  while (btn && !btn.classList.contains(QUICK_REPLY_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  if (btn) {
+    const afterReply = document.getElementById(btn.dataset.postId);
+    movePostform(afterReply);
+  }
+  e.preventDefault();
 };
 
 const addReplyBtn = (reply) => {
   if (!reply) return;
   const label = reply.querySelector(':scope > .reflink');
   if (!label) return;
-  const btn = document.createElement('span');
-  btn.title = QICK_REPLY_BTN_TITLE;
-  btn.classList.add(QUICK_REPLY_BTN_CLASSNAME);
-  btn.dataset.postId = '#' + reply.id;
+  label.insertAdjacentHTML('afterend', `
+    <div class="${QUICK_REPLY_BTN_CLASSNAME}" title="${QICK_REPLY_BTN_TITLE}" data-post-id="${reply.id}">
+      <svg>
+        <use class="iichan-icon-reply-use" xlink:href="#iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16"/>
+      </svg>
+    </div>
+  `);
+  const btn = reply.querySelector(`.${QUICK_REPLY_BTN_CLASSNAME}`);
   btn.addEventListener('click', onQuickReplyClick);
-  reply.insertBefore(btn, label.nextSibling);  // insert after
 };
 
 const processNodes = (rootNode) => {
@@ -228,8 +237,20 @@ const processNodes = (rootNode) => {
 const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
-      .${QUICK_REPLY_BTN_CLASSNAME}::after {
-        content: '[▶]';
+      .${QUICK_REPLY_BTN_CLASSNAME} {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        vertical-align: text-top;
+      }
+      
+      .${QUICK_REPLY_BTN_CLASSNAME} > svg {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .${QUICK_REPLY_BTN_CLASSNAME} use {
+        pointer-events: none;
       }
       
       .replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
@@ -250,6 +271,22 @@ const appendCSS = () => {
       }
       
     </style>`);
+};
+
+const appendHTML = () => {
+  const icons = `
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16">
+        <path
+          fill="currentcolor"
+          d="M 8,0.98745 A 7.0133929,5.9117254 0 0 0 0.986328,6.89859 7.0133929,5.9117254 0 0 0 3.037109,11.07043 L 1.835937,15.01255 6.230469,12.61078 A 7.0133929,5.9117254 0 0 0 8,12.80973 7.0133929,5.9117254 0 0 0 15.013672,6.89859 7.0133929,5.9117254 0 0 0 8,0.98745 Z"/>
+      </symbol>
+    </svg>
+  `;
+  const iconsContainer = `<div id="iichan-quick-reply-icons">
+    ${icons}
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
 
 const init = () => {
@@ -275,6 +312,7 @@ const init = () => {
     updateCaptchaParams();
   }
   appendCSS();
+  appendHTML();
   processNodes();
   quickReplyShowFormBtn.addEventListener('click', (e) => {
     movePostform();

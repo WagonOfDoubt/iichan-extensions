@@ -1,36 +1,53 @@
 .${PLACEHOLDER_CLASSNAME} {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .${PLACEHOLDER_CLASSNAME} a {
-    cursor: pointer;
-    pointer-events: auto;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .${PLACEHOLDER_CLASSNAME}:hover + div,
 .${PLACEHOLDER_CLASSNAME}:hover + div + br {
-    display: block !important;
+  display: block !important;
 }
 
 .${PLACEHOLDER_CLASSNAME} + div {
-    display: none;
+  display: none;
 }
 .${PLACEHOLDER_CLASSNAME} + div +  br {
-    display: none;
+  display: none;
 }
 
 .${HIDE_BTN_CLASSNAME} {
-    margin-left: 0.2em;
-    cursor: pointer;
+  margin-left: 0.2em;
+  cursor: pointer;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-top;
 }
 
-.${HIDE_BTN_CLASSNAME}::after {
-    content: '[✕]';
+.${HIDE_BTN_CLASSNAME} use {
+  pointer-events: none;
+}
+
+.${HIDE_BTN_CLASSNAME} > svg {
+  width: 16px;
+  height: 16px;
+}
+
+[id^=thread]:not(.iichan-thread-hidden) .${HIDE_BTN_CLASSNAME} .iichan-icon-unhide-use {
+  display: none;
+}
+
+[id^=thread].iichan-thread-hidden .${HIDE_BTN_CLASSNAME} .iichan-icon-hide-use {
+  display: none;
 }
 
 .catthreadlist a {
   position: relative;
-  transition: all .3s ease-in-out;
+  transition: opacity .3s ease-in-out, filter .3s ease-in-out;
 }
 
 .catthreadlist .${HIDDEN_THREAD_CLASSNAME} {
@@ -38,8 +55,8 @@
 }
 
 .catthreadlist .${HIDDEN_THREAD_CLASSNAME}:not(:hover) {
-  opacity: .2;
-  filter: blur(1px);
+  opacity: .1;
+  filter: grayscale(100%);
 }
 
 .catthread:hover .${HIDE_BTN_CLASSNAME} {
@@ -52,10 +69,5 @@
   top: 0;
   right: 0;
   display: none;
-  width: 25px;
-  height: 25px;
-}
-
-.catthreadlist .${HIDDEN_THREAD_CLASSNAME} .${HIDE_BTN_CLASSNAME}::after {
-  content: '[+]';
+  padding: 6px;
 }

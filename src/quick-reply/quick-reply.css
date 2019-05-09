@@ -1,5 +1,17 @@
-.${QUICK_REPLY_BTN_CLASSNAME}::after {
-  content: '[▶]';
+.${QUICK_REPLY_BTN_CLASSNAME} {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-top;
+}
+
+.${QUICK_REPLY_BTN_CLASSNAME} > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.${QUICK_REPLY_BTN_CLASSNAME} use {
+  pointer-events: none;
 }
 
 .replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {

@@ -7,6 +7,7 @@ const THREAD_TITLE_LENGTH = 50;
 const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
 const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
 const HIDE_BTN_TITLE = 'Скрыть тред';
+const UNHIDE_BTN_TITLE = 'Раскрыть тред';
 const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
 const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
 const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
@@ -39,25 +40,35 @@ const setThreadHidden = (threadId, isHidden) => {
 
 const addHideBtn = (thread) => {
   if (!thread) return;
-  const label = thread.querySelector(':scope > label');
+  const label = thread.querySelector(':scope > .reflink');
   if (!label) return;
-  const btn = document.createElement('span');
-  btn.title = HIDE_BTN_TITLE;
-  btn.classList.add(HIDE_BTN_CLASSNAME);
-  btn.dataset.threadId = thread.id;
+  label.insertAdjacentHTML('afterend', `
+    <div class="${HIDE_BTN_CLASSNAME}" title="${HIDE_BTN_TITLE}" data-thread-id="${thread.id}">
+      <svg>
+        <use class="iichan-icon-hide-use" xlink:href="#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-unhide-use" xlink:href="#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
+      </svg>
+    </div>
+  `);
+  const btn = thread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
   btn.addEventListener('click', hideThread);
-  thread.insertBefore(btn, label.nextSibling);  // insert after
 };
 
 const addToggleBtn = (thread) => {
   //catalog only
   if (!thread) return;
-  const btn = document.createElement('div');
-  btn.title = 'Скрыть тред';
-  btn.classList.add(HIDE_BTN_CLASSNAME, 'reply');
-  btn.dataset.threadId = thread.id;
+  const catthread = thread.querySelector('.catthread');
+  catthread.insertAdjacentHTML('beforeend', `
+    <div class="${HIDE_BTN_CLASSNAME}" title="${HIDE_BTN_TITLE}" data-thread-id="${thread.id}">
+      <svg>
+        <use class="iichan-icon-hide-use" xlink:href="#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-unhide-use" xlink:href="#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
+      </svg>
+    </div>
+  `);
+  const btn = catthread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
+  btn.classList.add('reply');
   btn.addEventListener('click', toggleThread);
-  thread.querySelector('.catthread').appendChild(btn);
 };
 
 const addPlaceholder = (thread) => {
@@ -68,7 +79,7 @@ const addPlaceholder = (thread) => {
   threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
   const placeholderId = 'iichan-hidden-' + thread.id;
   thread.insertAdjacentHTML('beforebegin', `
-    <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a>№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
+    <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a title="${UNHIDE_BTN_TITLE}">№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
   `);
 
   const placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
@@ -96,7 +107,11 @@ const processThreads = (rootNode) => {
 };
 
 const unhideThread = (e) => {
-  const threadId = e.target ? e.target.dataset.threadId : e;
+  let btn = e.target ? e.target : null;
+  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  const threadId = btn ? btn.dataset.threadId : e;
   setThreadHidden(threadId, false);
 
   const thread = document.getElementById(threadId);
@@ -106,10 +121,17 @@ const unhideThread = (e) => {
   if (placeholder) {
     placeholder.parentElement.removeChild(placeholder);
   }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
 };
 
 const hideThread = (e) => {
-  const threadId = e.target ? e.target.dataset.threadId : e;
+  let btn = e.target ? e.target : null;
+  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  const threadId = btn ? btn.dataset.threadId : e;
   setThreadHidden(threadId, true);
 
   const thread = document.getElementById(threadId);
@@ -119,11 +141,18 @@ const hideThread = (e) => {
   if (!catalogMode) {
     addPlaceholder(thread);
   }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
 };
 
 const toggleThread = (e) => {
   // for catalog only
-  const threadId = e.target ? e.target.dataset.threadId : e;
+  let btn = e.target ? e.target : null;
+  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    btn = btn.parentElement;
+  }
+  const threadId = btn ? btn.dataset.threadId : e;
   const threadNo = threadId.split('-').pop();
   const thread = document.getElementById('thread-' + threadNo);
   setThreadHidden(threadId, thread.classList.toggle(HIDDEN_THREAD_CLASSNAME));
@@ -136,38 +165,55 @@ const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
       .${PLACEHOLDER_CLASSNAME} {
-          pointer-events: none;
+        pointer-events: none;
       }
       
       .${PLACEHOLDER_CLASSNAME} a {
-          cursor: pointer;
-          pointer-events: auto;
+        cursor: pointer;
+        pointer-events: auto;
       }
       
       .${PLACEHOLDER_CLASSNAME}:hover + div,
       .${PLACEHOLDER_CLASSNAME}:hover + div + br {
-          display: block !important;
+        display: block !important;
       }
       
       .${PLACEHOLDER_CLASSNAME} + div {
-          display: none;
+        display: none;
       }
       .${PLACEHOLDER_CLASSNAME} + div +  br {
-          display: none;
+        display: none;
       }
       
       .${HIDE_BTN_CLASSNAME} {
-          margin-left: 0.2em;
-          cursor: pointer;
+        margin-left: 0.2em;
+        cursor: pointer;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        vertical-align: text-top;
       }
       
-      .${HIDE_BTN_CLASSNAME}::after {
-          content: '[✕]';
+      .${HIDE_BTN_CLASSNAME} use {
+        pointer-events: none;
+      }
+      
+      .${HIDE_BTN_CLASSNAME} > svg {
+        width: 16px;
+        height: 16px;
+      }
+      
+      [id^=thread]:not(.iichan-thread-hidden) .${HIDE_BTN_CLASSNAME} .iichan-icon-unhide-use {
+        display: none;
+      }
+      
+      [id^=thread].iichan-thread-hidden .${HIDE_BTN_CLASSNAME} .iichan-icon-hide-use {
+        display: none;
       }
       
       .catthreadlist a {
         position: relative;
-        transition: all .3s ease-in-out;
+        transition: opacity .3s ease-in-out, filter .3s ease-in-out;
       }
       
       .catthreadlist .${HIDDEN_THREAD_CLASSNAME} {
@@ -175,8 +221,8 @@ const appendCSS = () => {
       }
       
       .catthreadlist .${HIDDEN_THREAD_CLASSNAME}:not(:hover) {
-        opacity: .2;
-        filter: blur(1px);
+        opacity: .1;
+        filter: grayscale(100%);
       }
       
       .catthread:hover .${HIDE_BTN_CLASSNAME} {
@@ -189,20 +235,38 @@ const appendCSS = () => {
         top: 0;
         right: 0;
         display: none;
-        width: 25px;
-        height: 25px;
+        padding: 6px;
       }
       
-      .catthreadlist .${HIDDEN_THREAD_CLASSNAME} .${HIDE_BTN_CLASSNAME}::after {
-        content: '[+]';
-      }
     </style>`);
+};
+
+const appendHTML = () => {
+  const icons = `
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16">
+        <path
+          fill="currentcolor"
+          d="m 2.8925753,6.0097655 c -1.039639,0 -1.876953,0.837315 -1.876953,1.876954 v 0.226562 c 0,1.039639 0.837314,1.876953 1.876953,1.876953 10.8787687,0 0.063512,0 10.2148497,0 1.039637,0 1.876953,-0.837314 1.876953,-1.876953 v -0.226562 c 0,-1.039639 -0.837315,-1.876954 -1.876953,-1.876954 -10.8494379,0 -0.248141,0 -10.2148497,0 z"/>
+      </symbol>
+      <symbol id="iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16">
+        <path
+          fill="currentcolor"
+          d="m 7.9589815,1.003906 c -1.106736,0 -1.996094,0.89131 -1.996094,1.998047 v 2.982421 h -3.070312 c -1.039639,0 -1.876953,0.837315 -1.876953,1.876954 V 8.08789 c 0,1.039639 0.837314,1.876953 1.876953,1.876953 h 3.070312 v 3.033204 c 0,1.106736 0.889358,1.998047 1.996094,1.998047 h 0.01563 c 1.106736,0 1.996094,-0.891311 1.996094,-1.998047 V 9.964843 h 3.1367195 c 1.039637,0 1.876953,-0.837314 1.876953,-1.876953 V 7.861328 c 0,-1.039639 -0.837315,-1.876954 -1.876953,-1.876954 H 9.9707005 V 3.001953 c 0,-1.106737 -0.889358,-1.998047 -1.996094,-1.998047 z"/>
+      </symbol>
+    </svg>
+  `;
+  const iconsContainer = `<div id="iichan-hide-threads-icons">
+    ${icons}
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
+  appendHTML();
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
