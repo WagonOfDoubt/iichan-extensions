@@ -67,9 +67,8 @@
     var threadTitle = thread.querySelector('.filetitle').innerText || thread.querySelector('blockquote').innerText;
     threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
     var placeholderId = 'iichan-hidden-' + thread.id;
-    thread.insertAdjacentHTML('beforebegin', "\n    <div class=\"reply ".concat(PLACEHOLDER_CLASSNAME, "\" id=\"").concat(placeholderId, "\">\u0422\u0440\u0435\u0434 <a title=\"").concat(UNHIDE_BTN_TITLE, "\">\u2116").concat(threadNo, "</a> \u0441\u043A\u0440\u044B\u0442 (").concat(threadTitle || 'изображение', ")</div>\n  "));
+    thread.insertAdjacentHTML('beforebegin', "\n    <div class=\"reply ".concat(PLACEHOLDER_CLASSNAME, "\" id=\"").concat(placeholderId, "\">\u0422\u0440\u0435\u0434 <a title=\"").concat(UNHIDE_BTN_TITLE, "\" data-thread-id=\"").concat(thread.id, "\">\u2116").concat(threadNo, "</a> \u0441\u043A\u0440\u044B\u0442 (").concat(threadTitle || 'изображение', ")</div>\n  "));
     var placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
-    placeholderBtn.dataset.threadId = thread.id;
     placeholderBtn.addEventListener('click', unhideThread);
   };
 
@@ -113,14 +112,22 @@
     }
   };
 
-  var unhideThread = function unhideThread(e) {
-    var btn = e.target ? e.target : null;
+  var getTargetThreadId = function getTargetThreadId(e) {
+    if (typeof e === 'string') {
+      return e;
+    }
 
-    while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+    var btn = e.target;
+
+    while (btn && !(btn.dataset && btn.dataset.threadId)) {
       btn = btn.parentElement;
     }
 
-    var threadId = btn ? btn.dataset.threadId : e;
+    return btn && btn.dataset.threadId;
+  };
+
+  var unhideThread = function unhideThread(e) {
+    var threadId = getTargetThreadId(e);
     setThreadHidden(threadId, false);
     var thread = document.getElementById(threadId);
     if (!thread) return;
@@ -137,13 +144,7 @@
   };
 
   var hideThread = function hideThread(e) {
-    var btn = e.target ? e.target : null;
-
-    while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
-      btn = btn.parentElement;
-    }
-
-    var threadId = btn ? btn.dataset.threadId : e;
+    var threadId = getTargetThreadId(e);
     setThreadHidden(threadId, true);
     var thread = document.getElementById(threadId);
     if (!thread || !thread.parentNode) return;
@@ -161,13 +162,7 @@
 
   var toggleThread = function toggleThread(e) {
     // for catalog only
-    var btn = e.target ? e.target : null;
-
-    while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
-      btn = btn.parentElement;
-    }
-
-    var threadId = btn ? btn.dataset.threadId : e;
+    var threadId = getTargetThreadId(e);
     var threadNo = threadId.split('-').pop();
     var thread = document.getElementById('thread-' + threadNo);
     setThreadHidden(threadId, thread.classList.toggle(HIDDEN_THREAD_CLASSNAME));

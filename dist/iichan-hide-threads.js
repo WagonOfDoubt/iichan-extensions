@@ -79,11 +79,10 @@ const addPlaceholder = (thread) => {
   threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
   const placeholderId = 'iichan-hidden-' + thread.id;
   thread.insertAdjacentHTML('beforebegin', `
-    <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a title="${UNHIDE_BTN_TITLE}">№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
+    <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a title="${UNHIDE_BTN_TITLE}" data-thread-id="${thread.id}">№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
   `);
 
   const placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
-  placeholderBtn.dataset.threadId = thread.id;
   placeholderBtn.addEventListener('click', unhideThread);
 };
 
@@ -106,12 +105,19 @@ const processThreads = (rootNode) => {
   }
 };
 
-const unhideThread = (e) => {
-  let btn = e.target ? e.target : null;
-  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
+const getTargetThreadId = (e) => {
+  if (typeof e === 'string') {
+    return e;
+  }
+  let btn = e.target;
+  while (btn && !(btn.dataset && btn.dataset.threadId)) {
     btn = btn.parentElement;
   }
-  const threadId = btn ? btn.dataset.threadId : e;
+  return btn && btn.dataset.threadId;
+};
+
+const unhideThread = (e) => {
+  const threadId = getTargetThreadId(e);
   setThreadHidden(threadId, false);
 
   const thread = document.getElementById(threadId);
@@ -127,11 +133,7 @@ const unhideThread = (e) => {
 };
 
 const hideThread = (e) => {
-  let btn = e.target ? e.target : null;
-  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
-    btn = btn.parentElement;
-  }
-  const threadId = btn ? btn.dataset.threadId : e;
+  const threadId = getTargetThreadId(e);
   setThreadHidden(threadId, true);
 
   const thread = document.getElementById(threadId);
@@ -148,11 +150,7 @@ const hideThread = (e) => {
 
 const toggleThread = (e) => {
   // for catalog only
-  let btn = e.target ? e.target : null;
-  while (btn && !btn.classList.contains(HIDE_BTN_CLASSNAME)) {
-    btn = btn.parentElement;
-  }
-  const threadId = btn ? btn.dataset.threadId : e;
+  const threadId = getTargetThreadId(e);
   const threadNo = threadId.split('-').pop();
   const thread = document.getElementById('thread-' + threadNo);
   setThreadHidden(threadId, thread.classList.toggle(HIDDEN_THREAD_CLASSNAME));
