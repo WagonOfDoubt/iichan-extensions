@@ -5,9 +5,33 @@
   padding: 2px 20px;
   margin: 0;
 }
+
 .${HIDE_VIDEO_BTN_CLASSNAME} {
-  padding: 2px 20px;
+  margin: 2px 20px;
 }
+
 .${MUTE_CHECKBOX_CLASSNAME} {
   float: right;
+}
+
+.${HIDE_VIDEO_BTN_CLASSNAME} > span::before {
+  content: '[';
+}
+
+.${HIDE_VIDEO_BTN_CLASSNAME} > span::after {
+  content: ']';
+}
+
+.${HIDE_VIDEO_BTN_CLASSNAME} svg {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-top;
+}
+
+.${HIDE_VIDEO_BTN_CLASSNAME} use {
+  pointer-events: none;
+}
+
+a.imglink {
+  text-decoration: none;
 }

@@ -2,8 +2,8 @@ const EXTENSIONS = ['webm', 'mp4', 'ogv'];
 const LOCALSTORAGE_KEY = 'iichan_video_settings';
 const VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
 const HIDE_VIDEO_BTN_CLASSNAME = 'iichan-hide-video-btn';
-const HIDE_VIDEO_BTN_TITLE = 'Свернуть видео';
-const HIDE_VIDEO_BTN_TEXT = '[Свернуть видео]';
+const HIDE_VIDEO_BTN_TITLE = 'Закрыть видео';
+const HIDE_VIDEO_BTN_TEXT = 'Закрыть видео';
 const MUTE_CHECKBOX_CLASSNAME = 'iichan-mute-video-checkbox';
 const MUTE_CHECKBOX_TITLE = 'Включить звук при открытии видео';
 
@@ -72,9 +72,20 @@ const appendCSS = () => document.head.insertAdjacentHTML(
   </style>`
 );
 
+const appendHTML = () => {
+  const icons = `
+    //=include video-player-icons.svg
+  `;
+  const iconsContainer = `<div id="iichan-video-player-icons">
+    ${icons}
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', iconsContainer);
+};
+
 const init = () => {
   if (document.querySelector('#de-main')) return;
   appendCSS();
+  appendHTML();
   addListeners();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
