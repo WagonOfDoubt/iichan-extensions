@@ -13,16 +13,6 @@
 // ==/UserScript==
 
 (() => {
-const QUICK_REPLY_BTN_CLASSNAME = 'iichan-quick-reply-btn';
-const QUICK_REPLY_BTN_TITLE = 'Быстрый ответ';
-const QUICK_REPLY_CLOSE_FORM_BTN_TITLE = 'Закрыть форму';
-const QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE = '[Показать форму ответа]';
-const QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE = '[Создать тред]';
-const QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
-const QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
-const QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
-const QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME = 'iichan-quick-reply-close-form-btn';
-
 const captcha = {
   key: 'mainpage',
   dummy: '',
@@ -34,24 +24,24 @@ const { quickReplyContainer, postformContainer } = (() => {
     quickReplyContainer.insertAdjacentHTML('beforeend', `
         <tr>
         	<td class="doubledash">&gt;&gt;</td>
-        	<td class="${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} reply">
-           <div class="theader">Ответ в тред №<span class="iichan-quick-reply-thread"></span><div class="${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME}" title="${QUICK_REPLY_CLOSE_FORM_BTN_TITLE}"><svg>
+        	<td class="iichan-postform-container reply">
+           <div class="theader">Ответ в тред №<span class="iichan-quick-reply-thread"></span><div class="iichan-quick-reply-close-form-btn" title="Закрыть форму"><svg>
             <use class="iichan-icon-form-close-use" xlink:href="#iichan-icon-form-close" width="16" height="16" viewBox="0 0 16 16"/>
           </svg></div></div>
           </td>
         </tr>
         
       `);
-    quickReplyContainer.id = QUICK_REPLY_CONTAINER_ID;
-    const hideFormBtn = quickReplyContainer.querySelector(`.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME}`);
+    quickReplyContainer.id = 'iichan-quick-reply-container';
+    const hideFormBtn = quickReplyContainer.querySelector('.iichan-quick-reply-close-form-btn');
     hideFormBtn.addEventListener('click', (e) => movePostform(null, true));
-    const postformContainer = quickReplyContainer.querySelector(`.${QUICK_REPLY_FORM_CONTAINER_CLASSNAME}`);
+    const postformContainer = quickReplyContainer.querySelector('.iichan-postform-container');
     return { quickReplyContainer, postformContainer };
 })();
 
 const quickReplyShowFormBtn = (() => {
   const btn = document.createElement('a');
-  btn.classList.add(QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME);
+  btn.classList.add('iichan-quick-reply-show-form-btn');
   return btn;
 })();
 
@@ -238,7 +228,7 @@ const movePostform = (replyTo, closeQuickReply) => {
 
 const onQuickReplyClick = (e) => {
   let btn = e.target;
-  while (btn && !btn.classList.contains(QUICK_REPLY_BTN_CLASSNAME)) {
+  while (btn && !btn.classList.contains('iichan-quick-reply-btn')) {
     btn = btn.parentElement;
   }
   if (btn) {
@@ -253,13 +243,13 @@ const addReplyBtn = (reply) => {
   const label = reply.querySelector(':scope > .reflink');
   if (!label) return;
   label.insertAdjacentHTML('afterend', `
-    <div class="${QUICK_REPLY_BTN_CLASSNAME}" title="${QUICK_REPLY_BTN_TITLE}" data-post-id="${reply.id}">
+    <div class="iichan-quick-reply-btn" title="Быстрый ответ" data-post-id="${ reply.id }">
       <svg>
         <use class="iichan-icon-reply-use" xlink:href="#iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
   `);
-  const btn = reply.querySelector(`.${QUICK_REPLY_BTN_CLASSNAME}`);
+  const btn = reply.querySelector('.iichan-quick-reply-btn');
   btn.addEventListener('click', onQuickReplyClick);
 };
 
@@ -273,36 +263,36 @@ const processNodes = (rootNode) => {
 const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
-      .${QUICK_REPLY_BTN_CLASSNAME} {
+      .iichan-quick-reply-btn {
         display: inline-block;
         width: 16px;
         height: 16px;
         vertical-align: text-top;
       }
       
-      .${QUICK_REPLY_BTN_CLASSNAME} > svg {
+      .iichan-quick-reply-btn > svg {
         width: 16px;
         height: 16px;
       }
       
-      .${QUICK_REPLY_BTN_CLASSNAME} use {
+      .iichan-quick-reply-btn use {
         pointer-events: none;
       }
       
-      .replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-        content: '${QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE}';
+      .replypage .iichan-quick-reply-show-form-btn::after {
+        content: '[Показать форму ответа]';
       }
       
-      .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-        content: '${QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE}';
+      .iichan-quick-reply-show-form-btn::after {
+        content: '[Создать тред]';
       }
       
-      .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME},
-      .${QUICK_REPLY_BTN_CLASSNAME} {
+      .iichan-quick-reply-show-form-btn,
+      .iichan-quick-reply-btn {
         cursor: pointer;
       }
       
-      #${QUICK_REPLY_CONTAINER_ID} .rules {
+      #iichan-quick-reply-container .rules {
         display: none;
       }
       
@@ -310,23 +300,23 @@ const appendCSS = () => {
         display: none;
       }
       
-      .${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} .theader {
+      .iichan-postform-container .theader {
         width: auto;
       }
       
-      .${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} {
+      .iichan-quick-reply-close-form-btn {
         float: right;
         cursor: pointer;
         padding: 1px;
       }
       
-      .${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} svg {
+      .iichan-quick-reply-close-form-btn svg {
         width: 16px;
         height: 16px;
         vertical-align: text-top;
       }
       
-      .${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} use {
+      .iichan-quick-reply-close-form-btn use {
         pointer-events: none;
       }
       
@@ -334,7 +324,7 @@ const appendCSS = () => {
 };
 
 const appendHTML = () => {
-  const icons = `
+  const iconsContainer = `<div id="iichan-quick-reply-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
       <symbol id="iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16">
         <path
@@ -347,9 +337,6 @@ const appendHTML = () => {
           d="m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z"/>
       </symbol>
     </svg>
-  `;
-  const iconsContainer = `<div id="iichan-quick-reply-icons">
-    ${icons}
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };

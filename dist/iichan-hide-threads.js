@@ -3,22 +3,15 @@
 Сколько первых символов из поста показывать в заголовке скрытого треда
 */
 const THREAD_TITLE_LENGTH = 50;
-
-const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
-const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
-const HIDE_BTN_TITLE = 'Скрыть тред';
-const UNHIDE_BTN_TITLE = 'Раскрыть тред';
-const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
-const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
 const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
 const getHiddenThreads = () => {
-  const json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+  const json = JSON.parse(window.localStorage.getItem('iichan_hidden_threads') || '{}');
   return Array.isArray(json) ? {} : json;
 };
 
 const setHiddenThreads = (hiddenThreads) => {
-  window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
+  window.localStorage.setItem('iichan_hidden_threads', JSON.stringify(hiddenThreads));
 };
 
 const setThreadHidden = (threadId, isHidden) => {
@@ -43,14 +36,14 @@ const addHideBtn = (thread) => {
   const label = thread.querySelector(':scope > .reflink');
   if (!label) return;
   label.insertAdjacentHTML('afterend', `
-    <div class="${HIDE_BTN_CLASSNAME}" title="${HIDE_BTN_TITLE}" data-thread-id="${thread.id}">
+    <div class="iichan-hide-thread-btn" title="Скрыть тред" data-thread-id="${thread.id}">
       <svg>
         <use class="iichan-icon-hide-use" xlink:href="#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
         <use class="iichan-icon-unhide-use" xlink:href="#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
   `);
-  const btn = thread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
+  const btn = thread.querySelector(`.iichan-hide-thread-btn`);
   btn.addEventListener('click', hideThread);
 };
 
@@ -59,14 +52,14 @@ const addToggleBtn = (thread) => {
   if (!thread) return;
   const catthread = thread.querySelector('.catthread');
   catthread.insertAdjacentHTML('beforeend', `
-    <div class="${HIDE_BTN_CLASSNAME}" title="${HIDE_BTN_TITLE}" data-thread-id="${thread.id}">
+    <div class="iichan-hide-thread-btn" title="Скрыть тред" data-thread-id="${thread.id}">
       <svg>
         <use class="iichan-icon-hide-use" xlink:href="#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
         <use class="iichan-icon-unhide-use" xlink:href="#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
   `);
-  const btn = catthread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
+  const btn = catthread.querySelector(`.iichan-hide-thread-btn`);
   btn.classList.add('reply');
   btn.addEventListener('click', toggleThread);
 };
@@ -79,7 +72,7 @@ const addPlaceholder = (thread) => {
   threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
   const placeholderId = 'iichan-hidden-' + thread.id;
   thread.insertAdjacentHTML('beforebegin', `
-    <div class="reply ${PLACEHOLDER_CLASSNAME}" id="${placeholderId}">Тред <a title="${UNHIDE_BTN_TITLE}" data-thread-id="${thread.id}">№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
+    <div class="reply iichan-hidden-thread-placeholder" id="${placeholderId}">Тред <a title="Раскрыть тред" data-thread-id="${thread.id}">№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
   `);
 
   const placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
@@ -122,7 +115,7 @@ const unhideThread = (e) => {
 
   const thread = document.getElementById(threadId);
   if(!thread) return;
-  thread.classList.remove(HIDDEN_THREAD_CLASSNAME);
+  thread.classList.remove('iichan-thread-hidden');
   const placeholder = document.getElementById('iichan-hidden-' + threadId);
   if (placeholder) {
     placeholder.parentElement.removeChild(placeholder);
@@ -138,7 +131,7 @@ const hideThread = (e) => {
 
   const thread = document.getElementById(threadId);
   if(!thread || !thread.parentNode) return;
-  thread.classList.add(HIDDEN_THREAD_CLASSNAME);
+  thread.classList.add('iichan-thread-hidden');
   const catalogMode = !!document.querySelector('.catthreadlist');
   if (!catalogMode) {
     addPlaceholder(thread);
@@ -153,7 +146,7 @@ const toggleThread = (e) => {
   const threadId = getTargetThreadId(e);
   const threadNo = threadId.split('-').pop();
   const thread = document.getElementById('thread-' + threadNo);
-  setThreadHidden(threadId, thread.classList.toggle(HIDDEN_THREAD_CLASSNAME));
+  setThreadHidden(threadId, thread.classList.toggle('iichan-thread-hidden'));
   if (e.preventDefault) {
     e.preventDefault();
   }
@@ -162,28 +155,28 @@ const toggleThread = (e) => {
 const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
-      .${PLACEHOLDER_CLASSNAME} {
+      .iichan-hidden-thread-placeholder {
         pointer-events: none;
       }
       
-      .${PLACEHOLDER_CLASSNAME} a {
+      .iichan-hidden-thread-placeholder a {
         cursor: pointer;
         pointer-events: auto;
       }
       
-      .${PLACEHOLDER_CLASSNAME}:hover + div,
-      .${PLACEHOLDER_CLASSNAME}:hover + div + br {
+      .iichan-hidden-thread-placeholder:hover + div,
+      .iichan-hidden-thread-placeholder:hover + div + br {
         display: block !important;
       }
       
-      .${PLACEHOLDER_CLASSNAME} + div {
+      .iichan-hidden-thread-placeholder + div {
         display: none;
       }
-      .${PLACEHOLDER_CLASSNAME} + div +  br {
+      .iichan-hidden-thread-placeholder + div +  br {
         display: none;
       }
       
-      .${HIDE_BTN_CLASSNAME} {
+      .iichan-hide-thread-btn {
         margin-left: 0.2em;
         cursor: pointer;
         display: inline-block;
@@ -192,20 +185,20 @@ const appendCSS = () => {
         vertical-align: text-top;
       }
       
-      .${HIDE_BTN_CLASSNAME} use {
+      .iichan-hide-thread-btn use {
         pointer-events: none;
       }
       
-      .${HIDE_BTN_CLASSNAME} > svg {
+      .iichan-hide-thread-btn > svg {
         width: 16px;
         height: 16px;
       }
       
-      [id^=thread]:not(.iichan-thread-hidden) .${HIDE_BTN_CLASSNAME} .iichan-icon-unhide-use {
+      [id^=thread]:not(.iichan-thread-hidden) .iichan-hide-thread-btn .iichan-icon-unhide-use {
         display: none;
       }
       
-      [id^=thread].iichan-thread-hidden .${HIDE_BTN_CLASSNAME} .iichan-icon-hide-use {
+      [id^=thread].iichan-thread-hidden .iichan-hide-thread-btn .iichan-icon-hide-use {
         display: none;
       }
       
@@ -214,20 +207,20 @@ const appendCSS = () => {
         transition: opacity .3s ease-in-out, filter .3s ease-in-out;
       }
       
-      .catthreadlist .${HIDDEN_THREAD_CLASSNAME} {
+      .catthreadlist .iichan-thread-hidden {
         opacity: .6;
       }
       
-      .catthreadlist .${HIDDEN_THREAD_CLASSNAME}:not(:hover) {
+      .catthreadlist .iichan-thread-hidden:not(:hover) {
         opacity: .1;
         filter: grayscale(100%);
       }
       
-      .catthread:hover .${HIDE_BTN_CLASSNAME} {
+      .catthread:hover .iichan-hide-thread-btn {
         display: block;
       }
       
-      .catthread .${HIDE_BTN_CLASSNAME} {
+      .catthread .iichan-hide-thread-btn {
         text-decoration: none;
         position: absolute;
         top: 0;
@@ -243,7 +236,7 @@ const appendCSS = () => {
 };
 
 const appendHTML = () => {
-  const icons = `
+  const iconsContainer = `<div id="iichan-hide-threads-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
       <symbol id="iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16">
         <path
@@ -256,9 +249,6 @@ const appendHTML = () => {
           d="m 7.9589815,1.003906 c -1.106736,0 -1.996094,0.89131 -1.996094,1.998047 v 2.982421 h -3.070312 c -1.039639,0 -1.876953,0.837315 -1.876953,1.876954 V 8.08789 c 0,1.039639 0.837314,1.876953 1.876953,1.876953 h 3.070312 v 3.033204 c 0,1.106736 0.889358,1.998047 1.996094,1.998047 h 0.01563 c 1.106736,0 1.996094,-0.891311 1.996094,-1.998047 V 9.964843 h 3.1367195 c 1.039637,0 1.876953,-0.837314 1.876953,-1.876953 V 7.861328 c 0,-1.039639 -0.837315,-1.876954 -1.876953,-1.876954 H 9.9707005 V 3.001953 c 0,-1.106737 -0.889358,-1.998047 -1.996094,-1.998047 z"/>
       </symbol>
     </svg>
-  `;
-  const iconsContainer = `<div id="iichan-hide-threads-icons">
-    ${icons}
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };

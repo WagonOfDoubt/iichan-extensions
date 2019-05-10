@@ -1,22 +1,15 @@
 const EXTENSIONS = ['webm', 'mp4', 'ogv'];
-const LOCALSTORAGE_KEY = 'iichan_video_settings';
-const VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
-const HIDE_VIDEO_BTN_CLASSNAME = 'iichan-hide-video-btn';
-const HIDE_VIDEO_BTN_TITLE = 'Закрыть видео';
-const HIDE_VIDEO_BTN_TEXT = 'Закрыть видео';
-const MUTE_CHECKBOX_CLASSNAME = 'iichan-mute-video-checkbox';
-const MUTE_CHECKBOX_TITLE = 'Включить звук при открытии видео';
 
 const onThumbnailClick = (e) => {
-  const videoSettings = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+  const videoSettings = JSON.parse(window.localStorage.getItem('<%= LOCALSTORAGE_KEY %>') || '{}');
   if (!videoSettings.hasOwnProperty('enableSound')) {
     videoSettings.enableSound = false;
   }
-  if (e.target.classList.contains(MUTE_CHECKBOX_CLASSNAME)) {
+  if (e.target.classList.contains('<%= MUTE_CHECKBOX_CLASSNAME %>')) {
     // костыль
     setTimeout(() => e.target.checked = !e.target.checked, 0);
     videoSettings.enableSound = e.target.checked;
-    window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(videoSettings));
+    window.localStorage.setItem('<%= LOCALSTORAGE_KEY %>', JSON.stringify(videoSettings));
     e.preventDefault();
     return;
   }
@@ -40,7 +33,7 @@ const onThumbnailClick = (e) => {
     vp.controls = true;
     vp.loop = true;
     vp.muted = !videoSettings.enableSound;
-    vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+    vp.classList.add('<%= VIDEO_PLAYER_CLASSNAME %>');
     e.currentTarget.videoplayerid = vp.id;
     parentNode.insertBefore(vp, e.currentTarget.nextSibling);
     const enableSound = videoSettings.enableSound ? 'checked' : '';
@@ -72,15 +65,11 @@ const appendCSS = () => document.head.insertAdjacentHTML(
   </style>`
 );
 
-const appendHTML = () => {
-  const icons = `
+const appendHTML = () => document.body.insertAdjacentHTML('beforeend',
+  `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include video-player-icons.svg
-  `;
-  const iconsContainer = `<div id="iichan-video-player-icons">
-    ${icons}
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', iconsContainer);
-};
+  </div>`
+);
 
 const init = () => {
   if (document.querySelector('#de-main')) return;

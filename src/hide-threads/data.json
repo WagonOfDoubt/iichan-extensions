@@ -1,0 +1,14 @@
+{
+  "LOCALSTORAGE_KEY": "iichan_hidden_threads",
+  "HIDE_BTN_CLASSNAME": "iichan-hide-thread-btn",
+  "HIDE_BTN_TITLE": "Скрыть тред",
+  "UNHIDE_BTN_TITLE": "Раскрыть тред",
+  "HIDDEN_THREAD_CLASSNAME": "iichan-thread-hidden",
+  "PLACEHOLDER_CLASSNAME": "iichan-hidden-thread-placeholder",
+  "PLACEHOLDER_ID_PREFIX": "iichan-hidden-",
+  "ICON_HIDE_USE_CLASSNAME": "iichan-icon-hide-use",
+  "ICON_HIDE_ID": "iichan-icon-hide",
+  "ICON_UNHIDE_USE_CLASSNAME": "iichan-icon-unhide-use",
+  "ICON_UNHIDE_ID": "iichan-icon-unhide",
+  "ICONS_CONTAINER_ID": "iichan-hide-threads-icons"
+}

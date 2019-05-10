@@ -1,56 +1,56 @@
-.${QUICK_REPLY_BTN_CLASSNAME} {
+.<%= BTN_CLASSNAME %> {
   display: inline-block;
   width: 16px;
   height: 16px;
   vertical-align: text-top;
 }
 
-.${QUICK_REPLY_BTN_CLASSNAME} > svg {
+.<%= BTN_CLASSNAME %> > svg {
   width: 16px;
   height: 16px;
 }
 
-.${QUICK_REPLY_BTN_CLASSNAME} use {
+.<%= BTN_CLASSNAME %> use {
   pointer-events: none;
 }
 
-.replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-  content: '${QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE}';
+.replypage .<%= SHOW_FORM_BTN_CLASSNAME %>::after {
+  content: '<%= SHOW_REPLY_FORM_BTN_TITLE %>';
 }
 
-.${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-  content: '${QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE}';
+.<%= SHOW_FORM_BTN_CLASSNAME %>::after {
+  content: '<%= SHOW_THREAD_FORM_BTN_TITLE %>';
 }
 
-.${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME},
-.${QUICK_REPLY_BTN_CLASSNAME} {
+.<%= SHOW_FORM_BTN_CLASSNAME %>,
+.<%= BTN_CLASSNAME %> {
   cursor: pointer;
 }
 
-#${QUICK_REPLY_CONTAINER_ID} .rules {
+#<%= CONTAINER_ID %> .rules {
   display: none;
 }
 
-#iichan-quick-reply-icons {
+#<%= ICONS_CONTAINER_ID %> {
   display: none;
 }
 
-.${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} .theader {
+.<%= FORM_CONTAINER_CLASSNAME %> .theader {
   width: auto;
 }
 
-.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} {
+.<%= CLOSE_FORM_BTN_CLASSNAME %> {
   float: right;
   cursor: pointer;
   padding: 1px;
 }
 
-.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} svg {
+.<%= CLOSE_FORM_BTN_CLASSNAME %> svg {
   width: 16px;
   height: 16px;
   vertical-align: text-top;
 }
 
-.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} use {
+.<%= CLOSE_FORM_BTN_CLASSNAME %> use {
   pointer-events: none;
 }

@@ -1,20 +1,16 @@
-const NAME = 'Сырно';
-const NAME_QUERY = '.postername, .commentpostername';
-const SPECIAL_DAY = 'Пн';
-
 const init = () => {
   const cirnify = (node) => {
     const labels = node.querySelectorAll('label');
     for (const label of labels) {
-      const namespan = label.querySelector(NAME_QUERY);
+      const namespan = label.querySelector('<%= NAME_QUERY %>');
       if (!namespan) {
         continue;
       }
       const day = label.innerText.match(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/);
-      if (day.length < 1 || day[1] === SPECIAL_DAY) {
+      if (day.length < 1 || day[1] === '<%= SPECIAL_DAY %>') {
         continue;
       }
-      namespan.innerHTML = NAME;
+      namespan.innerHTML = '<%= NAME %>';
     }
   };
   cirnify(document.body);

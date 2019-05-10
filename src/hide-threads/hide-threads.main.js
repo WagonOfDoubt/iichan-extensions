@@ -2,22 +2,15 @@
 Сколько первых символов из поста показывать в заголовке скрытого треда
 */
 const THREAD_TITLE_LENGTH = 50;
-
-const LOCALSTORAGE_KEY = 'iichan_hidden_threads';
-const HIDE_BTN_CLASSNAME = 'iichan-hide-thread-btn';
-const HIDE_BTN_TITLE = 'Скрыть тред';
-const UNHIDE_BTN_TITLE = 'Раскрыть тред';
-const HIDDEN_THREAD_CLASSNAME = 'iichan-thread-hidden';
-const PLACEHOLDER_CLASSNAME = 'iichan-hidden-thread-placeholder';
 const board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
 
 const getHiddenThreads = () => {
-  const json = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+  const json = JSON.parse(window.localStorage.getItem('<%= LOCALSTORAGE_KEY %>') || '{}');
   return Array.isArray(json) ? {} : json;
 };
 
 const setHiddenThreads = (hiddenThreads) => {
-  window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(hiddenThreads));
+  window.localStorage.setItem('<%= LOCALSTORAGE_KEY %>', JSON.stringify(hiddenThreads));
 };
 
 const setThreadHidden = (threadId, isHidden) => {
@@ -44,7 +37,7 @@ const addHideBtn = (thread) => {
   label.insertAdjacentHTML('afterend', `
     //=include hide-thread-btn.html
   `);
-  const btn = thread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
+  const btn = thread.querySelector(`.<%= HIDE_BTN_CLASSNAME %>`);
   btn.addEventListener('click', hideThread);
 };
 
@@ -55,7 +48,7 @@ const addToggleBtn = (thread) => {
   catthread.insertAdjacentHTML('beforeend', `
     //=include hide-thread-btn.html
   `);
-  const btn = catthread.querySelector(`.${HIDE_BTN_CLASSNAME}`);
+  const btn = catthread.querySelector(`.<%= HIDE_BTN_CLASSNAME %>`);
   btn.classList.add('reply');
   btn.addEventListener('click', toggleThread);
 };
@@ -66,7 +59,7 @@ const addPlaceholder = (thread) => {
   let threadTitle = thread.querySelector('.filetitle').innerText ||
     thread.querySelector('blockquote').innerText;
   threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
-  const placeholderId = 'iichan-hidden-' + thread.id;
+  const placeholderId = '<%= PLACEHOLDER_ID_PREFIX %>' + thread.id;
   thread.insertAdjacentHTML('beforebegin', `
     //=include placeholder.html
   `);
@@ -111,8 +104,8 @@ const unhideThread = (e) => {
 
   const thread = document.getElementById(threadId);
   if(!thread) return;
-  thread.classList.remove(HIDDEN_THREAD_CLASSNAME);
-  const placeholder = document.getElementById('iichan-hidden-' + threadId);
+  thread.classList.remove('<%= HIDDEN_THREAD_CLASSNAME %>');
+  const placeholder = document.getElementById('<%= PLACEHOLDER_ID_PREFIX %>' + threadId);
   if (placeholder) {
     placeholder.parentElement.removeChild(placeholder);
   }
@@ -127,7 +120,7 @@ const hideThread = (e) => {
 
   const thread = document.getElementById(threadId);
   if(!thread || !thread.parentNode) return;
-  thread.classList.add(HIDDEN_THREAD_CLASSNAME);
+  thread.classList.add('<%= HIDDEN_THREAD_CLASSNAME %>');
   const catalogMode = !!document.querySelector('.catthreadlist');
   if (!catalogMode) {
     addPlaceholder(thread);
@@ -142,7 +135,7 @@ const toggleThread = (e) => {
   const threadId = getTargetThreadId(e);
   const threadNo = threadId.split('-').pop();
   const thread = document.getElementById('thread-' + threadNo);
-  setThreadHidden(threadId, thread.classList.toggle(HIDDEN_THREAD_CLASSNAME));
+  setThreadHidden(threadId, thread.classList.toggle('<%= HIDDEN_THREAD_CLASSNAME %>'));
   if (e.preventDefault) {
     e.preventDefault();
   }
@@ -156,11 +149,8 @@ const appendCSS = () => {
 };
 
 const appendHTML = () => {
-  const icons = `
+  const iconsContainer = `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include hide-threads-icons.svg
-  `;
-  const iconsContainer = `<div id="iichan-hide-threads-icons">
-    ${icons}
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };

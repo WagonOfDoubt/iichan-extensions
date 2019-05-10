@@ -2,28 +2,21 @@
 
 (function () {
   var EXTENSIONS = ['webm', 'mp4', 'ogv'];
-  var LOCALSTORAGE_KEY = 'iichan_video_settings';
-  var VIDEO_PLAYER_CLASSNAME = 'iichan-video-player';
-  var HIDE_VIDEO_BTN_CLASSNAME = 'iichan-hide-video-btn';
-  var HIDE_VIDEO_BTN_TITLE = 'Закрыть видео';
-  var HIDE_VIDEO_BTN_TEXT = 'Закрыть видео';
-  var MUTE_CHECKBOX_CLASSNAME = 'iichan-mute-video-checkbox';
-  var MUTE_CHECKBOX_TITLE = 'Включить звук при открытии видео';
 
   var onThumbnailClick = function onThumbnailClick(e) {
-    var videoSettings = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY) || '{}');
+    var videoSettings = JSON.parse(window.localStorage.getItem('iichan_video_settings') || '{}');
 
     if (!videoSettings.hasOwnProperty('enableSound')) {
       videoSettings.enableSound = false;
     }
 
-    if (e.target.classList.contains(MUTE_CHECKBOX_CLASSNAME)) {
+    if (e.target.classList.contains('iichan-mute-video-checkbox')) {
       // костыль
       setTimeout(function () {
         return e.target.checked = !e.target.checked;
       }, 0);
       videoSettings.enableSound = e.target.checked;
-      window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(videoSettings));
+      window.localStorage.setItem('iichan_video_settings', JSON.stringify(videoSettings));
       e.preventDefault();
       return;
     }
@@ -44,11 +37,11 @@
       vp.controls = true;
       vp.loop = true;
       vp.muted = !videoSettings.enableSound;
-      vp.classList.add(VIDEO_PLAYER_CLASSNAME);
+      vp.classList.add('iichan-video-player');
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
       var enableSound = videoSettings.enableSound ? 'checked' : '';
-      e.currentTarget.innerHTML = "\n    <div>\n      <input type=\"checkbox\" ".concat(enableSound, " class=\"").concat(MUTE_CHECKBOX_CLASSNAME, "\" title=\"").concat(MUTE_CHECKBOX_TITLE, "\">\n      <div class=\"").concat(HIDE_VIDEO_BTN_CLASSNAME, "\" title=\"").concat(HIDE_VIDEO_BTN_TITLE, "\"><span><svg>\n        <use class=\"iichan-icon-video-close-use\" xlink:href=\"#iichan-icon-video-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>").concat(HIDE_VIDEO_BTN_TEXT, "</span></div>\n    </div>\n    ");
+      e.currentTarget.innerHTML = "\n    <div>\n      <input type=\"checkbox\" ".concat(enableSound, " class=\"iichan-mute-video-checkbox\" title=\"\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0432\u0443\u043A \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u0432\u0438\u0434\u0435\u043E\">\n      <div class=\"iichan-hide-video-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C\xA0\u0432\u0438\u0434\u0435\u043E\"><span><svg>\n        <use class=\"iichan-icon-video-close-use\" xlink:href=\"#iichan-icon-video-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\u0417\u0430\u043A\u0440\u044B\u0442\u044C\xA0\u0432\u0438\u0434\u0435\u043E</span></div>\n    </div>\n    ");
     }
 
     e.preventDefault();
@@ -88,13 +81,11 @@
   };
 
   var appendCSS = function appendCSS() {
-    return document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n    .".concat(VIDEO_PLAYER_CLASSNAME, " {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }\n    \n    .").concat(HIDE_VIDEO_BTN_CLASSNAME, " {\n      margin: 2px 20px;\n    }\n    \n    .").concat(MUTE_CHECKBOX_CLASSNAME, " {\n      float: right;\n    }\n    \n    .").concat(HIDE_VIDEO_BTN_CLASSNAME, " > span::before {\n      content: '[';\n    }\n    \n    .").concat(HIDE_VIDEO_BTN_CLASSNAME, " > span::after {\n      content: ']';\n    }\n    \n    .").concat(HIDE_VIDEO_BTN_CLASSNAME, " svg {\n      width: 16px;\n      height: 16px;\n      vertical-align: text-top;\n    }\n    \n    .").concat(HIDE_VIDEO_BTN_CLASSNAME, " use {\n      pointer-events: none;\n    }\n    \n    a.imglink {\n      text-decoration: none;\n    }\n    \n    #iichan-video-player-icons {\n      display: none;\n    }\n  </style>"));
+    return document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n    .iichan-video-player {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }\n    \n    .iichan-hide-video-btn {\n      margin: 2px 20px;\n    }\n    \n    .iichan-mute-video-checkbox {\n      float: right;\n    }\n    \n    .iichan-hide-video-btn > span::before {\n      content: '[';\n    }\n    \n    .iichan-hide-video-btn > span::after {\n      content: ']';\n    }\n    \n    .iichan-hide-video-btn svg {\n      width: 16px;\n      height: 16px;\n      vertical-align: text-top;\n    }\n    \n    .iichan-hide-video-btn use {\n      pointer-events: none;\n    }\n    \n    #iichan-video-player-icons {\n      display: none;\n    }\n    \n    a.imglink {\n      text-decoration: none;\n    }\n  </style>");
   };
 
   var appendHTML = function appendHTML() {
-    var icons = "\n    <svg xmlns=\"http://www.w3.org/2000/svg\">\n      <symbol id=\"iichan-icon-video-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">\n        <path\n          fill=\"currentcolor\"\n          d=\"m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z\"/>\n      </symbol>\n    </svg>\n  ";
-    var iconsContainer = "<div id=\"iichan-video-player-icons\">\n    ".concat(icons, "\n  </div>");
-    document.body.insertAdjacentHTML('beforeend', iconsContainer);
+    return document.body.insertAdjacentHTML('beforeend', "<div id=\"iichan-video-player-icons\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\">\n      <symbol id=\"iichan-icon-video-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">\n        <path\n          fill=\"currentcolor\"\n          d=\"m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z\"/>\n      </symbol>\n    </svg>\n  </div>");
   };
 
   var init = function init() {

@@ -1,10 +1,6 @@
 "use strict";
 
 (function () {
-  var NAME = 'Сырно';
-  var NAME_QUERY = '.postername, .commentpostername';
-  var SPECIAL_DAY = 'Пн';
-
   var init = function init() {
     var cirnify = function cirnify(node) {
       var labels = node.querySelectorAll('label');
@@ -15,7 +11,7 @@
       try {
         for (var _iterator = labels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var label = _step.value;
-          var namespan = label.querySelector(NAME_QUERY);
+          var namespan = label.querySelector('.postername, .commentpostername');
 
           if (!namespan) {
             continue;
@@ -23,11 +19,11 @@
 
           var day = label.innerText.match(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/);
 
-          if (day.length < 1 || day[1] === SPECIAL_DAY) {
+          if (day.length < 1 || day[1] === 'Пн') {
             continue;
           }
 
-          namespan.innerHTML = NAME;
+          namespan.innerHTML = 'Сырно';
         }
       } catch (err) {
         _didIteratorError = true;

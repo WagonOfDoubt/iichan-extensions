@@ -12,10 +12,13 @@ import path from 'path';
 import rename from 'gulp-rename';
 import uglifyjs from 'uglify-es';
 import wrap from 'gulp-wrap';
+import data from 'gulp-data';
+import template from 'gulp-template';
+import _ from 'lodash';
 
 
 const minifier = composer(uglifyjs, console);
-
+_.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
 
 const getFolders = dir => fs
   .readdirSync(dir)
@@ -25,15 +28,24 @@ const getFolders = dir => fs
 
 
 const buildUserscript = (folder) => {
-  const main = path.join('src', folder, `${folder}.main.js`);
-  const meta = path.join('src', folder, `${folder}.meta.js`);
+  const mainPath = path.join('src', folder, `${folder}.main.js`);
+  const metaPath = path.join('src', folder, `${folder}.meta.js`);
+  const dataPath = path.join('src', folder, 'data.json');
+  const getData = () => {
+    if (fs.existsSync(dataPath)) {
+      return JSON.parse(fs.readFileSync(dataPath));
+    }
+    return null;
+  }
   const userscriptFileName = 'iichan-' + folder + '.user.js';
   const dest = path.join('dist', 'userscript');
 
-  return gulp.src(main)
+  return gulp.src(mainPath)
     .pipe(include({ hardFail: true }))
     .pipe(wrap({ src: 'src/closure-wrapper.js'}))
-    .pipe(gulp.src(meta))
+    .pipe(gulp.src(metaPath))
+    .pipe(data(getData))
+    .pipe(template())
     .pipe(order(['*.meta.js', '*.main.js']))
     .pipe(concat(userscriptFileName))
     .pipe(gulp.dest(dest));
@@ -70,9 +82,18 @@ export const build = () => {
     filePath.basename = 'iichan-' + filePath.basename.split('.')[0];
     filePath.extname = '.js';
   };
+  const getData = (file) => {
+    const dataPath = path.join(file.dirname, 'data.json');
+    if (fs.existsSync(dataPath)) {
+      return JSON.parse(fs.readFileSync(dataPath));
+    }
+    return null;
+  };
   return gulp.src('src/*/*.main.js')
     .pipe(include({ hardFail: true }))
     .pipe(wrap({ src: 'src/closure-wrapper.js'}))
+    .pipe(data(getData))
+    .pipe(template())
     .pipe(rename(renameFn))
     .pipe(gulp.dest('dist/'))
     // minify

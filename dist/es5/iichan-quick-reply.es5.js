@@ -1,15 +1,6 @@
 "use strict";
 
 (function () {
-  var QUICK_REPLY_BTN_CLASSNAME = 'iichan-quick-reply-btn';
-  var QUICK_REPLY_BTN_TITLE = 'Быстрый ответ';
-  var QUICK_REPLY_CLOSE_FORM_BTN_TITLE = 'Закрыть форму';
-  var QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE = '[Показать форму ответа]';
-  var QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE = '[Создать тред]';
-  var QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
-  var QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
-  var QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
-  var QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME = 'iichan-quick-reply-close-form-btn';
   var captcha = {
     key: 'mainpage',
     dummy: '',
@@ -18,13 +9,13 @@
 
   var _ref = function () {
     var quickReplyContainer = document.createElement('table');
-    quickReplyContainer.insertAdjacentHTML('beforeend', "\n        <tr>\n        \t<td class=\"doubledash\">&gt;&gt;</td>\n        \t<td class=\"".concat(QUICK_REPLY_FORM_CONTAINER_CLASSNAME, " reply\">\n           <div class=\"theader\">\u041E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0440\u0435\u0434 \u2116<span class=\"iichan-quick-reply-thread\"></span><div class=\"").concat(QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME, "\" title=\"").concat(QUICK_REPLY_CLOSE_FORM_BTN_TITLE, "\"><svg>\n            <use class=\"iichan-icon-form-close-use\" xlink:href=\"#iichan-icon-form-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n          </svg></div></div>\n          </td>\n        </tr>\n        \n      "));
-    quickReplyContainer.id = QUICK_REPLY_CONTAINER_ID;
-    var hideFormBtn = quickReplyContainer.querySelector(".".concat(QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME));
+    quickReplyContainer.insertAdjacentHTML('beforeend', "\n        <tr>\n        \t<td class=\"doubledash\">&gt;&gt;</td>\n        \t<td class=\"iichan-postform-container reply\">\n           <div class=\"theader\">\u041E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0440\u0435\u0434 \u2116<span class=\"iichan-quick-reply-thread\"></span><div class=\"iichan-quick-reply-close-form-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0440\u043C\u0443\"><svg>\n            <use class=\"iichan-icon-form-close-use\" xlink:href=\"#iichan-icon-form-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n          </svg></div></div>\n          </td>\n        </tr>\n        \n      ");
+    quickReplyContainer.id = 'iichan-quick-reply-container';
+    var hideFormBtn = quickReplyContainer.querySelector('.iichan-quick-reply-close-form-btn');
     hideFormBtn.addEventListener('click', function (e) {
       return movePostform(null, true);
     });
-    var postformContainer = quickReplyContainer.querySelector(".".concat(QUICK_REPLY_FORM_CONTAINER_CLASSNAME));
+    var postformContainer = quickReplyContainer.querySelector('.iichan-postform-container');
     return {
       quickReplyContainer: quickReplyContainer,
       postformContainer: postformContainer
@@ -35,7 +26,7 @@
 
   var quickReplyShowFormBtn = function () {
     var btn = document.createElement('a');
-    btn.classList.add(QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME);
+    btn.classList.add('iichan-quick-reply-show-form-btn');
     return btn;
   }();
 
@@ -245,7 +236,7 @@
   var onQuickReplyClick = function onQuickReplyClick(e) {
     var btn = e.target;
 
-    while (btn && !btn.classList.contains(QUICK_REPLY_BTN_CLASSNAME)) {
+    while (btn && !btn.classList.contains('iichan-quick-reply-btn')) {
       btn = btn.parentElement;
     }
 
@@ -261,8 +252,8 @@
     if (!reply) return;
     var label = reply.querySelector(':scope > .reflink');
     if (!label) return;
-    label.insertAdjacentHTML('afterend', "\n    <div class=\"".concat(QUICK_REPLY_BTN_CLASSNAME, "\" title=\"").concat(QUICK_REPLY_BTN_TITLE, "\" data-post-id=\"").concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
-    var btn = reply.querySelector(".".concat(QUICK_REPLY_BTN_CLASSNAME));
+    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-quick-reply-btn\" title=\"\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" data-post-id=\"".concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    var btn = reply.querySelector('.iichan-quick-reply-btn');
     btn.addEventListener('click', onQuickReplyClick);
   };
 
@@ -294,12 +285,11 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .".concat(QUICK_REPLY_BTN_CLASSNAME, " {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .").concat(QUICK_REPLY_BTN_CLASSNAME, " > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .").concat(QUICK_REPLY_BTN_CLASSNAME, " use {\n        pointer-events: none;\n      }\n      \n      .replypage .").concat(QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME, "::after {\n        content: '").concat(QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE, "';\n      }\n      \n      .").concat(QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME, "::after {\n        content: '").concat(QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE, "';\n      }\n      \n      .").concat(QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME, ",\n      .").concat(QUICK_REPLY_BTN_CLASSNAME, " {\n        cursor: pointer;\n      }\n      \n      #").concat(QUICK_REPLY_CONTAINER_ID, " .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .").concat(QUICK_REPLY_FORM_CONTAINER_CLASSNAME, " .theader {\n        width: auto;\n      }\n      \n      .").concat(QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME, " {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .").concat(QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME, " svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .").concat(QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME, " use {\n        pointer-events: none;\n      }\n      \n    </style>"));
+    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .replypage .iichan-quick-reply-show-form-btn::after {\n        content: '[\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0444\u043E\u0440\u043C\u0443 \u043E\u0442\u0432\u0435\u0442\u0430]';\n      }\n      \n      .iichan-quick-reply-show-form-btn::after {\n        content: '[\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0442\u0440\u0435\u0434]';\n      }\n      \n      .iichan-quick-reply-show-form-btn,\n      .iichan-quick-reply-btn {\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
   };
 
   var appendHTML = function appendHTML() {
-    var icons = "\n    <svg xmlns=\"http://www.w3.org/2000/svg\">\n      <symbol id=\"iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">\n        <path\n          fill=\"currentcolor\"\n          d=\"M 8,0.98745 A 7.0133929,5.9117254 0 0 0 0.986328,6.89859 7.0133929,5.9117254 0 0 0 3.037109,11.07043 L 1.835937,15.01255 6.230469,12.61078 A 7.0133929,5.9117254 0 0 0 8,12.80973 7.0133929,5.9117254 0 0 0 15.013672,6.89859 7.0133929,5.9117254 0 0 0 8,0.98745 Z\"/>\n      </symbol>\n      <symbol id=\"iichan-icon-form-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">\n        <path\n          fill=\"currentcolor\"\n          d=\"m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z\"/>\n      </symbol>\n    </svg>\n  ";
-    var iconsContainer = "<div id=\"iichan-quick-reply-icons\">\n    ".concat(icons, "\n  </div>");
+    var iconsContainer = "<div id=\"iichan-quick-reply-icons\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\">\n      <symbol id=\"iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">\n        <path\n          fill=\"currentcolor\"\n          d=\"M 8,0.98745 A 7.0133929,5.9117254 0 0 0 0.986328,6.89859 7.0133929,5.9117254 0 0 0 3.037109,11.07043 L 1.835937,15.01255 6.230469,12.61078 A 7.0133929,5.9117254 0 0 0 8,12.80973 7.0133929,5.9117254 0 0 0 15.013672,6.89859 7.0133929,5.9117254 0 0 0 8,0.98745 Z\"/>\n      </symbol>\n      <symbol id=\"iichan-icon-form-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">\n        <path\n          fill=\"currentcolor\"\n          d=\"m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z\"/>\n      </symbol>\n    </svg>\n  </div>";
     document.body.insertAdjacentHTML('beforeend', iconsContainer);
   };
 

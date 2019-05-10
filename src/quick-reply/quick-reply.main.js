@@ -1,13 +1,3 @@
-const QUICK_REPLY_BTN_CLASSNAME = 'iichan-quick-reply-btn';
-const QUICK_REPLY_BTN_TITLE = 'Быстрый ответ';
-const QUICK_REPLY_CLOSE_FORM_BTN_TITLE = 'Закрыть форму';
-const QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE = '[Показать форму ответа]';
-const QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE = '[Создать тред]';
-const QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
-const QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
-const QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
-const QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME = 'iichan-quick-reply-close-form-btn';
-
 const captcha = {
   key: 'mainpage',
   dummy: '',
@@ -19,16 +9,16 @@ const { quickReplyContainer, postformContainer } = (() => {
     quickReplyContainer.insertAdjacentHTML('beforeend', `
         //=include quick-reply-container.html
       `);
-    quickReplyContainer.id = QUICK_REPLY_CONTAINER_ID;
-    const hideFormBtn = quickReplyContainer.querySelector(`.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME}`);
+    quickReplyContainer.id = '<%= CONTAINER_ID %>';
+    const hideFormBtn = quickReplyContainer.querySelector('.<%= CLOSE_FORM_BTN_CLASSNAME %>');
     hideFormBtn.addEventListener('click', (e) => movePostform(null, true));
-    const postformContainer = quickReplyContainer.querySelector(`.${QUICK_REPLY_FORM_CONTAINER_CLASSNAME}`);
+    const postformContainer = quickReplyContainer.querySelector('.<%= FORM_CONTAINER_CLASSNAME %>');
     return { quickReplyContainer, postformContainer };
 })();
 
 const quickReplyShowFormBtn = (() => {
   const btn = document.createElement('a');
-  btn.classList.add(QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME);
+  btn.classList.add('<%= SHOW_FORM_BTN_CLASSNAME %>');
   return btn;
 })();
 
@@ -63,7 +53,7 @@ const updateCaptchaParams = (parentThread) => {
 };
 
 const setParentInputValue = (postform, value) => {
-  const threadIdSpan = quickReplyContainer.querySelector('.iichan-quick-reply-thread');
+  const threadIdSpan = quickReplyContainer.querySelector('.<%= FORM_HEADER_THREAD_NUM_CLASSNAME %>');
   if (threadIdSpan) {
     threadIdSpan.textContent = value || '';
   }
@@ -215,7 +205,7 @@ const movePostform = (replyTo, closeQuickReply) => {
 
 const onQuickReplyClick = (e) => {
   let btn = e.target;
-  while (btn && !btn.classList.contains(QUICK_REPLY_BTN_CLASSNAME)) {
+  while (btn && !btn.classList.contains('<%= BTN_CLASSNAME %>')) {
     btn = btn.parentElement;
   }
   if (btn) {
@@ -232,7 +222,7 @@ const addReplyBtn = (reply) => {
   label.insertAdjacentHTML('afterend', `
     //=include quick-reply-btn.html
   `);
-  const btn = reply.querySelector(`.${QUICK_REPLY_BTN_CLASSNAME}`);
+  const btn = reply.querySelector('.<%= BTN_CLASSNAME %>');
   btn.addEventListener('click', onQuickReplyClick);
 };
 
@@ -251,11 +241,8 @@ const appendCSS = () => {
 };
 
 const appendHTML = () => {
-  const icons = `
+  const iconsContainer = `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include quick-reply-icons.svg
-  `;
-  const iconsContainer = `<div id="iichan-quick-reply-icons">
-    ${icons}
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
