@@ -15,11 +15,11 @@
 }
 
 .replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-  content: '[Показать форму ответа]';
+  content: '${QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE}';
 }
 
 .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-  content: '[Создать тред]';
+  content: '${QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE}';
 }
 
 .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME},
@@ -33,4 +33,24 @@
 
 #iichan-quick-reply-icons {
   display: none;
+}
+
+.${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} .theader {
+  width: auto;
+}
+
+.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} {
+  float: right;
+  cursor: pointer;
+  padding: 1px;
+}
+
+.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} svg {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-top;
+}
+
+.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} use {
+  pointer-events: none;
 }

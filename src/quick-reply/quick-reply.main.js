@@ -1,8 +1,12 @@
 const QUICK_REPLY_BTN_CLASSNAME = 'iichan-quick-reply-btn';
-const QICK_REPLY_BTN_TITLE = 'Быстрый ответ';
+const QUICK_REPLY_BTN_TITLE = 'Быстрый ответ';
+const QUICK_REPLY_CLOSE_FORM_BTN_TITLE = 'Закрыть форму';
+const QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE = '[Показать форму ответа]';
+const QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE = '[Создать тред]';
 const QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
 const QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
 const QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
+const QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME = 'iichan-quick-reply-close-form-btn';
 
 const captcha = {
   key: 'mainpage',
@@ -16,7 +20,9 @@ const { quickReplyContainer, postformContainer } = (() => {
         //=include quick-reply-container.html
       `);
     quickReplyContainer.id = QUICK_REPLY_CONTAINER_ID;
-    const postformContainer = quickReplyContainer.querySelector('.' + QUICK_REPLY_FORM_CONTAINER_CLASSNAME);
+    const hideFormBtn = quickReplyContainer.querySelector(`.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME}`);
+    hideFormBtn.addEventListener('click', (e) => movePostform(null, true));
+    const postformContainer = quickReplyContainer.querySelector(`.${QUICK_REPLY_FORM_CONTAINER_CLASSNAME}`);
     return { quickReplyContainer, postformContainer };
 })();
 
@@ -57,6 +63,10 @@ const updateCaptchaParams = (parentThread) => {
 };
 
 const setParentInputValue = (postform, value) => {
+  const threadIdSpan = quickReplyContainer.querySelector('.iichan-quick-reply-thread');
+  if (threadIdSpan) {
+    threadIdSpan.textContent = value || '';
+  }
   let inp = postform.querySelector('[name=parent]');
   if (!value) {
     if (inp) {
@@ -106,6 +116,10 @@ const placePostareaButton = () => {
   if (postarea) {
     postarea.appendChild(quickReplyShowFormBtn);
   }
+  const theader = document.querySelector('body > .theader');
+  if (theader) {
+    theader.style.display = 'none';
+  }
 };
 
 const placeFormAfterReply = (postform, replyTo) => {
@@ -154,6 +168,10 @@ const placeFormAtPostarea = (postform, focus) => {
   }
   // remove button from postarea
   if (quickReplyShowFormBtn.parentNode) {
+    const theader = document.querySelector('body > .theader');
+    if (theader) {
+      theader.style.display = null;
+    }
     quickReplyShowFormBtn.parentNode.removeChild(quickReplyShowFormBtn);
   }
   // reset form parent value
@@ -170,7 +188,7 @@ const placeFormAtPostarea = (postform, focus) => {
   }
 };
 
-const movePostform = (replyTo) => {
+const movePostform = (replyTo, closeQuickReply) => {
   const postform = document.querySelector('#postform');
   if (!postform) {
     return;
@@ -179,7 +197,7 @@ const movePostform = (replyTo) => {
   // replyTo === null => return postform to default position
   if (!replyTo) {
     postform.dataset.replyTo = '';
-    placeFormAtPostarea(postform, true);
+    placeFormAtPostarea(postform, !closeQuickReply);
   // already at same post => return to default, no focus
   } else if (postform.dataset.replyTo === replyTo.id) {
     postform.dataset.replyTo = '';

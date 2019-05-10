@@ -14,10 +14,14 @@
 
 (() => {
 const QUICK_REPLY_BTN_CLASSNAME = 'iichan-quick-reply-btn';
-const QICK_REPLY_BTN_TITLE = 'Быстрый ответ';
+const QUICK_REPLY_BTN_TITLE = 'Быстрый ответ';
+const QUICK_REPLY_CLOSE_FORM_BTN_TITLE = 'Закрыть форму';
+const QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE = '[Показать форму ответа]';
+const QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE = '[Создать тред]';
 const QUICK_REPLY_CONTAINER_ID = 'iichan-quick-reply-container';
 const QUICK_REPLY_FORM_CONTAINER_CLASSNAME = 'iichan-postform-container';
 const QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME = 'iichan-quick-reply-show-form-btn';
+const QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME = 'iichan-quick-reply-close-form-btn';
 
 const captcha = {
   key: 'mainpage',
@@ -30,12 +34,18 @@ const { quickReplyContainer, postformContainer } = (() => {
     quickReplyContainer.insertAdjacentHTML('beforeend', `
         <tr>
         	<td class="doubledash">&gt;&gt;</td>
-        	<td class="${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} reply"></td>
+        	<td class="${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} reply">
+           <div class="theader">Ответ в тред №<span class="iichan-quick-reply-thread"></span><div class="${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME}" title="${QUICK_REPLY_CLOSE_FORM_BTN_TITLE}"><svg>
+            <use class="iichan-icon-form-close-use" xlink:href="#iichan-icon-form-close" width="16" height="16" viewBox="0 0 16 16"/>
+          </svg></div></div>
+          </td>
         </tr>
         
       `);
     quickReplyContainer.id = QUICK_REPLY_CONTAINER_ID;
-    const postformContainer = quickReplyContainer.querySelector('.' + QUICK_REPLY_FORM_CONTAINER_CLASSNAME);
+    const hideFormBtn = quickReplyContainer.querySelector(`.${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME}`);
+    hideFormBtn.addEventListener('click', (e) => movePostform(null, true));
+    const postformContainer = quickReplyContainer.querySelector(`.${QUICK_REPLY_FORM_CONTAINER_CLASSNAME}`);
     return { quickReplyContainer, postformContainer };
 })();
 
@@ -76,6 +86,10 @@ const updateCaptchaParams = (parentThread) => {
 };
 
 const setParentInputValue = (postform, value) => {
+  const threadIdSpan = quickReplyContainer.querySelector('.iichan-quick-reply-thread');
+  if (threadIdSpan) {
+    threadIdSpan.textContent = value || '';
+  }
   let inp = postform.querySelector('[name=parent]');
   if (!value) {
     if (inp) {
@@ -125,6 +139,10 @@ const placePostareaButton = () => {
   if (postarea) {
     postarea.appendChild(quickReplyShowFormBtn);
   }
+  const theader = document.querySelector('body > .theader');
+  if (theader) {
+    theader.style.display = 'none';
+  }
 };
 
 const placeFormAfterReply = (postform, replyTo) => {
@@ -173,6 +191,10 @@ const placeFormAtPostarea = (postform, focus) => {
   }
   // remove button from postarea
   if (quickReplyShowFormBtn.parentNode) {
+    const theader = document.querySelector('body > .theader');
+    if (theader) {
+      theader.style.display = null;
+    }
     quickReplyShowFormBtn.parentNode.removeChild(quickReplyShowFormBtn);
   }
   // reset form parent value
@@ -189,7 +211,7 @@ const placeFormAtPostarea = (postform, focus) => {
   }
 };
 
-const movePostform = (replyTo) => {
+const movePostform = (replyTo, closeQuickReply) => {
   const postform = document.querySelector('#postform');
   if (!postform) {
     return;
@@ -198,7 +220,7 @@ const movePostform = (replyTo) => {
   // replyTo === null => return postform to default position
   if (!replyTo) {
     postform.dataset.replyTo = '';
-    placeFormAtPostarea(postform, true);
+    placeFormAtPostarea(postform, !closeQuickReply);
   // already at same post => return to default, no focus
   } else if (postform.dataset.replyTo === replyTo.id) {
     postform.dataset.replyTo = '';
@@ -231,7 +253,7 @@ const addReplyBtn = (reply) => {
   const label = reply.querySelector(':scope > .reflink');
   if (!label) return;
   label.insertAdjacentHTML('afterend', `
-    <div class="${QUICK_REPLY_BTN_CLASSNAME}" title="${QICK_REPLY_BTN_TITLE}" data-post-id="${reply.id}">
+    <div class="${QUICK_REPLY_BTN_CLASSNAME}" title="${QUICK_REPLY_BTN_TITLE}" data-post-id="${reply.id}">
       <svg>
         <use class="iichan-icon-reply-use" xlink:href="#iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
@@ -268,11 +290,11 @@ const appendCSS = () => {
       }
       
       .replypage .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-        content: '[Показать форму ответа]';
+        content: '${QUICK_REPLY_SHOW_REPLY_FORM_BTN_TITLE}';
       }
       
       .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME}::after {
-        content: '[Создать тред]';
+        content: '${QUICK_REPLY_SHOW_THREAD_FORM_BTN_TITLE}';
       }
       
       .${QUICK_REPLY_SHOW_FORM_BTN_CLASSNAME},
@@ -287,6 +309,27 @@ const appendCSS = () => {
       #iichan-quick-reply-icons {
         display: none;
       }
+      
+      .${QUICK_REPLY_FORM_CONTAINER_CLASSNAME} .theader {
+        width: auto;
+      }
+      
+      .${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} {
+        float: right;
+        cursor: pointer;
+        padding: 1px;
+      }
+      
+      .${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} svg {
+        width: 16px;
+        height: 16px;
+        vertical-align: text-top;
+      }
+      
+      .${QUICK_REPLY_CLOSE_FORM_BTN_CLASSNAME} use {
+        pointer-events: none;
+      }
+      
     </style>`);
 };
 
@@ -297,6 +340,11 @@ const appendHTML = () => {
         <path
           fill="currentcolor"
           d="M 8,0.98745 A 7.0133929,5.9117254 0 0 0 0.986328,6.89859 7.0133929,5.9117254 0 0 0 3.037109,11.07043 L 1.835937,15.01255 6.230469,12.61078 A 7.0133929,5.9117254 0 0 0 8,12.80973 7.0133929,5.9117254 0 0 0 15.013672,6.89859 7.0133929,5.9117254 0 0 0 8,0.98745 Z"/>
+      </symbol>
+      <symbol id="iichan-icon-form-close" width="16" height="16" viewBox="0 0 16 16">
+        <path
+          fill="currentcolor"
+          d="m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z"/>
       </symbol>
     </svg>
   `;
