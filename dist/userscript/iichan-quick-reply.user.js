@@ -26,7 +26,7 @@ const { quickReplyContainer, postformContainer } = (() => {
         	<td class="doubledash">&gt;&gt;</td>
         	<td class="iichan-postform-container reply">
            <div class="theader">Ответ в тред №<span class="iichan-quick-reply-thread"></span><div class="iichan-quick-reply-close-form-btn" title="Закрыть форму"><svg>
-            <use class="iichan-icon-form-close-use" xlink:href="#iichan-icon-form-close" width="16" height="16" viewBox="0 0 16 16"/>
+            <use class="iichan-icon-form-close-use" xlink:href="#iichan-icon-close" width="16" height="16" viewBox="0 0 16 16"/>
           </svg></div></div>
           </td>
         </tr>
@@ -323,6 +323,7 @@ const appendCSS = () => {
     </style>`);
 };
 
+
 const appendHTML = () => {
   const iconsContainer = `<div id="iichan-quick-reply-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -331,7 +332,7 @@ const appendHTML = () => {
           fill="currentcolor"
           d="M 8,0.98745 A 7.0133929,5.9117254 0 0 0 0.986328,6.89859 7.0133929,5.9117254 0 0 0 3.037109,11.07043 L 1.835937,15.01255 6.230469,12.61078 A 7.0133929,5.9117254 0 0 0 8,12.80973 7.0133929,5.9117254 0 0 0 15.013672,6.89859 7.0133929,5.9117254 0 0 0 8,0.98745 Z"/>
       </symbol>
-      <symbol id="iichan-icon-form-close" width="16" height="16" viewBox="0 0 16 16">
+      <symbol id="iichan-icon-close" width="16" height="16" viewBox="0 0 16 16">
         <path
           fill="currentcolor"
           d="m 11.734373,2.0393046 c -0.551714,0.0032 -1.101132,0.214707 -1.521485,0.636719 l -2.2656251,2.275391 -2.359375,-2.314453 c -0.798816,-0.783843 -2.079336,-0.777297 -2.86914,0.01563 l -0.171875,0.171875 c -0.789805,0.792922 -0.781239,2.063814 0.01758,2.847656 l 2.359375,2.314453 -2.304688,2.3125004 c -0.840706,0.844025 -0.83272,2.194937 0.01758,3.029297 l 0.01172,0.01172 c 0.850299,0.834359 2.212029,0.826446 3.052734,-0.01758 l 2.302735,-2.3125 2.4101561,2.363281 c 0.798817,0.783842 2.077383,0.777297 2.867188,-0.01563 l 0.171875,-0.173828 c 0.789804,-0.792922 0.781238,-2.061861 -0.01758,-2.845703 l -2.408204,-2.3632824 2.265625,-2.27539 c 0.840706,-0.844025 0.832721,-2.194938 -0.01758,-3.029297 l -0.0098,-0.01172 c -0.42515,-0.41718 -0.979537,-0.622294 -1.53125,-0.619141 z"/>
@@ -340,6 +341,7 @@ const appendHTML = () => {
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
+
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
@@ -364,7 +366,9 @@ const init = () => {
     updateCaptchaParams();
   }
   appendCSS();
+  
   appendHTML();
+  
   processNodes();
   quickReplyShowFormBtn.addEventListener('click', (e) => {
     movePostform();

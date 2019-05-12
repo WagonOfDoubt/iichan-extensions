@@ -13,6 +13,7 @@
   "ICON_REPLY_USE_CLASSNAME": "iichan-icon-reply-use",
   "ICON_CLOSE_USE_CLASSNAME": "iichan-icon-form-close-use",
   "ICON_REPLY_ID": "iichan-icon-reply",
-  "ICON_CLOSE_ID": "iichan-icon-form-close",
-  "ICONS_CONTAINER_ID": "iichan-quick-reply-icons"
+  "ICON_CLOSE_ID": "iichan-icon-close",
+  "ICONS_CONTAINER_ID": "iichan-quick-reply-icons",
+  "ICONS_URL": "/icons.svg"
 }

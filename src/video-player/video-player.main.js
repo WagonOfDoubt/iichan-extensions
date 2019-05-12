@@ -65,16 +65,21 @@ const appendCSS = () => document.head.insertAdjacentHTML(
   </style>`
 );
 
+
+<% if (USERSCRIPT) { %>
 const appendHTML = () => document.body.insertAdjacentHTML('beforeend',
   `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include video-player-icons.svg
   </div>`
 );
+<% } %>
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
   appendCSS();
+  <% if (USERSCRIPT) { %>
   appendHTML();
+  <% } %>
   addListeners();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

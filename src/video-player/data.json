@@ -7,6 +7,7 @@
   "MUTE_CHECKBOX_CLASSNAME": "iichan-mute-video-checkbox",
   "MUTE_CHECKBOX_TITLE": "Включить звук при открытии видео",
   "ICONS_CONTAINER_ID": "iichan-video-player-icons",
-  "ICON_CLOSE_ID": "iichan-icon-video-close",
-  "ICON_CLOSE_USE_CLASSNAME": "iichan-icon-video-close-use"
+  "ICON_CLOSE_ID": "iichan-icon-close",
+  "ICON_CLOSE_USE_CLASSNAME": "iichan-icon-video-close-use",
+  "ICONS_URL": "/icons.svg"
 }

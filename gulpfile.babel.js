@@ -33,7 +33,10 @@ const buildUserscript = (folder) => {
   const dataPath = path.join('src', folder, 'data.json');
   const getData = () => {
     if (fs.existsSync(dataPath)) {
-      return JSON.parse(fs.readFileSync(dataPath));
+      const json = JSON.parse(fs.readFileSync(dataPath));
+      json.USERSCRIPT = true;
+      json.ICONS_URL = '';
+      return json;
     }
     return null;
   }
@@ -85,7 +88,9 @@ export const build = () => {
   const getData = (file) => {
     const dataPath = path.join(file.dirname, 'data.json');
     if (fs.existsSync(dataPath)) {
-      return JSON.parse(fs.readFileSync(dataPath));
+      const json = JSON.parse(fs.readFileSync(dataPath));
+      json.USERSCRIPT = false;
+      return json;
     }
     return null;
   };

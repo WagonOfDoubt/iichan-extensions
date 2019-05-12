@@ -249,8 +249,9 @@ const appendCSS = () => {
     </style>`);
 };
 
-const appendHTML = () => {
-  const iconsContainer = `<div id="iichan-hide-threads-icons">
+
+const appendHTML = () => document.body.insertAdjacentHTML('beforeend', `
+  <div id="iichan-hide-threads-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
       <symbol id="iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16">
         <path
@@ -263,15 +264,16 @@ const appendHTML = () => {
           d="m 7.9589815,1.003906 c -1.106736,0 -1.996094,0.89131 -1.996094,1.998047 v 2.982421 h -3.070312 c -1.039639,0 -1.876953,0.837315 -1.876953,1.876954 V 8.08789 c 0,1.039639 0.837314,1.876953 1.876953,1.876953 h 3.070312 v 3.033204 c 0,1.106736 0.889358,1.998047 1.996094,1.998047 h 0.01563 c 1.106736,0 1.996094,-0.891311 1.996094,-1.998047 V 9.964843 h 3.1367195 c 1.039637,0 1.876953,-0.837314 1.876953,-1.876953 V 7.861328 c 0,-1.039639 -0.837315,-1.876954 -1.876953,-1.876954 H 9.9707005 V 3.001953 c 0,-1.106737 -0.889358,-1.998047 -1.996094,-1.998047 z"/>
       </symbol>
     </svg>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', iconsContainer);
-};
+  </div>`);
+
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
+  
   appendHTML();
+  
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

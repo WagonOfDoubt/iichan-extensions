@@ -148,18 +148,20 @@ const appendCSS = () => {
     </style>`);
 };
 
-const appendHTML = () => {
-  const iconsContainer = `<div id="<%= ICONS_CONTAINER_ID %>">
+<% if (USERSCRIPT) { %>
+const appendHTML = () => document.body.insertAdjacentHTML('beforeend', `
+  <div id="<%= ICONS_CONTAINER_ID %>">
     //=include hide-threads-icons.svg
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', iconsContainer);
-};
+  </div>`);
+<% } %>
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
+  <% if (USERSCRIPT) { %>
   appendHTML();
+  <% } %>
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

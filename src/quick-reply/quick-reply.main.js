@@ -240,12 +240,14 @@ const appendCSS = () => {
     </style>`);
 };
 
+<% if (USERSCRIPT) { %>
 const appendHTML = () => {
   const iconsContainer = `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include quick-reply-icons.svg
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
+<% } %>
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
@@ -270,7 +272,9 @@ const init = () => {
     updateCaptchaParams();
   }
   appendCSS();
+  <% if (USERSCRIPT) { %>
   appendHTML();
+  <% } %>
   processNodes();
   quickReplyShowFormBtn.addEventListener('click', (e) => {
     movePostform();
