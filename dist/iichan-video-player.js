@@ -42,7 +42,7 @@ const onThumbnailClick = (e) => {
     <div>
       <input type="checkbox" ${ enableSound } class="iichan-mute-video-checkbox" title="Включить звук при открытии видео">
       <div class="iichan-hide-video-btn" title="Закрыть видео"><span><svg>
-        <use class="iichan-icon-video-close-use" xlink:href="/icons.svg#iichan-icon-close" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-video-close-use" xlink:href="/extras/icons.svg#iichan-icon-close" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>Закрыть видео</span></div>
     </div>
     `;

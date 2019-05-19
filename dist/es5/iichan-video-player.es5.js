@@ -41,7 +41,7 @@
       e.currentTarget.videoplayerid = vp.id;
       parentNode.insertBefore(vp, e.currentTarget.nextSibling);
       var enableSound = videoSettings.enableSound ? 'checked' : '';
-      e.currentTarget.innerHTML = "\n    <div>\n      <input type=\"checkbox\" ".concat(enableSound, " class=\"iichan-mute-video-checkbox\" title=\"\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0432\u0443\u043A \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u0432\u0438\u0434\u0435\u043E\">\n      <div class=\"iichan-hide-video-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C\xA0\u0432\u0438\u0434\u0435\u043E\"><span><svg>\n        <use class=\"iichan-icon-video-close-use\" xlink:href=\"/icons.svg#iichan-icon-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\u0417\u0430\u043A\u0440\u044B\u0442\u044C\xA0\u0432\u0438\u0434\u0435\u043E</span></div>\n    </div>\n    ");
+      e.currentTarget.innerHTML = "\n    <div>\n      <input type=\"checkbox\" ".concat(enableSound, " class=\"iichan-mute-video-checkbox\" title=\"\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0432\u0443\u043A \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u0432\u0438\u0434\u0435\u043E\">\n      <div class=\"iichan-hide-video-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C\xA0\u0432\u0438\u0434\u0435\u043E\"><span><svg>\n        <use class=\"iichan-icon-video-close-use\" xlink:href=\"/extras/icons.svg#iichan-icon-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\u0417\u0430\u043A\u0440\u044B\u0442\u044C\xA0\u0432\u0438\u0434\u0435\u043E</span></div>\n    </div>\n    ");
     }
 
     e.preventDefault();

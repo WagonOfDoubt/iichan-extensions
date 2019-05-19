@@ -40,7 +40,7 @@
     if (!thread) return;
     var label = thread.querySelector(':scope > .reflink');
     if (!label) return;
-    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
     var btn = thread.querySelector(".iichan-hide-thread-btn");
     btn.addEventListener('click', hideThread);
   };
@@ -49,7 +49,7 @@
     //catalog only
     if (!thread) return;
     var catthread = thread.querySelector('.catthread');
-    catthread.insertAdjacentHTML('beforeend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    catthread.insertAdjacentHTML('beforeend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
     var btn = catthread.querySelector(".iichan-hide-thread-btn");
     btn.classList.add('reply');
     btn.addEventListener('click', toggleThread);

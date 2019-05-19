@@ -11,5 +11,5 @@
   "ICON_UNHIDE_USE_CLASSNAME": "iichan-icon-unhide-use",
   "ICON_UNHIDE_ID": "iichan-icon-unhide",
   "ICONS_CONTAINER_ID": "iichan-hide-threads-icons",
-  "ICONS_URL": "/icons.svg"
+  "ICONS_URL": "/extras/icons.svg"
 }

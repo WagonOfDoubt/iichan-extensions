@@ -14,5 +14,5 @@
   "ICON_REPLY_ID": "iichan-icon-reply",
   "ICON_CLOSE_ID": "iichan-icon-close",
   "ICONS_CONTAINER_ID": "iichan-quick-reply-icons",
-  "ICONS_URL": "/icons.svg"
+  "ICONS_URL": "/extras/icons.svg"
 }

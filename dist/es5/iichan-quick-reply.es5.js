@@ -24,7 +24,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
   var _ref = function () {
     var quickReplyContainer = document.createElement('table');
-    quickReplyContainer.insertAdjacentHTML('beforeend', "\n      <tr>\n      \t<td class=\"doubledash\">&gt;&gt;</td>\n      \t<td class=\"iichan-postform-container reply\">\n         <div class=\"theader\">\u041E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0440\u0435\u0434 \u2116<span class=\"iichan-quick-reply-thread\"></span><div class=\"iichan-quick-reply-close-form-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0440\u043C\u0443\"><svg>\n          <use class=\"iichan-icon-form-close-use\" xlink:href=\"/icons.svg#iichan-icon-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        </svg></div></div>\n        </td>\n      </tr>\n      \n    ");
+    quickReplyContainer.insertAdjacentHTML('beforeend', "\n      <tr>\n      \t<td class=\"doubledash\">&gt;&gt;</td>\n      \t<td class=\"iichan-postform-container reply\">\n         <div class=\"theader\">\u041E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0440\u0435\u0434 \u2116<span class=\"iichan-quick-reply-thread\"></span><div class=\"iichan-quick-reply-close-form-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0440\u043C\u0443\"><svg>\n          <use class=\"iichan-icon-form-close-use\" xlink:href=\"/extras/icons.svg#iichan-icon-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        </svg></div></div>\n        </td>\n      </tr>\n      \n    ");
     quickReplyContainer.id = 'iichan-quick-reply-container';
     var hideFormBtn = quickReplyContainer.querySelector('.iichan-quick-reply-close-form-btn');
     hideFormBtn.addEventListener('click', function (e) {
@@ -295,7 +295,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     if (!reply) return;
     var label = reply.querySelector(':scope > .reflink');
     if (!label) return;
-    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-quick-reply-btn\" title=\"\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" data-post-id=\"".concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"/icons.svg#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-quick-reply-btn\" title=\"\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" data-post-id=\"".concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"/extras/icons.svg#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
     var btn = reply.querySelector('.iichan-quick-reply-btn');
     btn.addEventListener('click', onQuickReplyClick);
   };

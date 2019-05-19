@@ -9,5 +9,5 @@
   "ICONS_CONTAINER_ID": "iichan-video-player-icons",
   "ICON_CLOSE_ID": "iichan-icon-close",
   "ICON_CLOSE_USE_CLASSNAME": "iichan-icon-video-close-use",
-  "ICONS_URL": "/icons.svg"
+  "ICONS_URL": "/extras/icons.svg"
 }

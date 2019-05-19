@@ -19,7 +19,7 @@ const { quickReplyContainer, quickPostformContainer } = (() => {
       	<td class="doubledash">&gt;&gt;</td>
       	<td class="iichan-postform-container reply">
          <div class="theader">Ответ в тред №<span class="iichan-quick-reply-thread"></span><div class="iichan-quick-reply-close-form-btn" title="Закрыть форму"><svg>
-          <use class="iichan-icon-form-close-use" xlink:href="/icons.svg#iichan-icon-close" width="16" height="16" viewBox="0 0 16 16"/>
+          <use class="iichan-icon-form-close-use" xlink:href="/extras/icons.svg#iichan-icon-close" width="16" height="16" viewBox="0 0 16 16"/>
         </svg></div></div>
         </td>
       </tr>
@@ -266,7 +266,7 @@ const addReplyBtn = (reply) => {
   label.insertAdjacentHTML('afterend', `
     <div class="iichan-quick-reply-btn" title="Быстрый ответ" data-post-id="${ reply.id }">
       <svg>
-        <use class="iichan-icon-reply-use" xlink:href="/icons.svg#iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-reply-use" xlink:href="/extras/icons.svg#iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
   `);

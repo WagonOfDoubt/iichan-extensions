@@ -38,8 +38,8 @@ const addHideBtn = (thread) => {
   label.insertAdjacentHTML('afterend', `
     <div class="iichan-hide-thread-btn" title="Скрыть тред" data-thread-id="${thread.id}">
       <svg>
-        <use class="iichan-icon-hide-use" xlink:href="/icons.svg#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
-        <use class="iichan-icon-unhide-use" xlink:href="/icons.svg#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-hide-use" xlink:href="/extras/icons.svg#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-unhide-use" xlink:href="/extras/icons.svg#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
   `);
@@ -54,8 +54,8 @@ const addToggleBtn = (thread) => {
   catthread.insertAdjacentHTML('beforeend', `
     <div class="iichan-hide-thread-btn" title="Скрыть тред" data-thread-id="${thread.id}">
       <svg>
-        <use class="iichan-icon-hide-use" xlink:href="/icons.svg#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
-        <use class="iichan-icon-unhide-use" xlink:href="/icons.svg#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-hide-use" xlink:href="/extras/icons.svg#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
+        <use class="iichan-icon-unhide-use" xlink:href="/extras/icons.svg#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
   `);
