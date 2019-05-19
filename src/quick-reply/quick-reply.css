@@ -14,15 +14,6 @@
   pointer-events: none;
 }
 
-.replypage .<%= SHOW_FORM_BTN_CLASSNAME %>::after {
-  content: '<%= SHOW_REPLY_FORM_BTN_TITLE %>';
-}
-
-.<%= SHOW_FORM_BTN_CLASSNAME %>::after {
-  content: '<%= SHOW_THREAD_FORM_BTN_TITLE %>';
-}
-
-.<%= SHOW_FORM_BTN_CLASSNAME %>,
 .<%= BTN_CLASSNAME %> {
   cursor: pointer;
 }

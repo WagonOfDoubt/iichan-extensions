@@ -1,65 +1,133 @@
 "use strict";
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 (function () {
   var captcha = {
-    key: 'mainpage',
-    dummy: '',
-    url: '/cgi-bin/captcha1.pl/b/'
+    main: {
+      key: 'mainpage',
+      dummy: '',
+      url: '/cgi-bin/captcha1.pl/b/'
+    },
+    quick: {
+      key: 'mainpage',
+      dummy: '',
+      url: '/cgi-bin/captcha1.pl/b/'
+    }
   };
 
   var _ref = function () {
     var quickReplyContainer = document.createElement('table');
-    quickReplyContainer.insertAdjacentHTML('beforeend', "\n        <tr>\n        \t<td class=\"doubledash\">&gt;&gt;</td>\n        \t<td class=\"iichan-postform-container reply\">\n           <div class=\"theader\">\u041E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0440\u0435\u0434 \u2116<span class=\"iichan-quick-reply-thread\"></span><div class=\"iichan-quick-reply-close-form-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0440\u043C\u0443\"><svg>\n            <use class=\"iichan-icon-form-close-use\" xlink:href=\"/icons.svg#iichan-icon-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n          </svg></div></div>\n          </td>\n        </tr>\n        \n      ");
+    quickReplyContainer.insertAdjacentHTML('beforeend', "\n      <tr>\n      \t<td class=\"doubledash\">&gt;&gt;</td>\n      \t<td class=\"iichan-postform-container reply\">\n         <div class=\"theader\">\u041E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0440\u0435\u0434 \u2116<span class=\"iichan-quick-reply-thread\"></span><div class=\"iichan-quick-reply-close-form-btn\" title=\"\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0440\u043C\u0443\"><svg>\n          <use class=\"iichan-icon-form-close-use\" xlink:href=\"/icons.svg#iichan-icon-close\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        </svg></div></div>\n        </td>\n      </tr>\n      \n    ");
     quickReplyContainer.id = 'iichan-quick-reply-container';
     var hideFormBtn = quickReplyContainer.querySelector('.iichan-quick-reply-close-form-btn');
     hideFormBtn.addEventListener('click', function (e) {
-      return movePostform(null, true);
+      return movePostform(null);
     });
-    var postformContainer = quickReplyContainer.querySelector('.iichan-postform-container');
+    var quickPostformContainer = quickReplyContainer.querySelector('.iichan-postform-container');
     return {
       quickReplyContainer: quickReplyContainer,
-      postformContainer: postformContainer
+      quickPostformContainer: quickPostformContainer
     };
   }(),
       quickReplyContainer = _ref.quickReplyContainer,
-      postformContainer = _ref.postformContainer;
+      quickPostformContainer = _ref.quickPostformContainer;
 
-  var quickReplyShowFormBtn = function () {
-    var btn = document.createElement('a');
-    btn.classList.add('iichan-quick-reply-show-form-btn');
-    return btn;
+  var getMainForm = function () {
+    var mainForm;
+    return function () {
+      if (!mainForm) {
+        mainForm = document.getElementById('postform');
+      }
+
+      return mainForm;
+    };
+  }();
+
+  var getQuickReplyForm = function () {
+    var quickReplyForm;
+    return function () {
+      if (!quickReplyForm) {
+        var postform = getMainForm();
+        quickReplyForm = postform.cloneNode(true); // deep clone
+
+        quickReplyForm.id = 'iichan-quick-reply-form';
+        var quickCaptcha = quickReplyForm.querySelector('#captcha');
+        quickCaptcha.id = 'iichan-quick-reply-captcha';
+        addUpdateCaptchaListener(quickReplyForm);
+
+        if (document.body.classList.contains('replypage')) {
+          quickReplyForm.addEventListener('change', syncForms);
+          quickReplyForm.addEventListener('input', syncForms);
+        }
+
+        quickPostformContainer.appendChild(quickReplyForm);
+      }
+
+      return quickReplyForm;
+    };
   }();
 
   var hiddenParentInput = function () {
     var inp = document.createElement('input');
     inp.setAttribute('type', 'hidden');
     inp.setAttribute('name', 'parent');
-    return inp;
+    return inp; // kaeritai
   }();
 
-  var updateCaptcha = function updateCaptcha() {
-    var img = document.querySelector('#captcha');
+  var addUpdateCaptchaListener = function addUpdateCaptchaListener(form) {
+    var captchaLink = form.querySelector('input[name=captcha] + a');
 
-    if (!img) {
-      return;
+    if (captchaLink) {
+      captchaLink.removeAttribute('onclick');
+      captchaLink.addEventListener('click', function (e) {
+        updateCaptcha();
+        e.preventDefault();
+      });
+    }
+  };
+
+  var getCaptchaImageUrl = function getCaptchaImageUrl(captchaOpts) {
+    var url = captchaOpts.url,
+        key = captchaOpts.key,
+        dummy = captchaOpts.dummy;
+    return "".concat(url, "?key=").concat(key, "&dummy=").concat(dummy, "&").concat(Math.random());
+  };
+
+  var updateCaptcha = function updateCaptcha() {
+    var quickCaptchaImg = document.getElementById('iichan-quick-reply-captcha');
+    var mainCaptchaImg = document.getElementById('captcha');
+    var quickCaptchaUrl = getCaptchaImageUrl(captcha.quick);
+
+    if (quickCaptchaImg) {
+      quickCaptchaImg.src = quickCaptchaUrl;
     }
 
-    var url = captcha.url,
-        key = captcha.key,
-        dummy = captcha.dummy;
-    img.src = "".concat(url, "?key=").concat(key, "&dummy=").concat(dummy, "&").concat(Math.random());
+    if (mainCaptchaImg) {
+      if (captcha.quick.key === captcha.main.key) {
+        mainCaptchaImg.src = quickCaptchaUrl;
+      } else {
+        mainCaptchaImg.src = getCaptchaImageUrl(captcha.main);
+      }
+    }
   };
 
   var updateCaptchaParams = function updateCaptchaParams(parentThread) {
     if (!parentThread) {
-      captcha.key = 'mainpage';
-      captcha.dummy = '';
+      captcha.quick.key = 'mainpage';
+      captcha.quick.dummy = '';
     } else {
       var opRef = parentThread.id.substr('thread-'.length);
       var lastReply = parentThread.querySelector('table:last-child .reply');
       var lastRef = lastReply ? lastReply.id.substr('reply'.length) : opRef;
-      captcha.key = "res".concat(opRef);
-      captcha.dummy = lastRef;
+      captcha.quick.key = "res".concat(opRef);
+      captcha.quick.dummy = lastRef;
     }
 
     updateCaptcha();
@@ -104,8 +172,8 @@
     return parent;
   };
 
-  var addReflinkAndFocus = function addReflinkAndFocus(reflink) {
-    var textarea = document.querySelector('[name=nya4]');
+  var addReflinkAndFocus = function addReflinkAndFocus(postform, reflink) {
+    var textarea = postform && postform.querySelector('[name=nya4]');
 
     if (!textarea) {
       return;
@@ -124,23 +192,12 @@
         textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');
       }
     }
+
+    syncForms(textarea);
   };
 
-  var placePostareaButton = function placePostareaButton() {
-    var postarea = document.querySelector('.postarea');
-
-    if (postarea) {
-      postarea.appendChild(quickReplyShowFormBtn);
-    }
-
-    var theader = document.querySelector('body > .theader');
-
-    if (theader) {
-      theader.style.display = 'none';
-    }
-  };
-
-  var placeFormAfterReply = function placeFormAfterReply(postform, replyTo) {
+  var placeQuickReplyFormAfterReply = function placeQuickReplyFormAfterReply(replyTo) {
+    var quickReplyForm = getQuickReplyForm();
     var replyContainer = findParent(replyTo, 'table');
     var parentThread = findParent(replyTo, '[id^=thread]');
 
@@ -150,86 +207,72 @@
 
     var opRef = parentThread.id.substr('thread-'.length);
     var ref = replyTo.id.substr('reply'.length);
-    postformContainer.appendChild(postform);
     replyContainer.parentNode.insertBefore(quickReplyContainer, replyContainer.nextSibling);
-    placePostareaButton();
-    setParentInputValue(postform, opRef);
+    setParentInputValue(quickReplyForm, opRef);
     updateCaptchaParams(parentThread);
-    addReflinkAndFocus(ref);
+    addReflinkAndFocus(quickReplyForm, ref);
   };
 
-  var placeFormAfterOp = function placeFormAfterOp(postform, replyTo) {
+  var placeQuickReplyFormAfterOp = function placeQuickReplyFormAfterOp(replyTo) {
+    var quickReplyForm = getQuickReplyForm();
     var firstReply = replyTo.querySelector('table');
     var ref = replyTo.id.substr('thread-'.length);
-    postformContainer.appendChild(postform);
     replyTo.insertBefore(quickReplyContainer, firstReply);
-    placePostareaButton();
-    setParentInputValue(postform, ref);
+    setParentInputValue(quickReplyForm, ref);
     updateCaptchaParams(replyTo);
-    addReflinkAndFocus(ref);
+    addReflinkAndFocus(quickReplyForm, ref);
   };
 
-  var placeFormAtPostarea = function placeFormAtPostarea(postform, focus) {
-    var postarea = document.querySelector('.postarea'); // append postfrom to postarea
+  var closeQuickReplyForm = function closeQuickReplyForm() {
+    if (!quickReplyContainer.parentNode) {
+      return;
+    }
 
-    if (postarea) {
-      postarea.appendChild(postform);
+    quickReplyContainer.parentNode.removeChild(quickReplyContainer);
+  };
 
-      if (focus) {
-        addReflinkAndFocus();
-      }
-    } // remove table.reply
+  var movePostform = function movePostform(replyTo) {
+    var quickReplyForm = getQuickReplyForm(); // replyTo === null OR already at same post => close quick reply form
 
-
-    if (quickReplyContainer.parentNode) {
-      quickReplyContainer.parentNode.removeChild(quickReplyContainer);
-    } // remove button from postarea
-
-
-    if (quickReplyShowFormBtn.parentNode) {
-      var theader = document.querySelector('body > .theader');
-
-      if (theader) {
-        theader.style.display = null;
-      }
-
-      quickReplyShowFormBtn.parentNode.removeChild(quickReplyShowFormBtn);
-    } // reset form parent value
-
-
-    if (document.body.classList.contains('replypage')) {
-      // reply to thread
-      var parentThread = document.querySelector('[id^=thread]');
-      var opRef = parentThread.id.substr('thread-'.length);
-      setParentInputValue(postform, opRef);
-      updateCaptchaParams(parentThread);
+    if (!replyTo || quickReplyForm.dataset.replyTo === replyTo.id) {
+      quickReplyForm.dataset.replyTo = '';
+      closeQuickReplyForm(); // replyTo is reply (not OP)
+    } else if (replyTo.classList.contains('reply')) {
+      quickReplyForm.dataset.replyTo = replyTo.id;
+      placeQuickReplyFormAfterReply(replyTo); // replyTo is thread (OP)
     } else {
-      // create thread
-      setParentInputValue(postform, null);
-      updateCaptchaParams();
+      quickReplyForm.dataset.replyTo = replyTo.id;
+      placeQuickReplyFormAfterOp(replyTo);
     }
   };
 
-  var movePostform = function movePostform(replyTo, closeQuickReply) {
-    var postform = document.querySelector('#postform');
+  var syncForms = function syncForms(e) {
+    var sourceInput = e instanceof Event ? e.target : e;
+    var quickReplyForm = getQuickReplyForm();
+    var mainForm = getMainForm();
+    var targetForm = quickReplyForm.contains(sourceInput) ? mainForm : quickReplyForm;
+    var sourceForm = quickReplyForm.contains(sourceInput) ? quickReplyForm : mainForm;
+    var targetInput = targetForm[sourceInput.name];
+    var inputType = sourceInput.type;
+    console.log(sourceInput);
 
-    if (!postform) {
+    if (!targetInput) {
       return;
-    } // replyTo === null => return postform to default position
+    }
 
-
-    if (!replyTo) {
-      postform.dataset.replyTo = '';
-      placeFormAtPostarea(postform, !closeQuickReply); // already at same post => return to default, no focus
-    } else if (postform.dataset.replyTo === replyTo.id) {
-      postform.dataset.replyTo = '';
-      placeFormAtPostarea(postform, false); // replyTo is reply (not OP)
-    } else if (replyTo.classList.contains('reply')) {
-      postform.dataset.replyTo = replyTo.id;
-      placeFormAfterReply(postform, replyTo); // replyTo is thread (OP)
+    if (inputType === 'radio') {
+      var sourceGroup = sourceForm[sourceInput.name];
+      targetInput.value = sourceGroup.value;
+    } else if (inputType === 'checkbox') {
+      targetInput.checked = sourceInput.checked;
+    } else if (inputType === 'file') {
+      // might not work in all browsers
+      var newFileInput = sourceInput.cloneNode();
+      var parent = targetInput.parentElement;
+      parent.removeChild(targetInput);
+      parent.insertBefore(newFileInput, parent.firstChild);
     } else {
-      postform.dataset.replyTo = replyTo.id;
-      placeFormAfterOp(postform, replyTo);
+      targetInput.value = sourceInput.value;
     }
   };
 
@@ -285,41 +328,45 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .replypage .iichan-quick-reply-show-form-btn::after {\n        content: '[\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0444\u043E\u0440\u043C\u0443 \u043E\u0442\u0432\u0435\u0442\u0430]';\n      }\n      \n      .iichan-quick-reply-show-form-btn::after {\n        content: '[\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0442\u0440\u0435\u0434]';\n      }\n      \n      .iichan-quick-reply-show-form-btn,\n      .iichan-quick-reply-btn {\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
+    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-quick-reply-btn {\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
   };
 
   var init = function init() {
     if (document.querySelector('#de-main')) return;
+    var postform = getMainForm();
+
+    if (!postform) {
+      return;
+    }
+
     var captchaImg = document.querySelector('#captcha'); // get captcha root url
 
     if (captchaImg) {
-      captcha.url = captchaImg.getAttribute('src').match(/[^\?]*/)[0];
+      var captchaSrc = captchaImg.getAttribute('src');
+
+      var _captchaSrc$match = captchaSrc.match(/([^\?]*)\?key=(.*)&dummy=(.*)/),
+          _captchaSrc$match2 = _slicedToArray(_captchaSrc$match, 4),
+          matched = _captchaSrc$match2[0],
+          captchaUrl = _captchaSrc$match2[1],
+          captchaKey = _captchaSrc$match2[2],
+          captchaDummy = _captchaSrc$match2[3];
+
+      captcha.main.url = captchaUrl;
+      captcha.main.key = captchaKey;
+      captcha.main.dummy = captchaDummy;
+      captcha.quick.url = captchaUrl;
     } // remove default captcha update handler
 
 
-    var captchaLink = document.querySelector('input[name=captcha] + a');
-
-    if (captchaLink) {
-      captchaLink.removeAttribute('onclick');
-      captchaLink.addEventListener('click', function (e) {
-        updateCaptcha();
-        e.preventDefault();
-      });
-    }
+    addUpdateCaptchaListener(postform);
 
     if (document.body.classList.contains('replypage')) {
-      var parentThread = document.querySelector('[id^=thread]');
-      updateCaptchaParams(parentThread);
-    } else {
-      updateCaptchaParams();
+      postform.addEventListener('change', syncForms);
+      postform.addEventListener('input', syncForms);
     }
 
     appendCSS();
     processNodes();
-    quickReplyShowFormBtn.addEventListener('click', function (e) {
-      movePostform();
-      e.preventDefault();
-    });
 
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {

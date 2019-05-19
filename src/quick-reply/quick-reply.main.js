@@ -1,53 +1,107 @@
 const captcha = {
-  key: 'mainpage',
-  dummy: '',
-  url: '/cgi-bin/captcha1.pl/b/',
+  main: {
+    key: 'mainpage',
+    dummy: '',
+    url: '/cgi-bin/captcha1.pl/b/',    
+  },
+  quick: {
+    key: 'mainpage',
+    dummy: '',
+    url: '/cgi-bin/captcha1.pl/b/',    
+  }
 };
 
-const { quickReplyContainer, postformContainer } = (() => {
+const { quickReplyContainer, quickPostformContainer } = (() => {
   const quickReplyContainer = document.createElement('table');
-    quickReplyContainer.insertAdjacentHTML('beforeend', `
-        //=include quick-reply-container.html
-      `);
-    quickReplyContainer.id = '<%= CONTAINER_ID %>';
-    const hideFormBtn = quickReplyContainer.querySelector('.<%= CLOSE_FORM_BTN_CLASSNAME %>');
-    hideFormBtn.addEventListener('click', (e) => movePostform(null, true));
-    const postformContainer = quickReplyContainer.querySelector('.<%= FORM_CONTAINER_CLASSNAME %>');
-    return { quickReplyContainer, postformContainer };
+  quickReplyContainer.insertAdjacentHTML('beforeend', `
+      //=include quick-reply-container.html
+    `);
+  quickReplyContainer.id = '<%= CONTAINER_ID %>';
+  const hideFormBtn = quickReplyContainer.querySelector('.<%= CLOSE_FORM_BTN_CLASSNAME %>');
+  hideFormBtn.addEventListener('click', (e) => movePostform(null));
+  const quickPostformContainer = quickReplyContainer.querySelector('.<%= FORM_CONTAINER_CLASSNAME %>');
+  return { quickReplyContainer, quickPostformContainer };
 })();
 
-const quickReplyShowFormBtn = (() => {
-  const btn = document.createElement('a');
-  btn.classList.add('<%= SHOW_FORM_BTN_CLASSNAME %>');
-  return btn;
+const getMainForm = (() => {
+  let mainForm;
+  return () => {
+    if (!mainForm) {
+      mainForm = document.getElementById('postform');
+    }
+    return mainForm;
+  };
+})();
+
+const getQuickReplyForm = (() => {
+  let quickReplyForm;
+  return () => {
+    if (!quickReplyForm) {
+      const postform = getMainForm();
+      quickReplyForm = postform.cloneNode(true);  // deep clone
+      quickReplyForm.id = '<%= QUCK_REPLY_FORM_ID %>';
+      const quickCaptcha = quickReplyForm.querySelector('#captcha');
+      quickCaptcha.id = '<%= QUCK_REPLY_CAPTCHA_ID %>';
+      addUpdateCaptchaListener(quickReplyForm);
+      if (document.body.classList.contains('replypage')) {
+        quickReplyForm.addEventListener('change', syncForms);
+        quickReplyForm.addEventListener('input', syncForms);
+      }
+      quickPostformContainer.appendChild(quickReplyForm);
+    }
+    return quickReplyForm;
+  };
 })();
 
 const hiddenParentInput = (() => {
   const inp = document.createElement('input');
   inp.setAttribute('type', 'hidden');
   inp.setAttribute('name', 'parent');
-  return inp;
+  return inp;  // kaeritai
 })();
 
-const updateCaptcha = () => {
-  const img = document.querySelector('#captcha');
-  if (!img) {
-    return;
+const addUpdateCaptchaListener = (form) => {
+  const captchaLink = form.querySelector('input[name=captcha] + a');
+  if (captchaLink) {
+    captchaLink.removeAttribute('onclick');
+    captchaLink.addEventListener('click', (e) => {
+      updateCaptcha();
+      e.preventDefault();
+    });
   }
-  const { url, key, dummy } = captcha;
-  img.src = `${url}?key=${key}&dummy=${dummy}&${Math.random()}`;
+};
+
+const getCaptchaImageUrl = (captchaOpts) => {
+  const { url, key, dummy } = captchaOpts;
+  return `${url}?key=${key}&dummy=${dummy}&${Math.random()}`;
+};
+
+const updateCaptcha = () => {
+  const quickCaptchaImg = document.getElementById('<%= QUCK_REPLY_CAPTCHA_ID %>');
+  const mainCaptchaImg = document.getElementById('captcha');
+  const quickCaptchaUrl = getCaptchaImageUrl(captcha.quick);
+  if (quickCaptchaImg) {
+    quickCaptchaImg.src = quickCaptchaUrl;
+  }
+  if (mainCaptchaImg) {
+    if (captcha.quick.key === captcha.main.key) {
+      mainCaptchaImg.src = quickCaptchaUrl;
+    } else {
+      mainCaptchaImg.src = getCaptchaImageUrl(captcha.main);
+    }    
+  }
 };
 
 const updateCaptchaParams = (parentThread) => {
   if (!parentThread) {
-    captcha.key = 'mainpage';
-    captcha.dummy = '';
+    captcha.quick.key = 'mainpage';
+    captcha.quick.dummy = '';
   } else {
     const opRef = parentThread.id.substr('thread-'.length);
     const lastReply = parentThread.querySelector('table:last-child .reply');
     const lastRef = lastReply ? lastReply.id.substr('reply'.length) : opRef;
-    captcha.key = `res${opRef}`;
-    captcha.dummy = lastRef;
+    captcha.quick.key = `res${opRef}`;
+    captcha.quick.dummy = lastRef;
   }
   updateCaptcha();
 };
@@ -84,8 +138,8 @@ const findParent = (child, parentSelector) => {
   return parent;
 };
 
-const addReflinkAndFocus = (reflink) => {
-  const textarea = document.querySelector('[name=nya4]');
+const addReflinkAndFocus = (postform, reflink) => {
+  const textarea = postform && postform.querySelector('[name=nya4]');
   if (!textarea) {
     return;
   }
@@ -99,20 +153,11 @@ const addReflinkAndFocus = (reflink) => {
       textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');
     }
   }
+  syncForms(textarea);
 };
 
-const placePostareaButton = () => {
-  const postarea = document.querySelector('.postarea');
-  if (postarea) {
-    postarea.appendChild(quickReplyShowFormBtn);
-  }
-  const theader = document.querySelector('body > .theader');
-  if (theader) {
-    theader.style.display = 'none';
-  }
-};
-
-const placeFormAfterReply = (postform, replyTo) => {
+const placeQuickReplyFormAfterReply = (replyTo) => {
+  const quickReplyForm = getQuickReplyForm();
   const replyContainer = findParent(replyTo, 'table');
   const parentThread = findParent(replyTo, '[id^=thread]');
   if (!replyContainer || !parentThread) {
@@ -121,85 +166,75 @@ const placeFormAfterReply = (postform, replyTo) => {
   const opRef = parentThread.id.substr('thread-'.length);
   const ref = replyTo.id.substr('reply'.length);
 
-  postformContainer.appendChild(postform);
   replyContainer.parentNode.insertBefore(quickReplyContainer, replyContainer.nextSibling);
 
-  placePostareaButton();
-  setParentInputValue(postform, opRef);
+  setParentInputValue(quickReplyForm, opRef);
   updateCaptchaParams(parentThread);
-  addReflinkAndFocus(ref);
+  addReflinkAndFocus(quickReplyForm, ref);
 };
 
-const placeFormAfterOp = (postform, replyTo) => {
+const placeQuickReplyFormAfterOp = (replyTo) => {
+  const quickReplyForm = getQuickReplyForm();
   const firstReply = replyTo.querySelector('table');
   const ref = replyTo.id.substr('thread-'.length);
   
-  postformContainer.appendChild(postform);
   replyTo.insertBefore(quickReplyContainer, firstReply);
   
-  placePostareaButton();
-  setParentInputValue(postform, ref);
+  setParentInputValue(quickReplyForm, ref);
   updateCaptchaParams(replyTo);
-  addReflinkAndFocus(ref);
+  addReflinkAndFocus(quickReplyForm, ref);
 };
 
-const placeFormAtPostarea = (postform, focus) => {
-  const postarea = document.querySelector('.postarea');
-  // append postfrom to postarea
-  if (postarea) {
-    postarea.appendChild(postform);
-    if (focus) {
-      addReflinkAndFocus();
-    }
-  }
-  // remove table.reply
-  if (quickReplyContainer.parentNode) {
-    quickReplyContainer.parentNode.removeChild(quickReplyContainer);
-  }
-  // remove button from postarea
-  if (quickReplyShowFormBtn.parentNode) {
-    const theader = document.querySelector('body > .theader');
-    if (theader) {
-      theader.style.display = null;
-    }
-    quickReplyShowFormBtn.parentNode.removeChild(quickReplyShowFormBtn);
-  }
-  // reset form parent value
-  if (document.body.classList.contains('replypage')) {
-    // reply to thread
-    const parentThread = document.querySelector('[id^=thread]');
-    const opRef = parentThread.id.substr('thread-'.length);
-    setParentInputValue(postform, opRef);
-    updateCaptchaParams(parentThread);
-  } else {
-    // create thread
-    setParentInputValue(postform, null);
-    updateCaptchaParams();
-  }
-};
-
-const movePostform = (replyTo, closeQuickReply) => {
-  const postform = document.querySelector('#postform');
-  if (!postform) {
+const closeQuickReplyForm = () => {
+  if (!quickReplyContainer.parentNode) {
     return;
   }
+  quickReplyContainer.parentNode.removeChild(quickReplyContainer);
+};
 
-  // replyTo === null => return postform to default position
-  if (!replyTo) {
-    postform.dataset.replyTo = '';
-    placeFormAtPostarea(postform, !closeQuickReply);
-  // already at same post => return to default, no focus
-  } else if (postform.dataset.replyTo === replyTo.id) {
-    postform.dataset.replyTo = '';
-    placeFormAtPostarea(postform, false);
+const movePostform = (replyTo) => {
+  const quickReplyForm = getQuickReplyForm();
+
+  // replyTo === null OR already at same post => close quick reply form
+  if (!replyTo || quickReplyForm.dataset.replyTo === replyTo.id) {
+    quickReplyForm.dataset.replyTo = '';
+    closeQuickReplyForm();
   // replyTo is reply (not OP)
   } else if (replyTo.classList.contains('reply')) {
-    postform.dataset.replyTo = replyTo.id;
-    placeFormAfterReply(postform, replyTo);
+    quickReplyForm.dataset.replyTo = replyTo.id;
+    placeQuickReplyFormAfterReply(replyTo);
   // replyTo is thread (OP)
   } else {
-    postform.dataset.replyTo = replyTo.id;
-    placeFormAfterOp(postform, replyTo);
+    quickReplyForm.dataset.replyTo = replyTo.id;
+    placeQuickReplyFormAfterOp(replyTo);
+  }
+};
+
+const syncForms = (e) => {
+  const sourceInput = e instanceof Event ? e.target : e;
+  const quickReplyForm = getQuickReplyForm();
+  const mainForm = getMainForm();
+  const targetForm = quickReplyForm.contains(sourceInput) ? mainForm : quickReplyForm;
+  const sourceForm = quickReplyForm.contains(sourceInput) ? quickReplyForm : mainForm;
+  const targetInput = targetForm[sourceInput.name];
+  const inputType = sourceInput.type;
+  console.log(sourceInput);
+  if (!targetInput) {
+    return;
+  }
+  if (inputType === 'radio') {
+    const sourceGroup = sourceForm[sourceInput.name];
+    targetInput.value = sourceGroup.value;
+  } else if (inputType === 'checkbox') {
+    targetInput.checked = sourceInput.checked;
+  } else if (inputType === 'file') {
+    // might not work in all browsers
+    const newFileInput = sourceInput.cloneNode();
+    const parent = targetInput.parentElement;
+    parent.removeChild(targetInput);
+    parent.insertBefore(newFileInput, parent.firstChild);
+  } else {
+    targetInput.value = sourceInput.value;
   }
 };
 
@@ -251,35 +286,32 @@ const appendHTML = () => {
 
 const init = () => {
   if (document.querySelector('#de-main')) return;
+  const postform = getMainForm();
+  if (!postform) {
+    return;
+  }
   const captchaImg = document.querySelector('#captcha');
   // get captcha root url
   if (captchaImg) {
-    captcha.url = captchaImg.getAttribute('src').match(/[^\?]*/)[0];
+    const captchaSrc = captchaImg.getAttribute('src');
+    const [matched, captchaUrl, captchaKey, captchaDummy ] = captchaSrc.match(/([^\?]*)\?key=(.*)&dummy=(.*)/);
+    captcha.main.url = captchaUrl;
+    captcha.main.key = captchaKey;
+    captcha.main.dummy = captchaDummy;
+    captcha.quick.url = captchaUrl;
   }
   // remove default captcha update handler
-  const captchaLink = document.querySelector('input[name=captcha] + a');
-  if (captchaLink) {
-    captchaLink.removeAttribute('onclick');
-    captchaLink.addEventListener('click', (e) => {
-      updateCaptcha();
-      e.preventDefault();
-    });
-  }
+  addUpdateCaptchaListener(postform);
   if (document.body.classList.contains('replypage')) {
-    const parentThread = document.querySelector('[id^=thread]');
-    updateCaptchaParams(parentThread);
-  } else {
-    updateCaptchaParams();
+    postform.addEventListener('change', syncForms);
+    postform.addEventListener('input', syncForms);    
   }
   appendCSS();
   <% if (USERSCRIPT) { %>
   appendHTML();
   <% } %>
   processNodes();
-  quickReplyShowFormBtn.addEventListener('click', (e) => {
-    movePostform();
-    e.preventDefault();
-  });
+
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
