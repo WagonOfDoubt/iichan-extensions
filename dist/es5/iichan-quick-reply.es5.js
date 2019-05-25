@@ -59,7 +59,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
         quickReplyForm.id = 'iichan-quick-reply-form';
         var quickCaptcha = quickReplyForm.querySelector('#captcha');
-        quickCaptcha.id = 'iichan-quick-reply-captcha';
+
+        if (quickCaptcha) {
+          quickCaptcha.id = 'iichan-quick-reply-captcha';
+        }
+
         addUpdateCaptchaListener(quickReplyForm);
 
         if (document.body.classList.contains('replypage')) {
@@ -254,7 +258,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     var sourceForm = quickReplyForm.contains(sourceInput) ? quickReplyForm : mainForm;
     var targetInput = targetForm[sourceInput.name];
     var inputType = sourceInput.type;
-    console.log(sourceInput);
 
     if (!targetInput) {
       return;

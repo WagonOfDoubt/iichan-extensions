@@ -50,7 +50,9 @@ const getQuickReplyForm = (() => {
       quickReplyForm = postform.cloneNode(true);  // deep clone
       quickReplyForm.id = 'iichan-quick-reply-form';
       const quickCaptcha = quickReplyForm.querySelector('#captcha');
-      quickCaptcha.id = 'iichan-quick-reply-captcha';
+      if (quickCaptcha) {
+        quickCaptcha.id = 'iichan-quick-reply-captcha';
+      }
       addUpdateCaptchaListener(quickReplyForm);
       if (document.body.classList.contains('replypage')) {
         quickReplyForm.addEventListener('change', syncForms);
@@ -227,7 +229,6 @@ const syncForms = (e) => {
   const sourceForm = quickReplyForm.contains(sourceInput) ? quickReplyForm : mainForm;
   const targetInput = targetForm[sourceInput.name];
   const inputType = sourceInput.type;
-  console.log(sourceInput);
   if (!targetInput) {
     return;
   }
