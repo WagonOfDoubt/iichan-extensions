@@ -197,7 +197,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
     }
 
-    syncForms(textarea);
+    if (document.body.classList.contains('replypage')) {
+      syncForms(textarea);
+    }
   };
 
   var placeQuickReplyFormAfterReply = function placeQuickReplyFormAfterReply(replyTo) {

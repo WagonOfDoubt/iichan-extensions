@@ -178,7 +178,9 @@ const addReflinkAndFocus = (postform, reflink) => {
       textarea.setRangeText(reflink, textarea.textLength, textarea.textLength, 'end');
     }
   }
-  syncForms(textarea);
+  if (document.body.classList.contains('replypage')) {
+    syncForms(textarea);
+  }
 };
 
 const placeQuickReplyFormAfterReply = (replyTo) => {
