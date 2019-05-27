@@ -294,6 +294,33 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     e.preventDefault();
   };
 
+  var onReflinkClick = function onReflinkClick(e) {
+    var ref = '';
+    var reply = findParent(e.target, '.reply');
+    var thread = findParent(e.target, '[id^=thread]');
+
+    if (reply) {
+      ref = reply.id.substr('reply'.length);
+    } else if (thread) {
+      ref = thread.id.substr('thread-'.length);
+    }
+
+    if (ref) {
+      if (quickReplyContainer.parentNode) {
+        var quickReplyForm = getQuickReplyForm();
+        addReflinkAndFocus(quickReplyForm, ref);
+      } else if (document.body.classList.contains('replypage')) {
+        var postform = getMainForm();
+        addReflinkAndFocus(postform, ref);
+      } else {
+        var afterReply = reply || thread;
+        movePostform(afterReply);
+      }
+    }
+
+    e.preventDefault();
+  };
+
   var addReplyBtn = function addReplyBtn(reply) {
     if (!reply) return;
     var label = reply.querySelector(':scope > .reflink');
@@ -301,6 +328,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-quick-reply-btn\" title=\"\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" data-post-id=\"".concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"/extras/icons.svg#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
     var btn = reply.querySelector('.iichan-quick-reply-btn');
     btn.addEventListener('click', onQuickReplyClick);
+    var labelLink = label.querySelector('a');
+    if (!labelLink) return;
+    labelLink.addEventListener('click', onReflinkClick);
   };
 
   var processNodes = function processNodes(rootNode) {

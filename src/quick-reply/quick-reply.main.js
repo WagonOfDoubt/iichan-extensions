@@ -251,6 +251,30 @@ const onQuickReplyClick = (e) => {
   e.preventDefault();
 };
 
+const onReflinkClick = (e) => {
+  let ref = '';
+  const reply = findParent(e.target, '.reply');
+  const thread = findParent(e.target, '[id^=thread]');
+  if (reply) {
+    ref = reply.id.substr('reply'.length);
+  } else if (thread) {
+    ref = thread.id.substr('thread-'.length);
+  }
+  if (ref) {
+    if (quickReplyContainer.parentNode) {
+      const quickReplyForm = getQuickReplyForm();
+      addReflinkAndFocus(quickReplyForm, ref);
+    } else if (document.body.classList.contains('replypage')) {
+      const postform = getMainForm();
+      addReflinkAndFocus(postform, ref);
+    } else {
+      const afterReply = reply || thread;
+      movePostform(afterReply);
+    }
+  }
+  e.preventDefault();
+};
+
 const addReplyBtn = (reply) => {
   if (!reply) return;
   const label = reply.querySelector(':scope > .reflink');
@@ -260,6 +284,9 @@ const addReplyBtn = (reply) => {
   `);
   const btn = reply.querySelector('.<%= BTN_CLASSNAME %>');
   btn.addEventListener('click', onQuickReplyClick);
+  const labelLink = label.querySelector('a');
+  if (!labelLink) return;
+  labelLink.addEventListener('click', onReflinkClick);
 };
 
 const processNodes = (rootNode) => {
@@ -305,7 +332,7 @@ const init = () => {
   addUpdateCaptchaListener(postform);
   if (document.body.classList.contains('replypage')) {
     postform.addEventListener('change', syncForms);
-    postform.addEventListener('input', syncForms);    
+    postform.addEventListener('input', syncForms);
   }
   appendCSS();
   <% if (USERSCRIPT) { %>
