@@ -145,7 +145,7 @@ const addReflinkAndFocus = (postform, reflink) => {
   if (!textarea) {
     return;
   }
-  textarea.focus(false);
+  textarea.focus();
   if (reflink) {
     reflink = `>>${reflink}\n`;
     if (!textarea.value.endsWith(reflink)) {

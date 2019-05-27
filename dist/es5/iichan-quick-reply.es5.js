@@ -183,7 +183,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       return;
     }
 
-    textarea.focus(false);
+    textarea.focus();
 
     if (reflink) {
       reflink = ">>".concat(reflink, "\n");
