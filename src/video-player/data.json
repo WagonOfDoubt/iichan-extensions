@@ -1,4 +1,5 @@
 {
+  "SETTINGS_LOCALSTORAGE_KEY": "iichan_settings",
   "LOCALSTORAGE_KEY": "iichan_video_settings",
   "VIDEO_PLAYER_CLASSNAME": "iichan-video-player",
   "HIDE_VIDEO_BTN_CLASSNAME": "iichan-hide-video-btn",

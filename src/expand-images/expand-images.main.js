@@ -52,8 +52,12 @@ const isDollchan = () =>
   document.body.classList.contains('de-runned') ||
     !!document.body.querySelector('#de-main');
 
+const getSettings = () => JSON.parse(
+  window.localStorage.getItem('<%= SETTINGS_LOCALSTORAGE_KEY %>') || '{}');
+
 const init = () => {
   if (isDollchan()) return;
+  if (getSettings().disable_expand_images) return;
   appendCSS();
   addListeners();
   if ('MutationObserver' in window) {

@@ -373,12 +373,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-quick-reply-btn {\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
   };
 
+  var getSettings = function getSettings() {
+    return JSON.parse(window.localStorage.getItem('iichan_settings') || '{}');
+  };
+
   var isDollchan = function isDollchan() {
     return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
   };
 
   var init = function init() {
     if (isDollchan()) return;
+    if (getSettings().disable_quick_reply) return;
     var postform = getMainForm();
 
     if (!postform) {

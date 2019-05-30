@@ -78,8 +78,12 @@ const appendHTML = () => document.body.insertAdjacentHTML('beforeend',
 );
 <% } %>
 
+const getSettings = () => JSON.parse(
+  window.localStorage.getItem('<%= SETTINGS_LOCALSTORAGE_KEY %>') || '{}');
+
 const init = () => {
   if (isDollchan()) return;
+  if (getSettings().disable_video_player) return;
   appendCSS();
   <% if (USERSCRIPT) { %>
   appendHTML();

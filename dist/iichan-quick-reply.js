@@ -372,12 +372,16 @@ const appendCSS = () => {
 
 
 
+const getSettings = () => JSON.parse(
+  window.localStorage.getItem('iichan_settings') || '{}');
+
 const isDollchan = () =>
   document.body.classList.contains('de-runned') ||
     !!document.body.querySelector('#de-main');
 
 const init = () => {
   if (isDollchan()) return;
+  if (getSettings().disable_quick_reply) return;
   const postform = getMainForm();
   if (!postform) {
     return;

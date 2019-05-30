@@ -271,8 +271,12 @@ const isDollchan = () =>
   document.body.classList.contains('de-runned') ||
     !!document.body.querySelector('#de-main');
 
+const getSettings = () => JSON.parse(
+  window.localStorage.getItem('iichan_settings') || '{}');
+
 const init = () => {
   if (isDollchan()) return;
+  if (getSettings().disable_hide_threads) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
   
