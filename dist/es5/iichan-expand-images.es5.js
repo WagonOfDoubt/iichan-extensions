@@ -69,12 +69,17 @@
     document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      @media only screen and ".concat(HANDHELD_MEDIA_QUERY, " {\n        a img.thumb {\n          margin: 0;\n          padding: 2px 20px;\n        }\n      \n        a img.thumb[src*=\"/src/\"] {\n          height: auto;\n          max-width: calc(100% - 40px);\n        }\n      }\n    </style>"));
   };
 
+  var isDollchan = function isDollchan() {
+    return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
+  };
+
   var init = function init() {
-    if (document.querySelector('#de-main')) return;
+    if (isDollchan()) return;
     appendCSS();
     addListeners();
 
     if ('MutationObserver' in window) {
+      if (isDollchan()) return;
       var observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
           var _iteratorNormalCompletion2 = true;

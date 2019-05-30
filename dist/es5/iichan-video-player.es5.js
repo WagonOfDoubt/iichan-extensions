@@ -48,7 +48,7 @@
   };
 
   var addListeners = function addListeners(rootNode) {
-    var thumbs = (rootNode || document).querySelectorAll('.thumb');
+    var thumbs = (rootNode || document.body).querySelectorAll('.thumb');
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -84,13 +84,18 @@
     return document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n    .iichan-video-player {\n      max-width: 100%;\n      height: auto;\n      box-sizing: border-box;\n      padding: 2px 20px;\n      margin: 0;\n    }\n    \n    .iichan-hide-video-btn {\n      margin: 2px 20px;\n    }\n    \n    .iichan-mute-video-checkbox {\n      float: right;\n    }\n    \n    .iichan-hide-video-btn > span::before {\n      content: '[';\n    }\n    \n    .iichan-hide-video-btn > span::after {\n      content: ']';\n    }\n    \n    .iichan-hide-video-btn svg {\n      width: 16px;\n      height: 16px;\n      vertical-align: text-top;\n    }\n    \n    .iichan-hide-video-btn use {\n      pointer-events: none;\n    }\n    \n    #iichan-video-player-icons {\n      display: none;\n    }\n    \n    a.imglink {\n      text-decoration: none;\n    }\n  </style>");
   };
 
+  var isDollchan = function isDollchan() {
+    return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
+  };
+
   var init = function init() {
-    if (document.querySelector('#de-main')) return;
+    if (isDollchan()) return;
     appendCSS();
     addListeners();
 
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
+        if (isDollchan()) return;
         mutations.forEach(function (mutation) {
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;

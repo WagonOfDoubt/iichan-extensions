@@ -170,14 +170,19 @@
     document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-hidden-thread-placeholder {\n        pointer-events: none;\n      }\n      \n      .iichan-hidden-thread-placeholder a {\n        cursor: pointer;\n        pointer-events: auto;\n      }\n      \n      .iichan-hidden-thread-placeholder:hover + div,\n      .iichan-hidden-thread-placeholder:hover + div + br {\n        display: block !important;\n      }\n      \n      .iichan-hidden-thread-placeholder + div {\n        display: none;\n      }\n      .iichan-hidden-thread-placeholder + div +  br {\n        display: none;\n      }\n      \n      .iichan-hide-thread-btn {\n        margin-left: 0.2em;\n        cursor: pointer;\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-hide-thread-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-hide-thread-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      [id^=thread]:not(.iichan-thread-hidden) .iichan-hide-thread-btn .iichan-icon-unhide-use {\n        display: none;\n      }\n      \n      [id^=thread].iichan-thread-hidden .iichan-hide-thread-btn .iichan-icon-hide-use {\n        display: none;\n      }\n      \n      .catthreadlist a {\n        position: relative;\n        transition: opacity .3s ease-in-out, filter .3s ease-in-out;\n      }\n      \n      .catthreadlist .iichan-thread-hidden {\n        opacity: .6;\n      }\n      \n      .catthreadlist .iichan-thread-hidden:not(:hover) {\n        opacity: .1;\n        filter: grayscale(100%);\n      }\n      \n      .catthread:hover .iichan-hide-thread-btn {\n        display: block;\n      }\n      \n      .catthread .iichan-hide-thread-btn {\n        text-decoration: none;\n        position: absolute;\n        top: 0;\n        right: 0;\n        display: none;\n        padding: 6px;\n      }\n      \n      #iichan-hide-threads-icons {\n        display: none;\n      }\n    </style>");
   };
 
+  var isDollchan = function isDollchan() {
+    return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
+  };
+
   var init = function init() {
-    if (document.querySelector('#de-main')) return;
+    if (isDollchan()) return;
     if (document.querySelector('body.replypage')) return;
     appendCSS();
     processThreads();
 
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
+        if (isDollchan()) return;
         mutations.forEach(function (mutation) {
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;

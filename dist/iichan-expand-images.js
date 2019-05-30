@@ -59,11 +59,16 @@ const appendCSS = () => {
     </style>`);
 };
 
+const isDollchan = () =>
+  document.body.classList.contains('de-runned') ||
+    !!document.body.querySelector('#de-main');
+
 const init = () => {
-  if (document.querySelector('#de-main')) return;
+  if (isDollchan()) return;
   appendCSS();
   addListeners();
   if ('MutationObserver' in window) {
+    if (isDollchan()) return;
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         for (const node of mutation.addedNodes) {

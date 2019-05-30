@@ -336,7 +336,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   };
 
   var processNodes = function processNodes(rootNode) {
-    var replies = (rootNode || document).querySelectorAll('.reply, [id^=thread]');
+    var replySelector = '.reply, [id^=thread]';
+
+    if (rootNode && rootNode.matches(replySelector)) {
+      addReplyBtn(rootNode);
+      return;
+    }
+
+    var replies = (rootNode || document.body).querySelectorAll(replySelector);
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -366,15 +373,19 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-quick-reply-btn {\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
   };
 
+  var isDollchan = function isDollchan() {
+    return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
+  };
+
   var init = function init() {
-    if (document.querySelector('#de-main')) return;
+    if (isDollchan()) return;
     var postform = getMainForm();
 
     if (!postform) {
       return;
     }
 
-    var captchaImg = document.querySelector('#captcha'); // get captcha root url
+    var captchaImg = document.body.querySelector('#captcha'); // get captcha root url
 
     if (captchaImg) {
       var captchaSrc = captchaImg.getAttribute('src');
@@ -405,7 +416,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
+        if (isDollchan()) return;
         mutations.forEach(function (mutation) {
+          console.log(mutation);
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
           var _iteratorError2 = undefined;

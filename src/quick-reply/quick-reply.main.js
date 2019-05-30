@@ -292,7 +292,12 @@ const addReplyBtn = (reply) => {
 };
 
 const processNodes = (rootNode) => {
-  const replies = (rootNode || document).querySelectorAll('.reply, [id^=thread]');
+  const replySelector = '.reply, [id^=thread]';
+  if (rootNode && rootNode.matches(replySelector)) {
+    addReplyBtn(rootNode);
+    return;
+  }
+  const replies = (rootNode || document.body).querySelectorAll(replySelector);
   for (const reply of replies) {
     addReplyBtn(reply);
   }
@@ -314,13 +319,17 @@ const appendHTML = () => {
 };
 <% } %>
 
+const isDollchan = () =>
+  document.body.classList.contains('de-runned') ||
+    !!document.body.querySelector('#de-main');
+
 const init = () => {
-  if (document.querySelector('#de-main')) return;
+  if (isDollchan()) return;
   const postform = getMainForm();
   if (!postform) {
     return;
   }
-  const captchaImg = document.querySelector('#captcha');
+  const captchaImg = document.body.querySelector('#captcha');
   // get captcha root url
   if (captchaImg) {
     const captchaSrc = captchaImg.getAttribute('src');
@@ -344,7 +353,9 @@ const init = () => {
 
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
+      if (isDollchan()) return;
       mutations.forEach((mutation) => {
+        console.log(mutation);
         for (const node of mutation.addedNodes) {
           if (!node.querySelectorAll) return;
           processNodes(node);

@@ -52,7 +52,7 @@ const onThumbnailClick = (e) => {
 };
 
 const addListeners = (rootNode) => {
-  const thumbs = (rootNode || document).querySelectorAll('.thumb');
+  const thumbs = (rootNode || document.body).querySelectorAll('.thumb');
   for (const img of thumbs) {
     const a = img.parentNode;
     if (!a) continue;
@@ -111,16 +111,21 @@ const appendCSS = () => document.head.insertAdjacentHTML(
   </style>`
 );
 
+const isDollchan = () =>
+  document.body.classList.contains('de-runned') ||
+    !!document.body.querySelector('#de-main');
+
 
 
 
 const init = () => {
-  if (document.querySelector('#de-main')) return;
+  if (isDollchan()) return;
   appendCSS();
   
   addListeners();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
+      if (isDollchan()) return;
       mutations.forEach((mutation) => {
         for (const node of mutation.addedNodes) {
           if (!node.querySelectorAll) return;

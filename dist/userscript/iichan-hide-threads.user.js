@@ -267,8 +267,12 @@ const appendHTML = () => document.body.insertAdjacentHTML('beforeend', `
   </div>`);
 
 
+const isDollchan = () =>
+  document.body.classList.contains('de-runned') ||
+    !!document.body.querySelector('#de-main');
+
 const init = () => {
-  if (document.querySelector('#de-main')) return;
+  if (isDollchan()) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
   
@@ -277,6 +281,7 @@ const init = () => {
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
+      if (isDollchan()) return;
       mutations.forEach((mutation) => {
         for (const node of mutation.addedNodes) {
           if (!node.querySelectorAll) return;
