@@ -2,6 +2,22 @@
 
 (function () {
   var init = function init() {
+    var dayRegexp = new RegExp(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/, 'i');
+
+    var checkDate = function checkDate(text) {
+      var day = text.match(dayRegexp);
+
+      if (!day || day.length < 1) {
+        return false; // date not found
+      }
+
+      if (day[1] === 'Пн') {
+        return false; // don't change name on this day
+      }
+
+      return true;
+    };
+
     var cirnify = function cirnify(node) {
       var labels = node.querySelectorAll('label');
       var _iteratorNormalCompletion = true;
@@ -17,12 +33,12 @@
             continue;
           }
 
-          var day = label.innerText.match(/(Пн|Вт|Ср|Чт|Пт|Сб|Вс)\s/);
-
-          if (day.length < 1 || day[1] === 'Пн') {
+          if (!checkDate(label.innerText)) {
+            console.log(label.innerText, false);
             continue;
           }
 
+          console.log(label.innerText, true);
           namespan.innerHTML = 'Сырно';
         }
       } catch (err) {
