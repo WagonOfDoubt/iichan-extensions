@@ -327,7 +327,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     if (!reply) return;
     var label = reply.querySelector(':scope > .reflink');
     if (!label) return;
-    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-quick-reply-btn\" title=\"\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" data-post-id=\"".concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"/extras/icons.svg#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    var btnContainer = reply.querySelector(".iichan-post-btns");
+
+    if (!btnContainer) {
+      btnContainer = document.createElement('span');
+      btnContainer.classList.add("iichan-post-btns");
+      label.parentNode.insertBefore(btnContainer, label.nextSibling);
+    }
+
+    btnContainer.insertAdjacentHTML('beforeend', "\n    <div class=\"iichan-quick-reply-btn\" title=\"\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" data-post-id=\"".concat(reply.id, "\">\n      <svg>\n        <use class=\"iichan-icon-reply-use\" xlink:href=\"/extras/icons.svg#iichan-icon-reply\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  ").trim());
     var btn = reply.querySelector('.iichan-quick-reply-btn');
     btn.addEventListener('click', onQuickReplyClick);
     var labelLink = label.querySelector('a');
@@ -370,8 +378,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-quick-reply-btn {\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
-  };
+    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-quick-reply-btn {\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      .iichan-quick-reply-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-quick-reply-btn {\n        margin-left: 0.4em;\n        cursor: pointer;\n      }\n      \n      #iichan-quick-reply-container .rules {\n        display: none;\n      }\n      \n      #iichan-quick-reply-icons {\n        display: none;\n      }\n      \n      .iichan-postform-container .theader {\n        width: auto;\n      }\n      \n      .iichan-quick-reply-close-form-btn {\n        float: right;\n        cursor: pointer;\n        padding: 1px;\n      }\n      \n      .iichan-quick-reply-close-form-btn svg {\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-quick-reply-close-form-btn use {\n        pointer-events: none;\n      }\n      \n    </style>");
+  }; // jshint ignore:line
+
 
   var getSettings = function getSettings() {
     return JSON.parse(window.localStorage.getItem('iichan_settings') || '{}');
@@ -416,14 +425,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       postform.addEventListener('input', syncForms);
     }
 
-    appendCSS();
+    appendCSS(); // jshint ignore:line
+
     processNodes();
 
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
         if (isDollchan()) return;
         mutations.forEach(function (mutation) {
-          console.log(mutation);
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
           var _iteratorError2 = undefined;

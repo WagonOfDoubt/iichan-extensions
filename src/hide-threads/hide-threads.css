@@ -20,7 +20,7 @@
 }
 
 .<%= HIDE_BTN_CLASSNAME %> {
-  margin-left: 0.2em;
+  margin-left: 0.4em;
   cursor: pointer;
   display: inline-block;
   width: 16px;

@@ -281,9 +281,15 @@ const addReplyBtn = (reply) => {
   if (!reply) return;
   const label = reply.querySelector(':scope > .reflink');
   if (!label) return;
-  label.insertAdjacentHTML('afterend', `
+  let btnContainer = reply.querySelector(`.<%= POST_BTNS_CONTAINER_CLASSNAME %>`);
+  if (!btnContainer) {
+    btnContainer = document.createElement('span');
+    btnContainer.classList.add(`<%= POST_BTNS_CONTAINER_CLASSNAME %>`);
+    label.parentNode.insertBefore(btnContainer, label.nextSibling);
+  }
+  btnContainer.insertAdjacentHTML('beforeend', `
     //=include quick-reply-btn.html
-  `);
+  `.trim());
   const btn = reply.querySelector('.<%= BTN_CLASSNAME %>');
   btn.addEventListener('click', onQuickReplyClick);
   const labelLink = label.querySelector('a');

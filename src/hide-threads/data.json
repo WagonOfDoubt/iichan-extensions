@@ -4,6 +4,7 @@
   "HIDE_BTN_CLASSNAME": "iichan-hide-thread-btn",
   "HIDE_BTN_TITLE": "Скрыть тред",
   "UNHIDE_BTN_TITLE": "Раскрыть тред",
+  "POST_BTNS_CONTAINER_CLASSNAME": "iichan-post-btns",
   "HIDDEN_THREAD_CLASSNAME": "iichan-thread-hidden",
   "PLACEHOLDER_CLASSNAME": "iichan-hidden-thread-placeholder",
   "PLACEHOLDER_ID_PREFIX": "iichan-hidden-",

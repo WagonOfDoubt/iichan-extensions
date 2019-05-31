@@ -304,13 +304,19 @@ const addReplyBtn = (reply) => {
   if (!reply) return;
   const label = reply.querySelector(':scope > .reflink');
   if (!label) return;
-  label.insertAdjacentHTML('afterend', `
+  let btnContainer = reply.querySelector(`.iichan-post-btns`);
+  if (!btnContainer) {
+    btnContainer = document.createElement('span');
+    btnContainer.classList.add(`iichan-post-btns`);
+    label.parentNode.insertBefore(btnContainer, label.nextSibling);
+  }
+  btnContainer.insertAdjacentHTML('beforeend', `
     <div class="iichan-quick-reply-btn" title="Быстрый ответ" data-post-id="${ reply.id }">
       <svg>
         <use class="iichan-icon-reply-use" xlink:href="#iichan-icon-reply" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
-  `);
+  `.trim());
   const btn = reply.querySelector('.iichan-quick-reply-btn');
   btn.addEventListener('click', onQuickReplyClick);
   const labelLink = label.querySelector('a');
@@ -350,6 +356,7 @@ const appendCSS = () => {
       }
       
       .iichan-quick-reply-btn {
+        margin-left: 0.4em;
         cursor: pointer;
       }
       
@@ -384,7 +391,7 @@ const appendCSS = () => {
     </style>`);
 };
 
-
+  // jshint ignore:line
 const appendHTML = () => {
   const iconsContainer = `<div id="iichan-quick-reply-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -402,7 +409,7 @@ const appendHTML = () => {
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
-
+  // jshint ignore:line
 
 const getSettings = () => JSON.parse(
   window.localStorage.getItem('iichan_settings') || '{}');
@@ -435,16 +442,15 @@ const init = () => {
     postform.addEventListener('input', syncForms);
   }
   appendCSS();
-  
+    // jshint ignore:line
   appendHTML();
-  
+    // jshint ignore:line
   processNodes();
 
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
       if (isDollchan()) return;
       mutations.forEach((mutation) => {
-        console.log(mutation);
         for (const node of mutation.addedNodes) {
           if (!node.querySelectorAll) return;
           processNodes(node);

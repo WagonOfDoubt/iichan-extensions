@@ -15,6 +15,7 @@
 }
 
 .<%= BTN_CLASSNAME %> {
+  margin-left: 0.4em;
   cursor: pointer;
 }
 

@@ -49,14 +49,20 @@ const addHideBtn = (thread) => {
   if (!thread) return;
   const label = thread.querySelector(':scope > .reflink');
   if (!label) return;
-  label.insertAdjacentHTML('afterend', `
+  let btnContainer = thread.querySelector(`.iichan-post-btns`);
+  if (!btnContainer) {
+    btnContainer = document.createElement('span');
+    btnContainer.classList.add(`iichan-post-btns`);
+    label.parentNode.insertBefore(btnContainer, label.nextSibling);
+  }
+  btnContainer.insertAdjacentHTML('afterbegin', `
     <div class="iichan-hide-thread-btn" title="Скрыть тред" data-thread-id="${thread.id}">
       <svg>
         <use class="iichan-icon-hide-use" xlink:href="#iichan-icon-hide" width="16" height="16" viewBox="0 0 16 16"/>
         <use class="iichan-icon-unhide-use" xlink:href="#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
-  `);
+  `.trim());
   const btn = thread.querySelector(`.iichan-hide-thread-btn`);
   btn.addEventListener('click', hideThread);
 };
@@ -72,7 +78,7 @@ const addToggleBtn = (thread) => {
         <use class="iichan-icon-unhide-use" xlink:href="#iichan-icon-unhide" width="16" height="16" viewBox="0 0 16 16"/>
       </svg>
     </div>
-  `);
+  `.trim());
   const btn = catthread.querySelector(`.iichan-hide-thread-btn`);
   btn.classList.add('reply');
   btn.addEventListener('click', toggleThread);
@@ -87,7 +93,7 @@ const addPlaceholder = (thread) => {
   const placeholderId = 'iichan-hidden-' + thread.id;
   thread.insertAdjacentHTML('beforebegin', `
     <div class="reply iichan-hidden-thread-placeholder" id="${placeholderId}">Тред <a title="Раскрыть тред" data-thread-id="${thread.id}">№${threadNo}</a> скрыт (${threadTitle || 'изображение'})</div>
-  `);
+  `.trim());
 
   const placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
   placeholderBtn.addEventListener('click', unhideThread);
@@ -191,7 +197,7 @@ const appendCSS = () => {
       }
       
       .iichan-hide-thread-btn {
-        margin-left: 0.2em;
+        margin-left: 0.4em;
         cursor: pointer;
         display: inline-block;
         width: 16px;
@@ -249,7 +255,7 @@ const appendCSS = () => {
     </style>`);
 };
 
-
+  // jshint ignore:line
 const appendHTML = () => document.body.insertAdjacentHTML('beforeend', `
   <div id="iichan-hide-threads-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -265,7 +271,7 @@ const appendHTML = () => document.body.insertAdjacentHTML('beforeend', `
       </symbol>
     </svg>
   </div>`);
-
+  // jshint ignore:line
 
 const isDollchan = () =>
   document.body.classList.contains('de-runned') ||
@@ -279,9 +285,9 @@ const init = () => {
   if (getSettings().disable_hide_threads) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
-  
+    // jshint ignore:line
   appendHTML();
-  
+    // jshint ignore:line
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

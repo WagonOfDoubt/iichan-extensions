@@ -86,7 +86,8 @@
 
   var isDollchan = function isDollchan() {
     return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
-  };
+  }; // jshint ignore:line
+
 
   var getSettings = function getSettings() {
     return JSON.parse(window.localStorage.getItem('iichan_settings') || '{}');
@@ -95,7 +96,8 @@
   var init = function init() {
     if (isDollchan()) return;
     if (getSettings().disable_video_player) return;
-    appendCSS();
+    appendCSS(); // jshint ignore:line
+
     addListeners();
 
     if ('MutationObserver' in window) {

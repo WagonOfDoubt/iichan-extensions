@@ -34,9 +34,15 @@ const addHideBtn = (thread) => {
   if (!thread) return;
   const label = thread.querySelector(':scope > .reflink');
   if (!label) return;
-  label.insertAdjacentHTML('afterend', `
+  let btnContainer = thread.querySelector(`.<%= POST_BTNS_CONTAINER_CLASSNAME %>`);
+  if (!btnContainer) {
+    btnContainer = document.createElement('span');
+    btnContainer.classList.add(`<%= POST_BTNS_CONTAINER_CLASSNAME %>`);
+    label.parentNode.insertBefore(btnContainer, label.nextSibling);
+  }
+  btnContainer.insertAdjacentHTML('afterbegin', `
     //=include hide-thread-btn.html
-  `);
+  `.trim());
   const btn = thread.querySelector(`.<%= HIDE_BTN_CLASSNAME %>`);
   btn.addEventListener('click', hideThread);
 };
@@ -47,7 +53,7 @@ const addToggleBtn = (thread) => {
   const catthread = thread.querySelector('.catthread');
   catthread.insertAdjacentHTML('beforeend', `
     //=include hide-thread-btn.html
-  `);
+  `.trim());
   const btn = catthread.querySelector(`.<%= HIDE_BTN_CLASSNAME %>`);
   btn.classList.add('reply');
   btn.addEventListener('click', toggleThread);
@@ -62,7 +68,7 @@ const addPlaceholder = (thread) => {
   const placeholderId = '<%= PLACEHOLDER_ID_PREFIX %>' + thread.id;
   thread.insertAdjacentHTML('beforebegin', `
     //=include placeholder.html
-  `);
+  `.trim());
 
   const placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
   placeholderBtn.addEventListener('click', unhideThread);

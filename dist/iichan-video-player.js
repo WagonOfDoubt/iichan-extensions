@@ -116,7 +116,7 @@ const isDollchan = () =>
     !!document.body.querySelector('#de-main');
 
 
-
+  // jshint ignore:line
 
 const getSettings = () => JSON.parse(
   window.localStorage.getItem('iichan_settings') || '{}');
@@ -125,7 +125,7 @@ const init = () => {
   if (isDollchan()) return;
   if (getSettings().disable_video_player) return;
   appendCSS();
-  
+    // jshint ignore:line
   addListeners();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

@@ -40,7 +40,15 @@
     if (!thread) return;
     var label = thread.querySelector(':scope > .reflink');
     if (!label) return;
-    label.insertAdjacentHTML('afterend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    var btnContainer = thread.querySelector(".iichan-post-btns");
+
+    if (!btnContainer) {
+      btnContainer = document.createElement('span');
+      btnContainer.classList.add("iichan-post-btns");
+      label.parentNode.insertBefore(btnContainer, label.nextSibling);
+    }
+
+    btnContainer.insertAdjacentHTML('afterbegin', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  ").trim());
     var btn = thread.querySelector(".iichan-hide-thread-btn");
     btn.addEventListener('click', hideThread);
   };
@@ -49,7 +57,7 @@
     //catalog only
     if (!thread) return;
     var catthread = thread.querySelector('.catthread');
-    catthread.insertAdjacentHTML('beforeend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  "));
+    catthread.insertAdjacentHTML('beforeend', "\n    <div class=\"iichan-hide-thread-btn\" title=\"\u0421\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"".concat(thread.id, "\">\n      <svg>\n        <use class=\"iichan-icon-hide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-hide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n        <use class=\"iichan-icon-unhide-use\" xlink:href=\"/extras/icons.svg#iichan-icon-unhide\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\"/>\n      </svg>\n    </div>\n  ").trim());
     var btn = catthread.querySelector(".iichan-hide-thread-btn");
     btn.classList.add('reply');
     btn.addEventListener('click', toggleThread);
@@ -61,7 +69,7 @@
     var threadTitle = thread.querySelector('.filetitle').innerText || thread.querySelector('blockquote').innerText;
     threadTitle = threadTitle.substr(0, THREAD_TITLE_LENGTH);
     var placeholderId = 'iichan-hidden-' + thread.id;
-    thread.insertAdjacentHTML('beforebegin', "\n    <div class=\"reply iichan-hidden-thread-placeholder\" id=\"".concat(placeholderId, "\">\u0422\u0440\u0435\u0434 <a title=\"\u0420\u0430\u0441\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"").concat(thread.id, "\">\u2116").concat(threadNo, "</a> \u0441\u043A\u0440\u044B\u0442 (").concat(threadTitle || 'изображение', ")</div>\n  "));
+    thread.insertAdjacentHTML('beforebegin', "\n    <div class=\"reply iichan-hidden-thread-placeholder\" id=\"".concat(placeholderId, "\">\u0422\u0440\u0435\u0434 <a title=\"\u0420\u0430\u0441\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0434\" data-thread-id=\"").concat(thread.id, "\">\u2116").concat(threadNo, "</a> \u0441\u043A\u0440\u044B\u0442 (").concat(threadTitle || 'изображение', ")</div>\n  ").trim());
     var placeholderBtn = thread.previousElementSibling.querySelector(':scope > a');
     placeholderBtn.addEventListener('click', unhideThread);
   };
@@ -167,8 +175,9 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-hidden-thread-placeholder {\n        pointer-events: none;\n      }\n      \n      .iichan-hidden-thread-placeholder a {\n        cursor: pointer;\n        pointer-events: auto;\n      }\n      \n      .iichan-hidden-thread-placeholder:hover + div,\n      .iichan-hidden-thread-placeholder:hover + div + br {\n        display: block !important;\n      }\n      \n      .iichan-hidden-thread-placeholder + div {\n        display: none;\n      }\n      .iichan-hidden-thread-placeholder + div +  br {\n        display: none;\n      }\n      \n      .iichan-hide-thread-btn {\n        margin-left: 0.2em;\n        cursor: pointer;\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-hide-thread-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-hide-thread-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      [id^=thread]:not(.iichan-thread-hidden) .iichan-hide-thread-btn .iichan-icon-unhide-use {\n        display: none;\n      }\n      \n      [id^=thread].iichan-thread-hidden .iichan-hide-thread-btn .iichan-icon-hide-use {\n        display: none;\n      }\n      \n      .catthreadlist a {\n        position: relative;\n        transition: opacity .3s ease-in-out, filter .3s ease-in-out;\n      }\n      \n      .catthreadlist .iichan-thread-hidden {\n        opacity: .6;\n      }\n      \n      .catthreadlist .iichan-thread-hidden:not(:hover) {\n        opacity: .1;\n        filter: grayscale(100%);\n      }\n      \n      .catthread:hover .iichan-hide-thread-btn {\n        display: block;\n      }\n      \n      .catthread .iichan-hide-thread-btn {\n        text-decoration: none;\n        position: absolute;\n        top: 0;\n        right: 0;\n        display: none;\n        padding: 6px;\n      }\n      \n      #iichan-hide-threads-icons {\n        display: none;\n      }\n    </style>");
-  };
+    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      .iichan-hidden-thread-placeholder {\n        pointer-events: none;\n      }\n      \n      .iichan-hidden-thread-placeholder a {\n        cursor: pointer;\n        pointer-events: auto;\n      }\n      \n      .iichan-hidden-thread-placeholder:hover + div,\n      .iichan-hidden-thread-placeholder:hover + div + br {\n        display: block !important;\n      }\n      \n      .iichan-hidden-thread-placeholder + div {\n        display: none;\n      }\n      .iichan-hidden-thread-placeholder + div +  br {\n        display: none;\n      }\n      \n      .iichan-hide-thread-btn {\n        margin-left: 0.4em;\n        cursor: pointer;\n        display: inline-block;\n        width: 16px;\n        height: 16px;\n        vertical-align: text-top;\n      }\n      \n      .iichan-hide-thread-btn use {\n        pointer-events: none;\n      }\n      \n      .iichan-hide-thread-btn > svg {\n        width: 16px;\n        height: 16px;\n      }\n      \n      [id^=thread]:not(.iichan-thread-hidden) .iichan-hide-thread-btn .iichan-icon-unhide-use {\n        display: none;\n      }\n      \n      [id^=thread].iichan-thread-hidden .iichan-hide-thread-btn .iichan-icon-hide-use {\n        display: none;\n      }\n      \n      .catthreadlist a {\n        position: relative;\n        transition: opacity .3s ease-in-out, filter .3s ease-in-out;\n      }\n      \n      .catthreadlist .iichan-thread-hidden {\n        opacity: .6;\n      }\n      \n      .catthreadlist .iichan-thread-hidden:not(:hover) {\n        opacity: .1;\n        filter: grayscale(100%);\n      }\n      \n      .catthread:hover .iichan-hide-thread-btn {\n        display: block;\n      }\n      \n      .catthread .iichan-hide-thread-btn {\n        text-decoration: none;\n        position: absolute;\n        top: 0;\n        right: 0;\n        display: none;\n        padding: 6px;\n      }\n      \n      #iichan-hide-threads-icons {\n        display: none;\n      }\n    </style>");
+  }; // jshint ignore:line
+
 
   var isDollchan = function isDollchan() {
     return document.body.classList.contains('de-runned') || !!document.body.querySelector('#de-main');
@@ -182,7 +191,8 @@
     if (isDollchan()) return;
     if (getSettings().disable_hide_threads) return;
     if (document.querySelector('body.replypage')) return;
-    appendCSS();
+    appendCSS(); // jshint ignore:line
+
     processThreads();
 
     if ('MutationObserver' in window) {

@@ -130,7 +130,7 @@ const isDollchan = () =>
     !!document.body.querySelector('#de-main');
 
 
-
+  // jshint ignore:line
 const appendHTML = () => document.body.insertAdjacentHTML('beforeend',
   `<div id="iichan-video-player-icons">
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -142,7 +142,7 @@ const appendHTML = () => document.body.insertAdjacentHTML('beforeend',
     </svg>
   </div>`
 );
-
+  // jshint ignore:line
 
 const getSettings = () => JSON.parse(
   window.localStorage.getItem('iichan_settings') || '{}');
@@ -151,9 +151,9 @@ const init = () => {
   if (isDollchan()) return;
   if (getSettings().disable_video_player) return;
   appendCSS();
-  
+    // jshint ignore:line
   appendHTML();
-  
+    // jshint ignore:line
   addListeners();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

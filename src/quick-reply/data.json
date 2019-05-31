@@ -1,5 +1,6 @@
 {
   "SETTINGS_LOCALSTORAGE_KEY": "iichan_settings",
+  "POST_BTNS_CONTAINER_CLASSNAME": "iichan-post-btns",
   "BTN_CLASSNAME": "iichan-quick-reply-btn",
   "BTN_TITLE": "Быстрый ответ",
   "CLOSE_FORM_BTN_TITLE": "Закрыть форму",

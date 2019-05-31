@@ -35,10 +35,8 @@ const init = () => {
         continue;
       }
       if (!checkDate(label.innerText)) {
-        console.log(label.innerText, false);
         continue;
       }
-      console.log(label.innerText, true);
       namespan.innerHTML = 'Сырно';
     }
   };
