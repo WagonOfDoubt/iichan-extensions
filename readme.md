@@ -6,6 +6,7 @@
 - [iichan-hide-threads.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-hide-threads.js) - скрывалка тредов
 - [iichan-video-player.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-video-player.js) - раскрытие webm
 - [iichan-quick-reply.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-quick-reply.js) - форма быстрого ответа
+- [iichan-configurator.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-configurator.js) - окно настроек скриптов
 - Опциональные скрипты, которых нет на Ычане:
   - [iichan-eng-captcha.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-eng-captcha.js) - автоматическое исправление русской раскладки клавиатуры на английскую при вводе капчи
   - [iichan-ice-fairy.js](https://github.com/WagonOfDoubt/iichan-extensions/blob/master/dist/iichan-ice-fairy.js) - заменяет имя в /b/ на "Сырно"
@@ -83,6 +84,11 @@
 - Работает при ответе как с доски, так и из треда
 - Автоматически добавляет >>ссылку на отвечаемый пост в текст ответа
 - Введенные данные не пропадают при ответе на другой пост
+
+### configurator
+
+- Позволяет отключать все скрипты выше по отдельности
+- Настройка цвета кнопок у постов
 
 ### eng-captcha
 
