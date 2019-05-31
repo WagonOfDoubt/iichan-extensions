@@ -1,0 +1,8 @@
+{
+  "SETTINGS_LOCALSTORAGE_KEY": "iichan_settings",
+  "CONFIGURATOR_BTN_CONTAINER_CLASSNAME": "iican-configurator-btn-container",
+  "CONFIGURATOR_BTN_CLASSNAME": "iican-configurator-btn",
+  "SETTINGS_PANEL_CLASSNAME": "iichan-settings-panel",
+  "SETTINGS_PANEL_SHOW_CLASSNAME": "iichan-settings-panel-show",
+  "SETTINGS_PANEL_CONTENT_CLASSNAME": "iichan-settings-panel-content"
+}

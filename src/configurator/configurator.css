@@ -1,0 +1,17 @@
+.<%= SETTINGS_PANEL_CLASSNAME %> {
+  display: none;
+  clear: both;
+  float: right;
+}
+
+.<%= SETTINGS_PANEL_CLASSNAME %>.<%= SETTINGS_PANEL_SHOW_CLASSNAME %> {
+  display: block;
+}
+
+.<%= SETTINGS_PANEL_CLASSNAME %> .theader {
+  width: auto;
+}
+
+.<%= SETTINGS_PANEL_CONTENT_CLASSNAME %> {
+  padding: 10px;
+}
