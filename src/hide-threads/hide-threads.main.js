@@ -154,12 +154,12 @@ const appendCSS = () => {
     </style>`);
 };
 
-<% if (USERSCRIPT) { %>
+<% if (USERSCRIPT) { %>  // jshint ignore:line
 const appendHTML = () => document.body.insertAdjacentHTML('beforeend', `
   <div id="<%= ICONS_CONTAINER_ID %>">
     //=include hide-threads-icons.svg
   </div>`);
-<% } %>
+<% } %>  // jshint ignore:line
 
 const isDollchan = () =>
   document.body.classList.contains('de-runned') ||
@@ -173,9 +173,9 @@ const init = () => {
   if (getSettings().disable_hide_threads) return;
   if (document.querySelector('body.replypage')) return;
   appendCSS();
-  <% if (USERSCRIPT) { %>
+  <% if (USERSCRIPT) { %>  // jshint ignore:line
   appendHTML();
-  <% } %>
+  <% } %>  // jshint ignore:line
   processThreads();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

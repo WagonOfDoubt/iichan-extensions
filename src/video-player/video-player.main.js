@@ -70,13 +70,13 @@ const isDollchan = () =>
     !!document.body.querySelector('#de-main');
 
 
-<% if (USERSCRIPT) { %>
+<% if (USERSCRIPT) { %>  // jshint ignore:line
 const appendHTML = () => document.body.insertAdjacentHTML('beforeend',
   `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include video-player-icons.svg
   </div>`
 );
-<% } %>
+<% } %>  // jshint ignore:line
 
 const getSettings = () => JSON.parse(
   window.localStorage.getItem('<%= SETTINGS_LOCALSTORAGE_KEY %>') || '{}');
@@ -85,9 +85,9 @@ const init = () => {
   if (isDollchan()) return;
   if (getSettings().disable_video_player) return;
   appendCSS();
-  <% if (USERSCRIPT) { %>
+  <% if (USERSCRIPT) { %>  // jshint ignore:line
   appendHTML();
-  <% } %>
+  <% } %>  // jshint ignore:line
   addListeners();
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {

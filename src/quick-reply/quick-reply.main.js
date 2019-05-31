@@ -316,14 +316,14 @@ const appendCSS = () => {
     </style>`);
 };
 
-<% if (USERSCRIPT) { %>
+<% if (USERSCRIPT) { %>  // jshint ignore:line
 const appendHTML = () => {
   const iconsContainer = `<div id="<%= ICONS_CONTAINER_ID %>">
     //=include quick-reply-icons.svg
   </div>`;
   document.body.insertAdjacentHTML('beforeend', iconsContainer);
 };
-<% } %>
+<% } %>  // jshint ignore:line
 
 const getSettings = () => JSON.parse(
   window.localStorage.getItem('<%= SETTINGS_LOCALSTORAGE_KEY %>') || '{}');
@@ -356,16 +356,15 @@ const init = () => {
     postform.addEventListener('input', syncForms);
   }
   appendCSS();
-  <% if (USERSCRIPT) { %>
+  <% if (USERSCRIPT) { %>  // jshint ignore:line
   appendHTML();
-  <% } %>
+  <% } %>  // jshint ignore:line
   processNodes();
 
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
       if (isDollchan()) return;
       mutations.forEach((mutation) => {
-        console.log(mutation);
         for (const node of mutation.addedNodes) {
           if (!node.querySelectorAll) return;
           processNodes(node);
