@@ -4,5 +4,11 @@
   "CONFIGURATOR_BTN_CLASSNAME": "iican-configurator-btn",
   "SETTINGS_PANEL_CLASSNAME": "iichan-settings-panel",
   "SETTINGS_PANEL_SHOW_CLASSNAME": "iichan-settings-panel-show",
-  "SETTINGS_PANEL_CONTENT_CLASSNAME": "iichan-settings-panel-content"
+  "SETTINGS_PANEL_CONTENT_CLASSNAME": "iichan-settings-panel-content",
+  "CLOSE_BTN_CLASSNAME": "iichan-settings-close-btn",
+  "CLOSE_BTN_TITLE": "Закрыть",
+  "ICON_CLOSE_USE_CLASSNAME": "iichan-icon-settings-close-use",
+  "ICONS_CONTAINER_ID": "iichan-configurator-icons",
+  "ICONS_URL": "/extras/icons.svg",
+  "ICON_CLOSE_ID": "iichan-icon-close"
 }

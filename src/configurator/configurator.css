@@ -1,7 +1,10 @@
 .<%= SETTINGS_PANEL_CLASSNAME %> {
   display: none;
-  clear: both;
-  float: right;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  max-height: 100%;
 }
 
 .<%= SETTINGS_PANEL_CLASSNAME %>.<%= SETTINGS_PANEL_SHOW_CLASSNAME %> {
@@ -13,5 +16,34 @@
 }
 
 .<%= SETTINGS_PANEL_CONTENT_CLASSNAME %> {
-  padding: 10px;
+  padding: 0 10px 10px;
+}
+
+.<%= SETTINGS_PANEL_CONTENT_CLASSNAME %> input[type="color"] {
+  float: right;
+  clear: both;
+}
+
+.<%= CLOSE_BTN_CLASSNAME %> {
+  float: right;
+  cursor: pointer;
+  padding: 1px;
+}
+
+.<%= CLOSE_BTN_CLASSNAME %> svg {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-top;
+}
+
+.<%= CLOSE_BTN_CLASSNAME %> use {
+  pointer-events: none;
+}
+
+.<%= SETTINGS_PANEL_CONTENT_CLASSNAME %> h5 {
+  margin: 10px 0 5px;
+}
+
+#<%= ICONS_CONTAINER_ID %> {
+  display: none;
 }

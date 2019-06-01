@@ -1,7 +1,22 @@
 (() => {
 const styles = {
   post_btns_color: (c) => `
-    .iichan-post-btns svg { color: ${c} !important; }`,
+    .catthread .iichan-hide-thread-btn svg,
+    .iichan-post-btns div > svg {
+      color: ${c || '#000000'} !important;
+    }`,
+  post_btns_color_hover: (c) => `
+    .catthread .iichan-hide-thread-btn:hover svg,
+    .iichan-post-btns div:hover > svg {
+      color: ${c || '#000000'} !important;
+    }`,
+  post_btns_color_background: (c) => `
+    .catthread .iichan-hide-thread-btn,
+    .iichan-post-btns div {
+      background-color: ${c || '#000000'} !important;
+      border-radius: 3px;
+      padding: 2px;
+    }`,
 };
 
 
@@ -20,8 +35,8 @@ const addSettingsBtn = () => {
     <span class="iican-configurator-btn-container">[<a href="#" class="iican-configurator-btn">Настройки</a>]</span>
     
     `.trim());
-  const btn = bottomAdminbar.querySelector('.iican-configurator-btn');
-  btn.addEventListener('click', toggleSettingsView);
+  const settingsBtn = bottomAdminbar.querySelector('.iican-configurator-btn');
+  settingsBtn.addEventListener('click', toggleSettingsView);
 };
 
 const addSettingsPanel = () => {
@@ -31,22 +46,33 @@ const addSettingsPanel = () => {
   if (!bottomAdminbar) return;
   bottomAdminbar.insertAdjacentHTML('afterend', `
     <form class="reply iichan-settings-panel">
-      <div class="theader">Настройки</div>
+       <div class="theader">Настройки<div class="iichan-settings-close-btn" title="Закрыть"><svg>
+        <use class="iichan-icon-settings-close-use" xlink:href="/extras/icons.svg#iichan-icon-close" width="16" height="16" viewBox="0 0 16 16"/>
+      </svg></div></div>
       <div class="iichan-settings-panel-content">
+        <h5>Отключение функций</h5>
         <div>
-          <label><input type="checkbox" name="disable_quick_reply"> Отключить быстрый ответ</label>
+          <label><input type="checkbox" name="disable_quick_reply"> Отключить быстрый ответ*</label>
         </div>
         <div>
-          <label><input type="checkbox" name="disable_hide_threads"> Отключить скрытие тредов</label>
+          <label><input type="checkbox" name="disable_hide_threads"> Отключить скрытие тредов*</label>
         </div>
         <div>
-          <label><input type="checkbox" name="disable_expand_images"> Отключить разворот картинок</label>
+          <label><input type="checkbox" name="disable_expand_images"> Отключить разворот картинок*</label>
         </div>
         <div>
-          <label><input type="checkbox" name="disable_video_player"> Отключить плеер видео</label>
+          <label><input type="checkbox" name="disable_video_player"> Отключить плеер видео*</label>
+        </div>
+        <small>* Требуется перезагрузка страницы</small>
+        <h5>Цвет кнопок постов</h5>
+        <div>
+          <label><input type="checkbox" name="post_btns_color_en"> Основной <input type="color" name="post_btns_color"></label>
         </div>
         <div>
-          <label><input type="checkbox" name="post_btns_color_en"> Цвет кнопок постов <input type="color" name="post_btns_color"></label>
+          <label><input type="checkbox" name="post_btns_color_hover_en"> По наведению <input type="color" name="post_btns_color_hover"></label>
+        </div>
+        <div>
+          <label><input type="checkbox" name="post_btns_color_background_en"> Фон <input type="color" name="post_btns_color_background"></label>
         </div>
       </div>
     </form>
@@ -63,6 +89,8 @@ const addSettingsPanel = () => {
       input.value = settings[input.name];
     }
   }
+  const closeBtn = settingsPanel.querySelector('.iichan-settings-close-btn');
+  closeBtn.addEventListener('click', toggleSettingsView);
 };
 
 const onSettingsChange = (e) => {
@@ -81,17 +109,26 @@ const onSettingsChange = (e) => {
 };
 
 const propertyUpdate = (property, settings) => {
-  if (property === 'post_btns_color_en' || property === 'post_btns_color') {
+  const allStyles = Object.keys(styles);
+  let styleProperty = property;
+  if (styleProperty.endsWith('_en')) {
+    styleProperty = styleProperty.slice(0, -'_en'.length);
+  }
+  if (allStyles.includes(styleProperty)) {
     updateStyles(settings);
   }
 };
 
 const updateStyles = (settings) => {
-  let style = null;
-  if (settings.post_btns_color_en) {
-    style = styles.post_btns_color(settings.post_btns_color);
+  const allStyles = Object.keys(styles);
+  for (const styleName of allStyles) {
+    const enableKey = styleName + '_en';
+    let style = null;
+    if (settings[enableKey]) {
+      style = styles[styleName](settings[styleName]);
+    }
+    changeCustomStyle(styleName, style);
   }
-  changeCustomStyle('post_btns_color', style);
 };
 
 const toggleSettingsView = (e) => {
@@ -105,8 +142,11 @@ const appendCSS = () => {
     `<style type="text/css">
     .iichan-settings-panel {
       display: none;
-      clear: both;
-      float: right;
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+      max-height: 100%;
     }
     
     .iichan-settings-panel.iichan-settings-panel-show {
@@ -118,7 +158,36 @@ const appendCSS = () => {
     }
     
     .iichan-settings-panel-content {
-      padding: 10px;
+      padding: 0 10px 10px;
+    }
+    
+    .iichan-settings-panel-content input[type="color"] {
+      float: right;
+      clear: both;
+    }
+    
+    .iichan-settings-close-btn {
+      float: right;
+      cursor: pointer;
+      padding: 1px;
+    }
+    
+    .iichan-settings-close-btn svg {
+      width: 16px;
+      height: 16px;
+      vertical-align: text-top;
+    }
+    
+    .iichan-settings-close-btn use {
+      pointer-events: none;
+    }
+    
+    .iichan-settings-panel-content h5 {
+      margin: 10px 0 5px;
+    }
+    
+    #iichan-configurator-icons {
+      display: none;
     }
     
     </style>`);
@@ -135,8 +204,11 @@ const changeCustomStyle = (styleName, style) => {
   }
 };
 
+  // jshint ignore:line
+
 const init = () => {
   appendCSS();
+    // jshint ignore:line
   addSettingsBtn();
   addSettingsPanel();
   const settings = getSettings();

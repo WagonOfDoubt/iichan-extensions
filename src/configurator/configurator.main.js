@@ -1,6 +1,21 @@
 const styles = {
   post_btns_color: (c) => `
-    .iichan-post-btns svg { color: ${c} !important; }`,
+    .catthread .iichan-hide-thread-btn svg,
+    .iichan-post-btns div > svg {
+      color: ${c || '#000000'} !important;
+    }`,
+  post_btns_color_hover: (c) => `
+    .catthread .iichan-hide-thread-btn:hover svg,
+    .iichan-post-btns div:hover > svg {
+      color: ${c || '#000000'} !important;
+    }`,
+  post_btns_color_background: (c) => `
+    .catthread .iichan-hide-thread-btn,
+    .iichan-post-btns div {
+      background-color: ${c || '#000000'} !important;
+      border-radius: 3px;
+      padding: 2px;
+    }`,
 };
 
 
@@ -18,8 +33,8 @@ const addSettingsBtn = () => {
   bottomAdminbar.insertAdjacentHTML('beforeend', `
     //=include configurator-btn.html
     `.trim());
-  const btn = bottomAdminbar.querySelector('.<%= CONFIGURATOR_BTN_CLASSNAME %>');
-  btn.addEventListener('click', toggleSettingsView);
+  const settingsBtn = bottomAdminbar.querySelector('.<%= CONFIGURATOR_BTN_CLASSNAME %>');
+  settingsBtn.addEventListener('click', toggleSettingsView);
 };
 
 const addSettingsPanel = () => {
@@ -41,6 +56,8 @@ const addSettingsPanel = () => {
       input.value = settings[input.name];
     }
   }
+  const closeBtn = settingsPanel.querySelector('.<%= CLOSE_BTN_CLASSNAME %>');
+  closeBtn.addEventListener('click', toggleSettingsView);
 };
 
 const onSettingsChange = (e) => {
@@ -59,17 +76,26 @@ const onSettingsChange = (e) => {
 };
 
 const propertyUpdate = (property, settings) => {
-  if (property === 'post_btns_color_en' || property === 'post_btns_color') {
+  const allStyles = Object.keys(styles);
+  let styleProperty = property;
+  if (styleProperty.endsWith('_en')) {
+    styleProperty = styleProperty.slice(0, -'_en'.length);
+  }
+  if (allStyles.includes(styleProperty)) {
     updateStyles(settings);
   }
 };
 
 const updateStyles = (settings) => {
-  let style = null;
-  if (settings.post_btns_color_en) {
-    style = styles.post_btns_color(settings.post_btns_color);
+  const allStyles = Object.keys(styles);
+  for (const styleName of allStyles) {
+    const enableKey = styleName + '_en';
+    let style = null;
+    if (settings[enableKey]) {
+      style = styles[styleName](settings[styleName]);
+    }
+    changeCustomStyle(styleName, style);
   }
-  changeCustomStyle('post_btns_color', style);
 };
 
 const toggleSettingsView = (e) => {
@@ -96,8 +122,20 @@ const changeCustomStyle = (styleName, style) => {
   }
 };
 
+<% if (USERSCRIPT) { %>  // jshint ignore:line
+const appendHTML = () => {
+  const iconsContainer = `<div id="<%= ICONS_CONTAINER_ID %>">
+    //=include configurator-icons.svg
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', iconsContainer);
+};
+<% } %>  // jshint ignore:line
+
 const init = () => {
   appendCSS();
+  <% if (USERSCRIPT) { %>  // jshint ignore:line
+  appendHTML();
+  <% } %>  // jshint ignore:line
   addSettingsBtn();
   addSettingsPanel();
   const settings = getSettings();

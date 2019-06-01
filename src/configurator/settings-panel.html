@@ -1,20 +1,31 @@
 <form class="reply <%= SETTINGS_PANEL_CLASSNAME %>">
-  <div class="theader">Настройки</div>
+   <div class="theader">Настройки<div class="<%= CLOSE_BTN_CLASSNAME %>" title="<%= CLOSE_BTN_TITLE %>"><svg>
+    <use class="<%= ICON_CLOSE_USE_CLASSNAME %>" xlink:href="<%= ICONS_URL %>#<%= ICON_CLOSE_ID %>" width="16" height="16" viewBox="0 0 16 16"/>
+  </svg></div></div>
   <div class="<%= SETTINGS_PANEL_CONTENT_CLASSNAME %>">
+    <h5>Отключение функций</h5>
     <div>
-      <label><input type="checkbox" name="disable_quick_reply"> Отключить быстрый ответ</label>
+      <label><input type="checkbox" name="disable_quick_reply"> Отключить быстрый ответ*</label>
     </div>
     <div>
-      <label><input type="checkbox" name="disable_hide_threads"> Отключить скрытие тредов</label>
+      <label><input type="checkbox" name="disable_hide_threads"> Отключить скрытие тредов*</label>
     </div>
     <div>
-      <label><input type="checkbox" name="disable_expand_images"> Отключить разворот картинок</label>
+      <label><input type="checkbox" name="disable_expand_images"> Отключить разворот картинок*</label>
     </div>
     <div>
-      <label><input type="checkbox" name="disable_video_player"> Отключить плеер видео</label>
+      <label><input type="checkbox" name="disable_video_player"> Отключить плеер видео*</label>
+    </div>
+    <small>* Требуется перезагрузка страницы</small>
+    <h5>Цвет кнопок постов</h5>
+    <div>
+      <label><input type="checkbox" name="post_btns_color_en"> Основной <input type="color" name="post_btns_color"></label>
     </div>
     <div>
-      <label><input type="checkbox" name="post_btns_color_en"> Цвет кнопок постов <input type="color" name="post_btns_color"></label>
+      <label><input type="checkbox" name="post_btns_color_hover_en"> По наведению <input type="color" name="post_btns_color_hover"></label>
+    </div>
+    <div>
+      <label><input type="checkbox" name="post_btns_color_background_en"> Фон <input type="color" name="post_btns_color_background"></label>
     </div>
   </div>
 </form>
