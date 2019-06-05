@@ -3,13 +3,18 @@
 (function () {
   var init = function init() {
     if (document.querySelector('#de-main')) return;
-    var captchaInput = document.querySelector('input[name=captcha]');
-    if (!captchaInput) return;
-    captchaInput.addEventListener('keypress', function (e) {
+    document.body.addEventListener('keypress', function (e) {
+      var el = e.target;
+
+      if (!(el.name === 'captcha' && el.type === 'text')) {
+        return;
+      }
       /*
       copypasta from
       https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/blob/master/src/Dollchan_Extension_Tools.es6.user.js
       */
+
+
       var ruUa = 'йцукенгшщзхъїфыівапролджэєячсмитьбюёґ',
           en = 'qwertyuiop[]]assdfghjkl;\'\'zxcvbnm,.`\\';
       var i,
@@ -21,7 +26,6 @@
       }
 
       chr = en[i];
-      var el = e.target;
       var txt = chr;
       var scrtop = el.scrollTop;
       var start = el.selectionStart;

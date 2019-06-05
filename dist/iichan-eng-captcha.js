@@ -1,10 +1,12 @@
 (() => {
 const init = () => {
   if (document.querySelector('#de-main')) return;
-  const captchaInput = document.querySelector('input[name=captcha]');
-  if (!captchaInput) return;
 
-  captchaInput.addEventListener('keypress', (e) => {
+  document.body.addEventListener('keypress', (e) => {
+    const el = e.target;
+    if (!(el.name === 'captcha' && el.type === 'text')) {
+      return;
+    }
     /*
     copypasta from
     https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/blob/master/src/Dollchan_Extension_Tools.es6.user.js
@@ -17,7 +19,6 @@ const init = () => {
       return;
     }
     chr = en[i];
-    const el = e.target;
     const txt = chr;
     const scrtop = el.scrollTop;
     const start = el.selectionStart;

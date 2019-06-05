@@ -2,7 +2,7 @@
 // @name         [IIchan] English captcha
 // @namespace    http://iichan.hk/
 // @license      MIT
-// @version      0.5
+// @version      0.6
 // @description  Fixes non-english keyboard layout for captcha input
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-eng-captcha.meta.js

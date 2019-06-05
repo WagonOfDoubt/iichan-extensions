@@ -2,7 +2,7 @@
 // @name         [IIchan] English captcha
 // @namespace    http://iichan.hk/
 // @license      MIT
-// @version      0.5
+// @version      0.6
 // @description  Fixes non-english keyboard layout for captcha input
 // @icon         http://iichan.hk/favicon.ico
 // @updateURL    https://raw.github.com/WagonOfDoubt/iichan-extensions/master/dist/userscript/iichan-eng-captcha.meta.js
@@ -17,10 +17,12 @@
 (() => {
 const init = () => {
   if (document.querySelector('#de-main')) return;
-  const captchaInput = document.querySelector('input[name=captcha]');
-  if (!captchaInput) return;
 
-  captchaInput.addEventListener('keypress', (e) => {
+  document.body.addEventListener('keypress', (e) => {
+    const el = e.target;
+    if (!(el.name === 'captcha' && el.type === 'text')) {
+      return;
+    }
     /*
     copypasta from
     https://github.com/SthephanShinkufag/Dollchan-Extension-Tools/blob/master/src/Dollchan_Extension_Tools.es6.user.js
@@ -33,7 +35,6 @@ const init = () => {
       return;
     }
     chr = en[i];
-    const el = e.target;
     const txt = chr;
     const scrtop = el.scrollTop;
     const start = el.selectionStart;
