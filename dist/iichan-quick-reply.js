@@ -282,15 +282,13 @@ const onReflinkClick = (e) => {
     if (quickReplyContainer.parentNode) {
       const quickReplyForm = getQuickReplyForm();
       addReflinkAndFocus(quickReplyForm, ref);
+      e.preventDefault();
     } else if (document.body.classList.contains('replypage')) {
       const postform = getMainForm();
       addReflinkAndFocus(postform, ref);
-    } else {
-      const afterReply = reply || thread;
-      movePostform(afterReply);
+      e.preventDefault();
     }
   }
-  e.preventDefault();
 };
 
 
@@ -319,7 +317,6 @@ const deserializeForm = (form, formData) => {
   for (const input of inputs) {
     if (!formData[input.name]) continue;
     if (formData[input.name].type !== input.type) continue;
-    console.log(input.name, formData[input.name]);
     if (input.type === 'radio') {
       const group = form[input.name];
       group.value = formData[input.name].value;
@@ -349,7 +346,6 @@ const onBeforeUnload = (e) => {
   }
 
   setStatus(status);
-  console.log(status);
 };
 
 
@@ -379,7 +375,6 @@ const checkFormStateAfterReload = () => {
 
     if (!document.body.classList.contains('replypage') && status.formData) {
       const quickReplyForm = getQuickReplyForm();
-      console.log('deserializeForm', status.formData);
       deserializeForm(quickReplyForm, status.formData);
     }
   }

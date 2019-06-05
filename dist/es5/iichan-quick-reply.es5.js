@@ -320,16 +320,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       if (quickReplyContainer.parentNode) {
         var quickReplyForm = getQuickReplyForm();
         addReflinkAndFocus(quickReplyForm, ref);
+        e.preventDefault();
       } else if (document.body.classList.contains('replypage')) {
         var postform = getMainForm();
         addReflinkAndFocus(postform, ref);
-      } else {
-        var afterReply = reply || thread;
-        movePostform(afterReply);
+        e.preventDefault();
       }
     }
-
-    e.preventDefault();
   };
 
   var serializeForm = function serializeForm(form) {
@@ -386,7 +383,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         var input = _step2.value;
         if (!formData[input.name]) continue;
         if (formData[input.name].type !== input.type) continue;
-        console.log(input.name, formData[input.name]);
 
         if (input.type === 'radio') {
           var group = form[input.name];
@@ -428,7 +424,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     }
 
     setStatus(status);
-    console.log(status);
   };
 
   var checkFormStateAfterReload = function checkFormStateAfterReload() {
@@ -458,7 +453,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
       if (!document.body.classList.contains('replypage') && status.formData) {
         var quickReplyForm = getQuickReplyForm();
-        console.log('deserializeForm', status.formData);
         deserializeForm(quickReplyForm, status.formData);
       }
     }

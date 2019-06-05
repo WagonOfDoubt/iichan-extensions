@@ -273,15 +273,13 @@ const onReflinkClick = (e) => {
     if (quickReplyContainer.parentNode) {
       const quickReplyForm = getQuickReplyForm();
       addReflinkAndFocus(quickReplyForm, ref);
+      e.preventDefault();
     } else if (document.body.classList.contains('replypage')) {
       const postform = getMainForm();
       addReflinkAndFocus(postform, ref);
-    } else {
-      const afterReply = reply || thread;
-      movePostform(afterReply);
+      e.preventDefault();
     }
   }
-  e.preventDefault();
 };
 
 
