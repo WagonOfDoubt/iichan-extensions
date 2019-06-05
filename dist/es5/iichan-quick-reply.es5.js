@@ -21,6 +21,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       url: '/cgi-bin/captcha1.pl/b/'
     }
   };
+  var SAVE_STATE_TIMEOUT = 3 * 60 * 1000;
 
   var _ref = function () {
     var quickReplyContainer = document.createElement('table');
@@ -202,7 +203,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     }
   };
 
-  var placeQuickReplyFormAfterReply = function placeQuickReplyFormAfterReply(replyTo) {
+  var placeQuickReplyFormAfterReply = function placeQuickReplyFormAfterReply(replyTo, addReflink) {
     var quickReplyForm = getQuickReplyForm();
     var replyContainer = findParent(replyTo, 'table');
     var parentThread = findParent(replyTo, '[id^=thread]');
@@ -216,17 +217,23 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     replyContainer.parentNode.insertBefore(quickReplyContainer, replyContainer.nextSibling);
     setParentInputValue(quickReplyForm, opRef);
     updateCaptchaParams(parentThread);
-    addReflinkAndFocus(quickReplyForm, ref);
+
+    if (addReflink) {
+      addReflinkAndFocus(quickReplyForm, ref);
+    }
   };
 
-  var placeQuickReplyFormAfterOp = function placeQuickReplyFormAfterOp(replyTo) {
+  var placeQuickReplyFormAfterOp = function placeQuickReplyFormAfterOp(replyTo, addReflink) {
     var quickReplyForm = getQuickReplyForm();
     var firstReply = replyTo.querySelector('table');
     var ref = replyTo.id.substr('thread-'.length);
     replyTo.insertBefore(quickReplyContainer, firstReply);
     setParentInputValue(quickReplyForm, ref);
     updateCaptchaParams(replyTo);
-    addReflinkAndFocus(quickReplyForm, ref);
+
+    if (addReflink) {
+      addReflinkAndFocus(quickReplyForm, ref);
+    }
   };
 
   var closeQuickReplyForm = function closeQuickReplyForm() {
@@ -238,6 +245,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   };
 
   var movePostform = function movePostform(replyTo) {
+    var addReflink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     var quickReplyForm = getQuickReplyForm(); // replyTo === null OR already at same post => close quick reply form
 
     if (!replyTo || quickReplyForm.dataset.replyTo === replyTo.id) {
@@ -245,14 +253,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       closeQuickReplyForm(); // replyTo is reply (not OP)
     } else if (replyTo.classList.contains('reply')) {
       quickReplyForm.dataset.replyTo = replyTo.id;
-      placeQuickReplyFormAfterReply(replyTo); // replyTo is thread (OP)
+      placeQuickReplyFormAfterReply(replyTo, addReflink); // replyTo is thread (OP)
     } else {
       quickReplyForm.dataset.replyTo = replyTo.id;
-      placeQuickReplyFormAfterOp(replyTo);
+      placeQuickReplyFormAfterOp(replyTo, addReflink);
     }
   };
 
   var syncForms = function syncForms(e) {
+    if (!e) return;
     var sourceInput = e instanceof Event ? e.target : e;
     var quickReplyForm = getQuickReplyForm();
     var mainForm = getMainForm();
@@ -323,6 +332,144 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     e.preventDefault();
   };
 
+  var serializeForm = function serializeForm(form) {
+    var formData = {};
+    var inputs = form.querySelectorAll('input, textarea');
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = inputs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var input = _step.value;
+        if (!input.name) continue;
+        if (input.type === 'file') continue;
+        formData[input.name] = {
+          type: input.type
+        };
+
+        if (input.type === 'radio') {
+          var group = form[input.name];
+          formData[input.name].value = group.value;
+        } else if (input.type === 'checkbox') {
+          formData[input.name].checked = input.checked;
+        } else {
+          formData[input.name].value = input.value;
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return != null) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return formData;
+  };
+
+  var deserializeForm = function deserializeForm(form, formData) {
+    var inputs = form.querySelectorAll('input, textarea');
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = inputs[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var input = _step2.value;
+        if (!formData[input.name]) continue;
+        if (formData[input.name].type !== input.type) continue;
+        console.log(input.name, formData[input.name]);
+
+        if (input.type === 'radio') {
+          var group = form[input.name];
+          group.value = formData[input.name].value;
+        } else if (input.type === 'checkbox') {
+          input.checked = formData[input.name].checked;
+        } else {
+          input.value = formData[input.name].value;
+        }
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+  };
+
+  var onBeforeUnload = function onBeforeUnload(e) {
+    if (isDollchan()) return; // if form is closed, don't save it's state
+
+    if (!quickReplyContainer.parentNode) return;
+    var status = getStatus();
+    var quickReplyForm = getQuickReplyForm();
+    status.lastQuickReply = quickReplyForm.dataset.replyTo;
+    status.lastUrl = window.location.href;
+    status.timestamp = Date.now(); // serialize form if it's board page, thus forms are not in sync.
+
+    if (!document.body.classList.contains('replypage')) {
+      status.formData = serializeForm(quickReplyForm);
+    }
+
+    setStatus(status);
+    console.log(status);
+  };
+
+  var checkFormStateAfterReload = function checkFormStateAfterReload() {
+    if (isDollchan()) return;
+    var status = getStatus();
+
+    if (status.lastUrl !== window.location.href || !status.timestamp) {
+      return;
+    } // user returned to previous page by clicking a link, purge data
+    // or if timeout was reached
+
+
+    var timePassed = Date.now() - status.timestamp;
+
+    if (!pageWasReloaded() || timePassed > SAVE_STATE_TIMEOUT) {
+      status.lastUrl = null;
+      status.lastQuickReply = null;
+      status.timestamp = null;
+      status.formData = null;
+      setStatus(status);
+      return;
+    }
+
+    if (status.lastQuickReply) {
+      var reply = document.getElementById(status.lastQuickReply);
+      movePostform(reply, false);
+
+      if (!document.body.classList.contains('replypage') && status.formData) {
+        var quickReplyForm = getQuickReplyForm();
+        console.log('deserializeForm', status.formData);
+        deserializeForm(quickReplyForm, status.formData);
+      }
+    }
+
+    status.lastUrl = null;
+    status.lastQuickReply = null;
+    status.timestamp = null;
+    status.formData = null;
+    setStatus(status);
+  };
+
   var addReplyBtn = function addReplyBtn(reply) {
     if (!reply) return;
     var label = reply.querySelector(':scope > .reflink');
@@ -352,26 +499,26 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     }
 
     var replies = (rootNode || document.body).querySelectorAll(replySelector);
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
 
     try {
-      for (var _iterator = replies[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var reply = _step.value;
+      for (var _iterator3 = replies[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var reply = _step3.value;
         addReplyBtn(reply);
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+          _iterator3.return();
         }
       } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+        if (_didIteratorError3) {
+          throw _iteratorError3;
         }
       }
     }
@@ -382,8 +529,24 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   }; // jshint ignore:line
 
 
+  var pageWasReloaded = function pageWasReloaded() {
+    var performance = window.performance;
+    if (!performance) return false;
+    var navigation = performance.navigation;
+    if (!navigation) return false;
+    return navigation.type === navigation.TYPE_RELOAD || navigation.type === navigation.TYPE_BACK_FORWARD;
+  };
+
   var getSettings = function getSettings() {
     return JSON.parse(window.localStorage.getItem('iichan_settings') || '{}');
+  };
+
+  var getStatus = function getStatus() {
+    return JSON.parse(window.localStorage.getItem('iichan_quick_reply') || '{}');
+  };
+
+  var setStatus = function setStatus(status) {
+    return window.localStorage.setItem('iichan_quick_reply', JSON.stringify(status));
   };
 
   var isDollchan = function isDollchan() {
@@ -392,6 +555,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
   var init = function init() {
     if (isDollchan()) return;
+    if (!document.getElementById('delform')) ;
     if (getSettings().disable_quick_reply) return;
     var postform = getMainForm();
 
@@ -399,6 +563,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       return;
     }
 
+    window.addEventListener('beforeunload', onBeforeUnload);
     var captchaImg = document.body.querySelector('#captcha'); // get captcha root url
 
     if (captchaImg) {
@@ -428,32 +593,33 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     appendCSS(); // jshint ignore:line
 
     processNodes();
+    checkFormStateAfterReload();
 
     if ('MutationObserver' in window) {
       var observer = new MutationObserver(function (mutations) {
         if (isDollchan()) return;
         mutations.forEach(function (mutation) {
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator2 = mutation.addedNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var node = _step2.value;
+            for (var _iterator4 = mutation.addedNodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var node = _step4.value;
               if (!node.querySelectorAll) return;
               processNodes(node);
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                _iterator2.return();
+              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+                _iterator4.return();
               }
             } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }

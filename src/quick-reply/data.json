@@ -1,5 +1,6 @@
 {
   "SETTINGS_LOCALSTORAGE_KEY": "iichan_settings",
+  "STATUS_LOCALSTORAGE_KEY": "iichan_quick_reply",
   "POST_BTNS_CONTAINER_CLASSNAME": "iichan-post-btns",
   "BTN_CLASSNAME": "iichan-quick-reply-btn",
   "BTN_TITLE": "Быстрый ответ",

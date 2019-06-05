@@ -11,6 +11,8 @@ const captcha = {
   }
 };
 
+const SAVE_STATE_TIMEOUT = 3 * 60 * 1000;
+
 const { quickReplyContainer, quickPostformContainer } = (() => {
   const quickReplyContainer = document.createElement('table');
   quickReplyContainer.insertAdjacentHTML('beforeend', `
@@ -160,7 +162,7 @@ const addReflinkAndFocus = (postform, reflink) => {
   }
 };
 
-const placeQuickReplyFormAfterReply = (replyTo) => {
+const placeQuickReplyFormAfterReply = (replyTo, addReflink) => {
   const quickReplyForm = getQuickReplyForm();
   const replyContainer = findParent(replyTo, 'table');
   const parentThread = findParent(replyTo, '[id^=thread]');
@@ -174,10 +176,12 @@ const placeQuickReplyFormAfterReply = (replyTo) => {
 
   setParentInputValue(quickReplyForm, opRef);
   updateCaptchaParams(parentThread);
-  addReflinkAndFocus(quickReplyForm, ref);
+  if (addReflink) {
+    addReflinkAndFocus(quickReplyForm, ref);
+  }
 };
 
-const placeQuickReplyFormAfterOp = (replyTo) => {
+const placeQuickReplyFormAfterOp = (replyTo, addReflink) => {
   const quickReplyForm = getQuickReplyForm();
   const firstReply = replyTo.querySelector('table');
   const ref = replyTo.id.substr('thread-'.length);
@@ -186,7 +190,9 @@ const placeQuickReplyFormAfterOp = (replyTo) => {
   
   setParentInputValue(quickReplyForm, ref);
   updateCaptchaParams(replyTo);
-  addReflinkAndFocus(quickReplyForm, ref);
+  if (addReflink) {
+    addReflinkAndFocus(quickReplyForm, ref);
+  }
 };
 
 const closeQuickReplyForm = () => {
@@ -196,7 +202,7 @@ const closeQuickReplyForm = () => {
   quickReplyContainer.parentNode.removeChild(quickReplyContainer);
 };
 
-const movePostform = (replyTo) => {
+const movePostform = (replyTo, addReflink = true) => {
   const quickReplyForm = getQuickReplyForm();
 
   // replyTo === null OR already at same post => close quick reply form
@@ -206,15 +212,16 @@ const movePostform = (replyTo) => {
   // replyTo is reply (not OP)
   } else if (replyTo.classList.contains('reply')) {
     quickReplyForm.dataset.replyTo = replyTo.id;
-    placeQuickReplyFormAfterReply(replyTo);
+    placeQuickReplyFormAfterReply(replyTo, addReflink);
   // replyTo is thread (OP)
   } else {
     quickReplyForm.dataset.replyTo = replyTo.id;
-    placeQuickReplyFormAfterOp(replyTo);
+    placeQuickReplyFormAfterOp(replyTo, addReflink);
   }
 };
 
 const syncForms = (e) => {
+  if (!e) return;
   const sourceInput = e instanceof Event ? e.target : e;
   const quickReplyForm = getQuickReplyForm();
   const mainForm = getMainForm();
@@ -277,6 +284,102 @@ const onReflinkClick = (e) => {
   e.preventDefault();
 };
 
+
+const serializeForm = (form) => {
+  const formData = {};
+  const inputs = form.querySelectorAll('input, textarea');
+  for (const input of inputs) {
+    if (!input.name) continue;
+    if (input.type === 'file') continue;
+    formData[input.name] = { type: input.type };
+    if (input.type === 'radio') {
+      const group = form[input.name];
+      formData[input.name].value = group.value;
+    } else if (input.type === 'checkbox') {
+      formData[input.name].checked = input.checked;
+    } else {
+      formData[input.name].value = input.value;
+    }
+  }
+  return formData;
+};
+
+
+const deserializeForm = (form, formData) => {
+  const inputs = form.querySelectorAll('input, textarea');
+  for (const input of inputs) {
+    if (!formData[input.name]) continue;
+    if (formData[input.name].type !== input.type) continue;
+    if (input.type === 'radio') {
+      const group = form[input.name];
+      group.value = formData[input.name].value;
+    } else if (input.type === 'checkbox') {
+      input.checked = formData[input.name].checked;
+    } else {
+      input.value = formData[input.name].value;
+    }
+  }
+};
+
+
+const onBeforeUnload = (e) => {
+  if (isDollchan()) return;
+  // if form is closed, don't save it's state
+  if (!quickReplyContainer.parentNode) return;
+
+  const status = getStatus();
+  const quickReplyForm = getQuickReplyForm();
+  status.lastQuickReply = quickReplyForm.dataset.replyTo;
+  status.lastUrl = window.location.href;
+  status.timestamp = Date.now();
+
+  // serialize form if it's board page, thus forms are not in sync.
+  if (!document.body.classList.contains('replypage')) {
+    status.formData = serializeForm(quickReplyForm);
+  }
+
+  setStatus(status);
+};
+
+
+const checkFormStateAfterReload = () => {
+  if (isDollchan()) return;
+
+  const status = getStatus();
+  if (status.lastUrl !== window.location.href || !status.timestamp) {
+    return;
+  }
+
+  // user returned to previous page by clicking a link, purge data
+  // or if timeout was reached
+  const timePassed = Date.now() - status.timestamp;
+  if (!pageWasReloaded() || timePassed > SAVE_STATE_TIMEOUT) {
+    status.lastUrl = null;
+    status.lastQuickReply = null;
+    status.timestamp = null;
+    status.formData = null;
+    setStatus(status);
+    return;
+  }
+
+  if (status.lastQuickReply) {
+    const reply = document.getElementById(status.lastQuickReply);
+    movePostform(reply, false);
+
+    if (!document.body.classList.contains('replypage') && status.formData) {
+      const quickReplyForm = getQuickReplyForm();
+      deserializeForm(quickReplyForm, status.formData);
+    }
+  }
+
+  status.lastUrl = null;
+  status.lastQuickReply = null;
+  status.timestamp = null;
+  status.formData = null;
+  setStatus(status);
+};
+
+
 const addReplyBtn = (reply) => {
   if (!reply) return;
   const label = reply.querySelector(':scope > .reflink');
@@ -297,6 +400,7 @@ const addReplyBtn = (reply) => {
   labelLink.addEventListener('click', onReflinkClick);
 };
 
+
 const processNodes = (rootNode) => {
   const replySelector = '.reply, [id^=thread]';
   if (rootNode && rootNode.matches(replySelector)) {
@@ -309,12 +413,14 @@ const processNodes = (rootNode) => {
   }
 };
 
+
 const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
       //=include quick-reply.css
     </style>`);
 };
+
 
 <% if (USERSCRIPT) { %>  // jshint ignore:line
 const appendHTML = () => {
@@ -325,8 +431,23 @@ const appendHTML = () => {
 };
 <% } %>  // jshint ignore:line
 
+const pageWasReloaded = () => {
+  const performance = window.performance;
+  if (!performance) return false;
+  const navigation = performance.navigation;
+  if (!navigation) return false;
+  return navigation.type === navigation.TYPE_RELOAD ||
+    navigation.type === navigation.TYPE_BACK_FORWARD;
+};
+
 const getSettings = () => JSON.parse(
   window.localStorage.getItem('<%= SETTINGS_LOCALSTORAGE_KEY %>') || '{}');
+
+const getStatus = () => JSON.parse(
+  window.localStorage.getItem('<%= STATUS_LOCALSTORAGE_KEY %>') || '{}');
+
+const setStatus = (status) =>
+  window.localStorage.setItem('<%= STATUS_LOCALSTORAGE_KEY %>', JSON.stringify(status));
 
 const isDollchan = () =>
   document.body.classList.contains('de-runned') ||
@@ -334,11 +455,13 @@ const isDollchan = () =>
 
 const init = () => {
   if (isDollchan()) return;
+  if (!document.getElementById('delform'));
   if (getSettings().disable_quick_reply) return;
   const postform = getMainForm();
   if (!postform) {
     return;
   }
+  window.addEventListener('beforeunload', onBeforeUnload);
   const captchaImg = document.body.querySelector('#captcha');
   // get captcha root url
   if (captchaImg) {
@@ -360,6 +483,8 @@ const init = () => {
   appendHTML();
   <% } %>  // jshint ignore:line
   processNodes();
+
+  checkFormStateAfterReload();
 
   if ('MutationObserver' in window) {
     const observer = new MutationObserver((mutations) => {
