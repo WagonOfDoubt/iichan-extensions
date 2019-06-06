@@ -322,18 +322,21 @@ const deserializeForm = (form, formData) => {
 
 const onBeforeUnload = (e) => {
   if (isDollchan()) return;
-  // if form is closed, don't save it's state
-  if (!quickReplyContainer.parentNode) return;
 
   const status = getStatus();
-  const quickReplyForm = getQuickReplyForm();
-  status.lastQuickReply = quickReplyForm.dataset.replyTo;
-  status.lastUrl = window.location.href;
-  status.timestamp = Date.now();
 
-  // serialize form if it's board page, thus forms are not in sync.
-  if (!document.body.classList.contains('replypage')) {
-    status.formData = serializeForm(quickReplyForm);
+  const quickReplyForm = getQuickReplyForm();
+  const textarea = quickReplyForm.querySelector('textarea');
+
+  if (quickReplyContainer.parentNode || textarea.value) {
+    status.lastQuickReply = quickReplyForm.dataset.replyTo;
+    status.lastUrl = window.location.href;
+    status.timestamp = Date.now();
+
+    // serialize form if it's board page, thus forms are not in sync.
+    if (!document.body.classList.contains('replypage')) {
+      status.formData = serializeForm(quickReplyForm);
+    }
   }
 
   setStatus(status);
@@ -363,11 +366,11 @@ const checkFormStateAfterReload = () => {
   if (status.lastQuickReply) {
     const reply = document.getElementById(status.lastQuickReply);
     movePostform(reply, false);
+  }
 
-    if (!document.body.classList.contains('replypage') && status.formData) {
-      const quickReplyForm = getQuickReplyForm();
-      deserializeForm(quickReplyForm, status.formData);
-    }
+  if (!document.body.classList.contains('replypage') && status.formData) {
+    const quickReplyForm = getQuickReplyForm();
+    deserializeForm(quickReplyForm, status.formData);
   }
 
   status.lastUrl = null;

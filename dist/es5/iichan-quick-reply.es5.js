@@ -410,17 +410,19 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   };
 
   var onBeforeUnload = function onBeforeUnload(e) {
-    if (isDollchan()) return; // if form is closed, don't save it's state
-
-    if (!quickReplyContainer.parentNode) return;
+    if (isDollchan()) return;
     var status = getStatus();
     var quickReplyForm = getQuickReplyForm();
-    status.lastQuickReply = quickReplyForm.dataset.replyTo;
-    status.lastUrl = window.location.href;
-    status.timestamp = Date.now(); // serialize form if it's board page, thus forms are not in sync.
+    var textarea = quickReplyForm.querySelector('textarea');
 
-    if (!document.body.classList.contains('replypage')) {
-      status.formData = serializeForm(quickReplyForm);
+    if (quickReplyContainer.parentNode || textarea.value) {
+      status.lastQuickReply = quickReplyForm.dataset.replyTo;
+      status.lastUrl = window.location.href;
+      status.timestamp = Date.now(); // serialize form if it's board page, thus forms are not in sync.
+
+      if (!document.body.classList.contains('replypage')) {
+        status.formData = serializeForm(quickReplyForm);
+      }
     }
 
     setStatus(status);
@@ -450,11 +452,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     if (status.lastQuickReply) {
       var reply = document.getElementById(status.lastQuickReply);
       movePostform(reply, false);
+    }
 
-      if (!document.body.classList.contains('replypage') && status.formData) {
-        var quickReplyForm = getQuickReplyForm();
-        deserializeForm(quickReplyForm, status.formData);
-      }
+    if (!document.body.classList.contains('replypage') && status.formData) {
+      var quickReplyForm = getQuickReplyForm();
+      deserializeForm(quickReplyForm, status.formData);
     }
 
     status.lastUrl = null;
