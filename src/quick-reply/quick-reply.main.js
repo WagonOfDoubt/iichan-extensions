@@ -210,7 +210,7 @@ const movePostform = (replyTo, addReflink = true) => {
     quickReplyForm.dataset.replyTo = '';
     closeQuickReplyForm();
   // replyTo is reply (not OP)
-  } else if (replyTo.classList.contains('reply')) {
+  } else if (replyTo.classList.contains('reply') || replyTo.classList.contains('highlight')) {
     quickReplyForm.dataset.replyTo = replyTo.id;
     placeQuickReplyFormAfterReply(replyTo, addReflink);
   // replyTo is thread (OP)
@@ -262,7 +262,7 @@ const onQuickReplyClick = (e) => {
 
 const onReflinkClick = (e) => {
   let ref = '';
-  const reply = findParent(e.target, '.reply');
+  const reply = findParent(e.target, '[id^=reply]');
   const thread = findParent(e.target, '[id^=thread]');
   if (reply) {
     ref = reply.id.substr('reply'.length);

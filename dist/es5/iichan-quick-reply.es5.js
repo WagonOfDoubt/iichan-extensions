@@ -251,7 +251,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     if (!replyTo || quickReplyForm.dataset.replyTo === replyTo.id) {
       quickReplyForm.dataset.replyTo = '';
       closeQuickReplyForm(); // replyTo is reply (not OP)
-    } else if (replyTo.classList.contains('reply')) {
+    } else if (replyTo.classList.contains('reply') || replyTo.classList.contains('highlight')) {
       quickReplyForm.dataset.replyTo = replyTo.id;
       placeQuickReplyFormAfterReply(replyTo, addReflink); // replyTo is thread (OP)
     } else {
@@ -307,7 +307,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
   var onReflinkClick = function onReflinkClick(e) {
     var ref = '';
-    var reply = findParent(e.target, '.reply');
+    var reply = findParent(e.target, '[id^=reply]');
     var thread = findParent(e.target, '[id^=thread]');
 
     if (reply) {
