@@ -480,6 +480,18 @@ const appendCSS = () => {
         pointer-events: none;
       }
       
+      @media only screen and (max-width: 480px) {
+        .iichan-postform-container table {
+          margin: 0;
+          width: 100%;
+        }
+      }
+      
+      .iichan-postform-container table {
+        margin: 0px auto;
+        text-align: left;
+      }
+      
     </style>`);
 };
 

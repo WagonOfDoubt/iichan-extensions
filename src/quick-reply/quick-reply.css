@@ -46,3 +46,15 @@
 .<%= CLOSE_FORM_BTN_CLASSNAME %> use {
   pointer-events: none;
 }
+
+@media only screen and (max-width: 480px) {
+  .<%= FORM_CONTAINER_CLASSNAME %> table {
+    margin: 0;
+    width: 100%;
+  }
+}
+
+.<%= FORM_CONTAINER_CLASSNAME %> table {
+  margin: 0px auto;
+  text-align: left;
+}
