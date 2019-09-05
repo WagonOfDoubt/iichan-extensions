@@ -17,6 +17,15 @@ const styles = {
       border-radius: 3px;
       padding: 2px;
     }`,
+  spoiler_off: () => `
+    .spoiler {
+      color: #F5F5F5 !important;
+      background-color: #888 !important;
+    }`,
+  doubledash_off: () => `
+    .doubledash {
+      display: none;
+    }`
 };
 
 
@@ -73,6 +82,13 @@ const addSettingsPanel = () => {
         </div>
         <div>
           <label><input type="checkbox" name="post_btns_color_background_en"> Фон <input type="color" name="post_btns_color_background"></label>
+        </div>
+        <h5>Внешний вид</h5>
+        <div>
+          <label><input type="checkbox" name="spoiler_off_en">Раскрывать спойлеры</label>
+        </div>
+        <div>
+          <label><input type="checkbox" name="doubledash_off_en">Скрывать >> перед постами</label>
         </div>
       </div>
     </form>

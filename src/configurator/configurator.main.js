@@ -16,6 +16,15 @@ const styles = {
       border-radius: 3px;
       padding: 2px;
     }`,
+  spoiler_off: () => `
+    .spoiler {
+      color: #F5F5F5 !important;
+      background-color: #888 !important;
+    }`,
+  doubledash_off: () => `
+    .doubledash {
+      display: none;
+    }`
 };
 
 
