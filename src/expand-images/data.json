@@ -1,3 +1,6 @@
 {
-  "SETTINGS_LOCALSTORAGE_KEY": "iichan_settings"
+  "SETTINGS_LOCALSTORAGE_KEY": "iichan_settings",
+  "HANDHELD_MEDIA_QUERY": "(max-width: 480px)",
+  "FALLBACK_MEDIA_QUERY": "(max-width: 360px)",
+  "IMAGE_EXTENSIONS": "['jpg', 'jpeg', 'gif', 'png', 'webp']"
 }

@@ -1,11 +1,20 @@
-@media only screen and ${HANDHELD_MEDIA_QUERY} {
+@media only screen and not <%= FALLBACK_MEDIA_QUERY %> {
+  a img.thumb[src*="/src/"] {
+    max-width: calc(100% - 8px);
+    max-height: initial;
+  }
+  a img.thumb {
+    margin: 0;
+    padding: 2px 4px;
+  }
+}
+@media only screen and not <%= HANDHELD_MEDIA_QUERY %> {
+  a img.thumb[src*="/src/"] {
+    max-width: calc(100% - 40px);
+    max-height: initial;
+  }
   a img.thumb {
     margin: 0;
     padding: 2px 20px;
-  }
-
-  a img.thumb[src*="/src/"] {
-    height: auto;
-    max-width: calc(100% - 40px);
   }
 }

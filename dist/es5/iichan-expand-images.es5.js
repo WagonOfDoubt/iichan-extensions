@@ -1,23 +1,28 @@
 "use strict";
 
 (function () {
-  /*
-  Если это условие НЕ выполняется, изображения будут открываться как обычно на новой вкладке.
-  См. https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries
-  */
-  var HANDHELD_MEDIA_QUERY = '(min-width: 10cm)';
-  /*
-  Список расширений файлов, для которых может применяться раскрытие.
-  */
-
-  var EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
-
   var onThumbnailClick = function onThumbnailClick(e) {
-    if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
+    var fallbackMediaQuery = '(max-width: 360px)'; // jshint ignore:line
+
+    if (window.matchMedia(fallbackMediaQuery).matches) {
+      return;
+    }
+
     var img = e.currentTarget.querySelector('.thumb');
     var isExpanded = img.src == img.dataset.fullSrc;
-    img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
-    img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+    var w = isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth;
+    var h = isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight;
+    img.setAttribute('width', w);
+    img.setAttribute('height', h);
+
+    if (isExpanded) {
+      img.style = '';
+    } else {
+      img.style.width = w + 'px'; // img.style.height = h + 'px';
+
+      img.style.height = 'auto';
+    }
+
     img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
     e.preventDefault();
   };
@@ -34,7 +39,9 @@
         var a = img.parentNode;
         if (!a) continue;
         var imageExt = a.href.split('.').pop();
-        if (!EXTENSIONS.includes(imageExt)) continue;
+        var allowedExtensions = ['jpg', 'jpeg', 'gif', 'png', 'webp']; // jshint ignore:line
+
+        if (!allowedExtensions.includes(imageExt)) continue;
         img.dataset.thumbWidth = img.getAttribute('width');
         img.dataset.thumbHeight = img.getAttribute('height');
         img.dataset.thumbSrc = img.src;
@@ -66,7 +73,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      @media only screen and ".concat(HANDHELD_MEDIA_QUERY, " {\n        a img.thumb {\n          margin: 0;\n          padding: 2px 20px;\n        }\n      \n        a img.thumb[src*=\"/src/\"] {\n          height: auto;\n          max-width: calc(100% - 40px);\n        }\n      }\n    </style>"));
+    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      @media only screen and not (max-width: 360px) {\n        a img.thumb[src*=\"/src/\"] {\n          max-width: calc(100% - 8px);\n          max-height: initial;\n        }\n        a img.thumb {\n          margin: 0;\n          padding: 2px 4px;\n        }\n      }\n      @media only screen and not (max-width: 480px) {\n        a img.thumb[src*=\"/src/\"] {\n          max-width: calc(100% - 40px);\n          max-height: initial;\n        }\n        a img.thumb {\n          margin: 0;\n          padding: 2px 20px;\n        }\n      }\n    </style>");
   };
 
   var isDollchan = function isDollchan() {

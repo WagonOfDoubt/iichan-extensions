@@ -1,20 +1,22 @@
 (() => {
-/*
-Если это условие НЕ выполняется, изображения будут открываться как обычно на новой вкладке.
-См. https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries
-*/
-const HANDHELD_MEDIA_QUERY = '(min-width: 10cm)';
-/*
-Список расширений файлов, для которых может применяться раскрытие.
-*/
-const EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png'];
-
 const onThumbnailClick = (e) => {
-  if (!window.matchMedia(HANDHELD_MEDIA_QUERY).matches) return;
+  const fallbackMediaQuery = '(max-width: 360px)'; // jshint ignore:line
+  if (window.matchMedia(fallbackMediaQuery).matches) {
+    return;
+  }
   const img = e.currentTarget.querySelector('.thumb');
   const isExpanded = img.src == img.dataset.fullSrc;
-  img.setAttribute('width', isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth);
-  img.setAttribute('height', isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight);
+  const w = isExpanded ? img.dataset.thumbWidth : img.dataset.fullWidth;
+  const h = isExpanded ? img.dataset.thumbHeight : img.dataset.fullHeight;
+  img.setAttribute('width', w);
+  img.setAttribute('height', h);
+  if (isExpanded) {
+    img.style = '';
+  } else {
+    img.style.width = w + 'px';
+    // img.style.height = h + 'px';
+    img.style.height = 'auto';
+  }
   img.src = isExpanded ? img.dataset.thumbSrc : img.dataset.fullSrc;
   e.preventDefault();
 };
@@ -25,7 +27,8 @@ const addListeners = (rootNode) => {
     const a = img.parentNode;
     if (!a) continue;
     const imageExt = a.href.split('.').pop();
-    if (!EXTENSIONS.includes(imageExt)) continue;
+    const allowedExtensions = ['jpg', 'jpeg', 'gif', 'png', 'webp']; // jshint ignore:line
+    if (!allowedExtensions.includes(imageExt)) continue;
     img.dataset.thumbWidth = img.getAttribute('width');
     img.dataset.thumbHeight = img.getAttribute('height');
     img.dataset.thumbSrc = img.src;
@@ -35,7 +38,7 @@ const addListeners = (rootNode) => {
     const filesize = post.querySelector('.filesize > em');
     if (!filesize) continue;
     const WxH = filesize.innerText.match(/(\d+)x(\d+)/);
-    if( WxH === null ) continue;
+    if (WxH === null) continue;
     img.dataset.fullWidth = WxH[1];
     img.dataset.fullHeight = WxH[2];
     a.addEventListener('click', onThumbnailClick);
@@ -45,15 +48,24 @@ const addListeners = (rootNode) => {
 const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
-      @media only screen and ${HANDHELD_MEDIA_QUERY} {
+      @media only screen and not (max-width: 360px) {
+        a img.thumb[src*="/src/"] {
+          max-width: calc(100% - 8px);
+          max-height: initial;
+        }
+        a img.thumb {
+          margin: 0;
+          padding: 2px 4px;
+        }
+      }
+      @media only screen and not (max-width: 480px) {
+        a img.thumb[src*="/src/"] {
+          max-width: calc(100% - 40px);
+          max-height: initial;
+        }
         a img.thumb {
           margin: 0;
           padding: 2px 20px;
-        }
-      
-        a img.thumb[src*="/src/"] {
-          height: auto;
-          max-width: calc(100% - 40px);
         }
       }
     </style>`);
