@@ -5,7 +5,7 @@
   Сколько первых символов из поста показывать в заголовке скрытого треда
   */
   var THREAD_TITLE_LENGTH = 50;
-  var board = window.location.href.match(/(?:\w+\.\w+\/)(.*)(?=\/)/)[1];
+  var board = window.location.href.match(/(?:[\w\.]+\/)(.*)(?=\/)/)[1];
 
   var getHiddenThreads = function getHiddenThreads() {
     var json = JSON.parse(window.localStorage.getItem('iichan_hidden_threads') || '{}');
