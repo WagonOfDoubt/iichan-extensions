@@ -54,7 +54,7 @@
 
 ### expand-images
 
-![expand-images screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/expand-images.png)
+![expand-images screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/assets/expand-images.png)
 
 - Растягивает изображения внутри постов по щелчку и сворачивает при повторном
 - Изображения не вылезают за края экрана при любом размере
@@ -70,7 +70,7 @@
 
 ### hide-threads
 
-![hide-threads screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/master/img/hide-threads.png)
+![hide-threads screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/assets/hide-threads.png)
 
 - Добавляет кнопки ➖/➕ скрытия/раскрытия треда
 - Скрытые треды можно быстро посмотреть по наведению на номер (как в кукле)
@@ -80,12 +80,16 @@
 
 ### quick-reply
 
+![quick-reply screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/assets/quick-reply.png)
+
 - Добавляет кнопку 💬 быстрого ответа
 - Работает при ответе как с доски, так и из треда
 - Автоматически добавляет >>ссылку на отвечаемый пост в текст ответа
 - Введенные данные не пропадают при ответе на другой пост
 
 ### configurator
+
+![configurator screenshot](https://raw.githubusercontent.com/WagonOfDoubt/iichan-extensions/assets/configurator.png)
 
 - Позволяет отключать все скрипты выше по отдельности
 - Настройка цвета кнопок у постов
