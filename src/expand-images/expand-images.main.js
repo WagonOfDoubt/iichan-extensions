@@ -1,6 +1,6 @@
 const onThumbnailClick = (e) => {
   const fallbackMediaQuery = '<%= FALLBACK_MEDIA_QUERY %>'; // jshint ignore:line
-  if (window.matchMedia(fallbackMediaQuery).matches) {
+  if (!window.matchMedia(fallbackMediaQuery).matches) {
     return;
   }
   const img = e.currentTarget.querySelector('.thumb');

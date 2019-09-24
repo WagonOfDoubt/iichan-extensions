@@ -2,9 +2,9 @@
 
 (function () {
   var onThumbnailClick = function onThumbnailClick(e) {
-    var fallbackMediaQuery = '(max-width: 360px)'; // jshint ignore:line
+    var fallbackMediaQuery = '(min-width: 360px)'; // jshint ignore:line
 
-    if (window.matchMedia(fallbackMediaQuery).matches) {
+    if (!window.matchMedia(fallbackMediaQuery).matches) {
       return;
     }
 
@@ -73,7 +73,7 @@
   };
 
   var appendCSS = function appendCSS() {
-    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      @media only screen and not (max-width: 360px) {\n        a img.thumb[src*=\"/src/\"] {\n          max-width: calc(100% - 8px);\n          max-height: initial;\n        }\n        a img.thumb {\n          margin: 0;\n          padding: 2px 4px;\n        }\n      }\n      @media only screen and not (max-width: 480px) {\n        a img.thumb[src*=\"/src/\"] {\n          max-width: calc(100% - 40px);\n          max-height: initial;\n        }\n        a img.thumb {\n          margin: 0;\n          padding: 2px 20px;\n        }\n      }\n    </style>");
+    document.head.insertAdjacentHTML('beforeend', "<style type=\"text/css\">\n      @media only screen and (min-width: 360px) {\n        a img.thumb[src*=\"/src/\"] {\n          max-width: calc(100% - 8px);\n          max-height: initial;\n        }\n        a img.thumb {\n          margin: 0;\n          padding: 2px 4px;\n        }\n      }\n      @media only screen and (min-width: 480px) {\n        a img.thumb[src*=\"/src/\"] {\n          max-width: calc(100% - 40px);\n          max-height: initial;\n        }\n        a img.thumb {\n          margin: 0;\n          padding: 2px 20px;\n        }\n      }\n    </style>");
   };
 
   var isDollchan = function isDollchan() {

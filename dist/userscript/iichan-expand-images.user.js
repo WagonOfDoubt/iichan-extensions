@@ -14,8 +14,8 @@
 
 (() => {
 const onThumbnailClick = (e) => {
-  const fallbackMediaQuery = '(max-width: 360px)'; // jshint ignore:line
-  if (window.matchMedia(fallbackMediaQuery).matches) {
+  const fallbackMediaQuery = '(min-width: 360px)'; // jshint ignore:line
+  if (!window.matchMedia(fallbackMediaQuery).matches) {
     return;
   }
   const img = e.currentTarget.querySelector('.thumb');
@@ -62,7 +62,7 @@ const addListeners = (rootNode) => {
 const appendCSS = () => {
   document.head.insertAdjacentHTML('beforeend',
     `<style type="text/css">
-      @media only screen and not (max-width: 360px) {
+      @media only screen and (min-width: 360px) {
         a img.thumb[src*="/src/"] {
           max-width: calc(100% - 8px);
           max-height: initial;
@@ -72,7 +72,7 @@ const appendCSS = () => {
           padding: 2px 4px;
         }
       }
-      @media only screen and not (max-width: 480px) {
+      @media only screen and (min-width: 480px) {
         a img.thumb[src*="/src/"] {
           max-width: calc(100% - 40px);
           max-height: initial;
